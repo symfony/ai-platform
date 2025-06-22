@@ -12,6 +12,7 @@
 namespace Symfony\AI\Platform\Tests\Bridge\Google\Contract;
 
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
@@ -19,6 +20,8 @@ use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\Google\Contract\UserMessageNormalizer;
 use Symfony\AI\Platform\Bridge\Google\Gemini;
 use Symfony\AI\Platform\Contract;
+use Symfony\AI\Platform\Message\Content\Audio;
+use Symfony\AI\Platform\Message\Content\Document;
 use Symfony\AI\Platform\Message\Content\File;
 use Symfony\AI\Platform\Message\Content\Image;
 use Symfony\AI\Platform\Message\Content\Text;
@@ -30,6 +33,9 @@ use Symfony\AI\Platform\Message\UserMessage;
 #[UsesClass(UserMessage::class)]
 #[UsesClass(Text::class)]
 #[UsesClass(File::class)]
+#[UsesClass(Image::class)]
+#[UsesClass(Document::class)]
+#[UsesClass(Audio::class)]
 final class UserMessageNormalizerTest extends TestCase
 {
     #[Test]
@@ -62,22 +68,32 @@ final class UserMessageNormalizerTest extends TestCase
         self::assertSame([['text' => 'Write a story about a magic backpack.']], $normalized);
     }
 
+    #[DataProvider('binaryContentProvider')]
     #[Test]
-    public function normalizeImageContent(): void
+    public function normalizeBinaryContent(File $content, string $expectedMimeType, string $expectedPrefix): void
     {
         $normalizer = new UserMessageNormalizer();
-        $imageContent = Image::fromFile(\dirname(__DIR__, 6).'/fixtures/image.jpg');
-        $message = new UserMessage(new Text('Tell me about this instrument'), $imageContent);
+        $message = new UserMessage(new Text('Tell me about this instrument'), $content);
 
         $normalized = $normalizer->normalize($message);
 
         self::assertCount(2, $normalized);
         self::assertSame(['text' => 'Tell me about this instrument'], $normalized[0]);
         self::assertArrayHasKey('inline_data', $normalized[1]);
-        self::assertSame('image/jpeg', $normalized[1]['inline_data']['mime_type']);
+        self::assertSame($expectedMimeType, $normalized[1]['inline_data']['mime_type']);
         self::assertNotEmpty($normalized[1]['inline_data']['data']);
 
-        // Verify that the base64 data string starts correctly for a JPEG
-        self::assertStringStartsWith('/9j/', $normalized[1]['inline_data']['data']);
+        // Verify that the base64 data string starts correctly
+        self::assertStringStartsWith($expectedPrefix, $normalized[1]['inline_data']['data']);
+    }
+
+    /**
+     * @return iterable<string, array{0: File, 1: string, 2: string}>
+     */
+    public static function binaryContentProvider(): iterable
+    {
+        yield 'image' => [Image::fromFile(\dirname(__DIR__, 6).'/fixtures/image.jpg'), 'image/jpeg', '/9j/'];
+        yield 'document' => [Document::fromFile(\dirname(__DIR__, 6).'/fixtures/document.pdf'), 'application/pdf', 'JVBE'];
+        yield 'audio' => [Audio::fromFile(\dirname(__DIR__, 6).'/fixtures/audio.mp3'), 'audio/mpeg', 'SUQz'];
     }
 }
