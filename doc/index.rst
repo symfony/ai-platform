@@ -78,6 +78,7 @@ usually defined by the specific models and their documentation.
     * `Amazon's Nova`_ with `AWS Bedrock`_ as Platform
     * `Mistral's Mistral`_ with `Mistral`_ as Platform
 * **Embeddings Models**
+    * `Google's Text Embeddings`_ with `Google`_
     * `OpenAI's Text Embeddings`_ with `OpenAI`_ and `Azure`_ as Platform
     * `Voyage's Embeddings`_ with `Voyage`_ as Platform
     * `Mistral Embed`_ with `Mistral`_ as Platform
@@ -274,6 +275,7 @@ which can be useful to speed up the processing::
 .. _`Amazon's Nova`: https://nova.amazon.com
 .. _`Mistral's Mistral`: https://www.mistral.ai/
 .. _`Mistral`: https://www.mistral.ai/
+.. _`Google's Text Embeddings`: https://ai.google.dev/gemini-api/docs/embeddings
 .. _`OpenAI's Text Embeddings`: https://platform.openai.com/docs/guides/embeddings/embedding-models
 .. _`Voyage's Embeddings`: https://docs.voyageai.com/docs/embeddings
 .. _`Voyage`: https://www.voyageai.com/
