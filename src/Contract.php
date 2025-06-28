@@ -23,6 +23,7 @@ use Symfony\AI\Platform\Contract\Normalizer\Message\UserMessageNormalizer;
 use Symfony\AI\Platform\Contract\Normalizer\Response\ToolCallNormalizer;
 use Symfony\AI\Platform\Contract\Normalizer\ToolNormalizer;
 use Symfony\AI\Platform\Tool\Tool;
+use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Serializer;
 
@@ -81,6 +82,9 @@ final readonly class Contract
      */
     public function createToolOption(array $tools, Model $model): array
     {
-        return $this->normalizer->normalize($tools, context: [self::CONTEXT_MODEL => $model]);
+        return $this->normalizer->normalize($tools, context: [
+            self::CONTEXT_MODEL => $model,
+            AbstractObjectNormalizer::PRESERVE_EMPTY_OBJECTS => true,
+        ]);
     }
 }
