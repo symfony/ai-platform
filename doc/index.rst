@@ -134,7 +134,8 @@ This provides several benefits:
 - **Timestamp extraction**: Get the exact creation time from the ID
 - **Database-friendly**: Sequential nature improves index performance
 
-.. code-block:: php
+::
+
     use PhpLlm\LlmChain\Platform\Message\Message;
 
     $message = Message::ofUser('Hello, AI!');
