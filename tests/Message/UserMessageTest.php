@@ -21,6 +21,8 @@ use Symfony\AI\Platform\Message\Content\ImageUrl;
 use Symfony\AI\Platform\Message\Content\Text;
 use Symfony\AI\Platform\Message\Role;
 use Symfony\AI\Platform\Message\UserMessage;
+use Symfony\AI\Platform\Tests\Helper\UuidAssertionTrait;
+use Symfony\Component\Uid\UuidV7;
 
 #[CoversClass(UserMessage::class)]
 #[UsesClass(Text::class)]
@@ -30,6 +32,8 @@ use Symfony\AI\Platform\Message\UserMessage;
 #[Small]
 final class UserMessageTest extends TestCase
 {
+    use UuidAssertionTrait;
+
     #[Test]
     public function constructionIsPossible(): void
     {
@@ -79,5 +83,37 @@ final class UserMessageTest extends TestCase
         $message = new UserMessage(new Text('foo'), new ImageUrl('https://foo.com/bar.jpg'));
 
         self::assertTrue($message->hasImageContent());
+    }
+
+    #[Test]
+    public function messageHasUid(): void
+    {
+        $message = new UserMessage(new Text('foo'));
+
+        self::assertInstanceOf(UuidV7::class, $message->id);
+        self::assertInstanceOf(UuidV7::class, $message->getId());
+        self::assertSame($message->id, $message->getId());
+    }
+
+    #[Test]
+    public function differentMessagesHaveDifferentUids(): void
+    {
+        $message1 = new UserMessage(new Text('foo'));
+        $message2 = new UserMessage(new Text('bar'));
+
+        self::assertNotSame($message1->getId()->toRfc4122(), $message2->getId()->toRfc4122());
+        self::assertIsUuidV7($message1->getId()->toRfc4122());
+        self::assertIsUuidV7($message2->getId()->toRfc4122());
+    }
+
+    #[Test]
+    public function sameMessagesHaveDifferentUids(): void
+    {
+        $message1 = new UserMessage(new Text('foo'));
+        $message2 = new UserMessage(new Text('foo'));
+
+        self::assertNotSame($message1->getId()->toRfc4122(), $message2->getId()->toRfc4122());
+        self::assertIsUuidV7($message1->getId()->toRfc4122());
+        self::assertIsUuidV7($message2->getId()->toRfc4122());
     }
 }
