@@ -256,6 +256,13 @@ The standalone usage results in an ``Vector`` instance::
 * `Embeddings with Voyage`_
 * `Embeddings with Mistral`_
 
+Server Tools
+------------
+
+Some platforms provide built-in server-side tools for enhanced capabilities without custom implementations:
+
+1. **[Google Gemini](google-gemini-server-tools.md)** - URL Context, Google Search, Code Execution
+
 Parallel Platform Calls
 -----------------------
 
