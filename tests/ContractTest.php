@@ -37,9 +37,12 @@ use Symfony\AI\Platform\Message\Content\Image;
 use Symfony\AI\Platform\Message\Content\ImageUrl;
 use Symfony\AI\Platform\Message\Message;
 use Symfony\AI\Platform\Message\MessageBag;
+use Symfony\AI\Platform\Message\MessageInterface;
+use Symfony\AI\Platform\Message\Role;
 use Symfony\AI\Platform\Message\SystemMessage;
 use Symfony\AI\Platform\Message\UserMessage;
 use Symfony\AI\Platform\Model;
+use Symfony\Component\Uid\Uuid;
 
 #[Large]
 #[CoversClass(Contract::class)]
@@ -194,6 +197,37 @@ final class ContractTest extends TestCase
                         ['type' => 'text', 'text' => 'My hint for how to analyze an image.'],
                         ['type' => 'image_url', 'image_url' => ['url' => 'http://image-generator.local/my-fancy-image.png']],
                     ]],
+                ],
+                'model' => 'gpt-4o',
+            ],
+        ];
+
+        $customSerializableMessage = new class implements MessageInterface, \JsonSerializable {
+            public function getRole(): Role
+            {
+                return Role::User;
+            }
+
+            public function getId(): Uuid
+            {
+                return Uuid::v7();
+            }
+
+            public function jsonSerialize(): array
+            {
+                return [
+                    'role' => 'user',
+                    'content' => 'This is a custom serializable message.',
+                ];
+            }
+        };
+
+        yield 'MessageBag with custom message from GPT' => [
+            'model' => new GPT(),
+            'input' => new MessageBag($customSerializableMessage),
+            'expected' => [
+                'messages' => [
+                    ['role' => 'user', 'content' => 'This is a custom serializable message.'],
                 ],
                 'model' => 'gpt-4o',
             ],
