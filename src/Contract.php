@@ -30,12 +30,12 @@ use Symfony\Component\Serializer\Serializer;
 /**
  * @author Christopher Hertel <mail@christopher-hertel.de>
  */
-final readonly class Contract
+readonly class Contract
 {
     public const CONTEXT_MODEL = 'model';
 
-    public function __construct(
-        private NormalizerInterface $normalizer,
+    final public function __construct(
+        protected NormalizerInterface $normalizer,
     ) {
     }
 
@@ -70,7 +70,7 @@ final readonly class Contract
      *
      * @return array<string, mixed>|string
      */
-    public function createRequestPayload(Model $model, object|array|string $input): string|array
+    final public function createRequestPayload(Model $model, object|array|string $input): string|array
     {
         return $this->normalizer->normalize($input, context: [self::CONTEXT_MODEL => $model]);
     }
@@ -80,7 +80,7 @@ final readonly class Contract
      *
      * @return array<string, mixed>
      */
-    public function createToolOption(array $tools, Model $model): array
+    final public function createToolOption(array $tools, Model $model): array
     {
         return $this->normalizer->normalize($tools, context: [
             self::CONTEXT_MODEL => $model,
