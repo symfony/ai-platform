@@ -9,18 +9,21 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\AI\Platform;
-
-use Symfony\AI\Platform\Response\ResponsePromise;
+namespace Symfony\AI\Platform\Response;
 
 /**
+ * Base class for raw model responses.
+ *
  * @author Christopher Hertel <mail@christopher-hertel.de>
  */
-interface PlatformInterface
+interface RawResponseInterface
 {
     /**
-     * @param array<mixed>|string|object $input
-     * @param array<string, mixed>       $options
+     * Returns an array representation of the raw response data.
+     *
+     * @return array<string, mixed>
      */
-    public function request(Model $model, array|string|object $input, array $options = []): ResponsePromise;
+    public function getRawData(): array;
+
+    public function getRawObject(): object;
 }

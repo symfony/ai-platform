@@ -17,6 +17,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Response\Exception\RawResponseAlreadySetException;
+use Symfony\AI\Platform\Response\RawHttpResponse;
 use Symfony\AI\Platform\Response\RawResponseAwareTrait;
 use Symfony\Contracts\HttpClient\ResponseInterface as SymfonyHttpResponse;
 
@@ -31,8 +32,8 @@ final class RawResponseAwareTraitTest extends TestCase
         $response = $this->createTestClass();
         $rawResponse = self::createMock(SymfonyHttpResponse::class);
 
-        $response->setRawResponse($rawResponse);
-        self::assertSame($rawResponse, $response->getRawResponse());
+        $response->setRawResponse(new RawHttpResponse($rawResponse));
+        self::assertSame($rawResponse, $response->getRawResponse()?->getRawObject());
     }
 
     #[Test]
@@ -43,8 +44,8 @@ final class RawResponseAwareTraitTest extends TestCase
         $response = $this->createTestClass();
         $rawResponse = self::createMock(SymfonyHttpResponse::class);
 
-        $response->setRawResponse($rawResponse);
-        $response->setRawResponse($rawResponse);
+        $response->setRawResponse(new RawHttpResponse($rawResponse));
+        $response->setRawResponse(new RawHttpResponse($rawResponse));
     }
 
     private function createTestClass(): object

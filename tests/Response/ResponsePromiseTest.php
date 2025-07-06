@@ -16,21 +16,23 @@ use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Symfony\AI\Platform\Response\AsyncResponse;
 use Symfony\AI\Platform\Response\BaseResponse;
 use Symfony\AI\Platform\Response\Exception\RawResponseAlreadySetException;
 use Symfony\AI\Platform\Response\Metadata\Metadata;
+use Symfony\AI\Platform\Response\RawHttpResponse;
+use Symfony\AI\Platform\Response\RawResponseInterface;
 use Symfony\AI\Platform\Response\ResponseInterface;
+use Symfony\AI\Platform\Response\ResponsePromise;
 use Symfony\AI\Platform\Response\TextResponse;
 use Symfony\AI\Platform\ResponseConverterInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface as SymfonyHttpResponse;
 
-#[CoversClass(AsyncResponse::class)]
+#[CoversClass(ResponsePromise::class)]
 #[UsesClass(Metadata::class)]
 #[UsesClass(TextResponse::class)]
 #[UsesClass(RawResponseAlreadySetException::class)]
 #[Small]
-final class AsyncResponseTest extends TestCase
+final class ResponsePromiseTest extends TestCase
 {
     #[Test]
     public function itUnwrapsTheResponseWhenGettingContent(): void
@@ -44,9 +46,9 @@ final class AsyncResponseTest extends TestCase
             ->with($httpResponse, [])
             ->willReturn($textResponse);
 
-        $asyncResponse = new AsyncResponse($responseConverter, $httpResponse);
+        $responsePromise = new ResponsePromise($responseConverter->convert(...), new RawHttpResponse($httpResponse));
 
-        self::assertSame('test content', $asyncResponse->getContent());
+        self::assertSame('test content', $responsePromise->getResponse()->getContent());
     }
 
     #[Test]
@@ -61,12 +63,12 @@ final class AsyncResponseTest extends TestCase
             ->with($httpResponse, [])
             ->willReturn($textResponse);
 
-        $asyncResponse = new AsyncResponse($responseConverter, $httpResponse);
+        $responsePromise = new ResponsePromise($responseConverter->convert(...), new RawHttpResponse($httpResponse));
 
         // Call unwrap multiple times, but the converter should only be called once
-        $asyncResponse->unwrap();
-        $asyncResponse->unwrap();
-        $asyncResponse->getContent();
+        $responsePromise->await();
+        $responsePromise->await();
+        $responsePromise->getResponse();
     }
 
     #[Test]
@@ -75,21 +77,9 @@ final class AsyncResponseTest extends TestCase
         $httpResponse = $this->createStub(SymfonyHttpResponse::class);
         $responseConverter = $this->createStub(ResponseConverterInterface::class);
 
-        $asyncResponse = new AsyncResponse($responseConverter, $httpResponse);
+        $responsePromise = new ResponsePromise($responseConverter->convert(...), new RawHttpResponse($httpResponse));
 
-        self::assertSame($httpResponse, $asyncResponse->getRawResponse());
-    }
-
-    #[Test]
-    public function itThrowsExceptionWhenSettingRawResponse(): void
-    {
-        self::expectException(RawResponseAlreadySetException::class);
-
-        $httpResponse = $this->createStub(SymfonyHttpResponse::class);
-        $responseConverter = $this->createStub(ResponseConverterInterface::class);
-
-        $asyncResponse = new AsyncResponse($responseConverter, $httpResponse);
-        $asyncResponse->setRawResponse($httpResponse);
+        self::assertSame($httpResponse, $responsePromise->getRawResponse()->getRawObject());
     }
 
     #[Test]
@@ -102,11 +92,11 @@ final class AsyncResponseTest extends TestCase
         $responseConverter = $this->createStub(ResponseConverterInterface::class);
         $responseConverter->method('convert')->willReturn($unwrappedResponse);
 
-        $asyncResponse = new AsyncResponse($responseConverter, $httpResponse);
-        $asyncResponse->unwrap();
+        $responsePromise = new ResponsePromise($responseConverter->convert(...), new RawHttpResponse($httpResponse));
+        $responsePromise->await();
 
         // The raw response in the model response is now set and not null anymore
-        self::assertSame($httpResponse, $unwrappedResponse->getRawResponse());
+        self::assertSame($httpResponse, $unwrappedResponse->getRawResponse()->getRawObject());
     }
 
     #[Test]
@@ -120,11 +110,11 @@ final class AsyncResponseTest extends TestCase
         $responseConverter = $this->createStub(ResponseConverterInterface::class);
         $responseConverter->method('convert')->willReturn($unwrappedResponse);
 
-        $asyncResponse = new AsyncResponse($responseConverter, $originHttpResponse);
-        $asyncResponse->unwrap();
+        $responsePromise = new ResponsePromise($responseConverter->convert(...), new RawHttpResponse($originHttpResponse));
+        $responsePromise->await();
 
         // It is still the same raw response as set initially and so not overwritten
-        self::assertSame($anotherHttpResponse, $unwrappedResponse->getRawResponse());
+        self::assertSame($anotherHttpResponse, $unwrappedResponse->getRawResponse()->getRawObject());
     }
 
     /**
@@ -132,21 +122,18 @@ final class AsyncResponseTest extends TestCase
      * mock creation "Type Traversable|object|array|string|null contains both object and a class type"
      * in PHPUnit MockClass.
      */
-    private function createResponse(?SymfonyHttpResponse $rawResponse): ResponseInterface
+    private function createResponse(?SymfonyHttpResponse $httpResponse): ResponseInterface
     {
+        $rawResponse = null !== $httpResponse ? new RawHttpResponse($httpResponse) : null;
+
         return new class($rawResponse) extends BaseResponse {
-            public function __construct(protected ?SymfonyHttpResponse $rawResponse)
+            public function __construct(protected ?RawResponseInterface $rawResponse)
             {
             }
 
             public function getContent(): string
             {
                 return 'test content';
-            }
-
-            public function getRawResponse(): ?SymfonyHttpResponse
-            {
-                return $this->rawResponse;
             }
         };
     }
@@ -163,7 +150,7 @@ final class AsyncResponseTest extends TestCase
             ->with($httpResponse, $options)
             ->willReturn($this->createResponse(null));
 
-        $asyncResponse = new AsyncResponse($responseConverter, $httpResponse, $options);
-        $asyncResponse->unwrap();
+        $responsePromise = new ResponsePromise($responseConverter->convert(...), new RawHttpResponse($httpResponse), $options);
+        $responsePromise->await();
     }
 }

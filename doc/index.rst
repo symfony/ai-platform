@@ -246,7 +246,7 @@ The standalone usage results in an ``Vector`` instance::
 
     $embeddings = new Embeddings($platform, Embeddings::TEXT_3_SMALL);
 
-    $vectors = $platform->request($embeddings, $textInput)->getContent();
+    $vectors = $platform->request($embeddings, $textInput)->asVectors();
 
     dump($vectors[0]->getData()); // returns something like: [0.123, -0.456, 0.789, ...]
 
@@ -276,7 +276,7 @@ which can be useful to speed up the processing::
     }
 
     foreach ($responses as $response) {
-        echo $response->getContent().PHP_EOL;
+        echo $response->asText().PHP_EOL;
     }
 
 .. note::

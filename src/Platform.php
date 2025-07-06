@@ -12,9 +12,9 @@
 namespace Symfony\AI\Platform;
 
 use Symfony\AI\Platform\Exception\RuntimeException;
-use Symfony\AI\Platform\Response\AsyncResponse;
-use Symfony\AI\Platform\Response\ResponseInterface;
-use Symfony\Contracts\HttpClient\ResponseInterface as HttpResponse;
+use Symfony\AI\Platform\Response\RawHttpResponse;
+use Symfony\AI\Platform\Response\ResponsePromise;
+use Symfony\Contracts\HttpClient\ResponseInterface;
 
 /**
  * @author Christopher Hertel <mail@christopher-hertel.de>
@@ -45,7 +45,7 @@ final class Platform implements PlatformInterface
         $this->responseConverter = $responseConverter instanceof \Traversable ? iterator_to_array($responseConverter) : $responseConverter;
     }
 
-    public function request(Model $model, array|string|object $input, array $options = []): ResponseInterface
+    public function request(Model $model, array|string|object $input, array $options = []): ResponsePromise
     {
         $payload = $this->contract->createRequestPayload($model, $input);
         $options = array_merge($model->getOptions(), $options);
@@ -63,7 +63,7 @@ final class Platform implements PlatformInterface
      * @param array<string, mixed> $payload
      * @param array<string, mixed> $options
      */
-    private function doRequest(Model $model, array|string $payload, array $options = []): HttpResponse
+    private function doRequest(Model $model, array|string $payload, array $options = []): ResponseInterface
     {
         foreach ($this->modelClients as $modelClient) {
             if ($modelClient->supports($model)) {
@@ -77,11 +77,15 @@ final class Platform implements PlatformInterface
     /**
      * @param array<string, mixed> $options
      */
-    private function convertResponse(Model $model, HttpResponse $response, array $options): ResponseInterface
+    private function convertResponse(Model $model, ResponseInterface $response, array $options): ResponsePromise
     {
         foreach ($this->responseConverter as $responseConverter) {
             if ($responseConverter->supports($model)) {
-                return new AsyncResponse($responseConverter, $response, $options);
+                return new ResponsePromise(
+                    fn (ResponseInterface $response, array $options) => $responseConverter->convert($response, $options),
+                    new RawHttpResponse($response),
+                    $options,
+                );
             }
         }
 
