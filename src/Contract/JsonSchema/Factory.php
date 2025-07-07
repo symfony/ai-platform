@@ -90,7 +90,7 @@ final readonly class Factory
      */
     private function convertTypes(array $elements): ?array
     {
-        if (0 === \count($elements)) {
+        if ([] === $elements) {
             return null;
         }
 

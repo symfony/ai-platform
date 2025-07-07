@@ -45,6 +45,6 @@ final readonly class Choice
 
     public function hasToolCall(): bool
     {
-        return 0 !== \count($this->toolCalls);
+        return [] !== $this->toolCalls;
     }
 }

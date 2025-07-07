@@ -29,7 +29,7 @@ final class Vector implements VectorInterface
             throw new InvalidArgumentException('Vector must have '.$dimensions.' dimensions');
         }
 
-        if (0 === \count($data)) {
+        if ([] === $data) {
             throw new InvalidArgumentException('Vector must have at least one dimension');
         }
 

@@ -25,7 +25,7 @@ final class ToolCallResponse extends BaseResponse
 
     public function __construct(ToolCall ...$toolCalls)
     {
-        if (0 === \count($toolCalls)) {
+        if ([] === $toolCalls) {
             throw new InvalidArgumentException('Response must have at least one tool call.');
         }
 

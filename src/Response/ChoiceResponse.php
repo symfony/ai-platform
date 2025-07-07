@@ -25,7 +25,7 @@ final class ChoiceResponse extends BaseResponse
 
     public function __construct(Choice ...$choices)
     {
-        if (0 === \count($choices)) {
+        if ([] === $choices) {
             throw new InvalidArgumentException('Response must have at least one choice.');
         }
 

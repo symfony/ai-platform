@@ -43,6 +43,6 @@ final readonly class AssistantMessage implements MessageInterface
 
     public function hasToolCalls(): bool
     {
-        return null !== $this->toolCalls && 0 !== \count($this->toolCalls);
+        return null !== $this->toolCalls && [] !== $this->toolCalls;
     }
 }
