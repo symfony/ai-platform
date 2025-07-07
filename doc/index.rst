@@ -136,7 +136,7 @@ This provides several benefits:
 
 ::
 
-    use PhpLlm\LlmChain\Platform\Message\Message;
+    use Symfony\AI\Platform\Message\Message;
 
     $message = Message::ofUser('Hello, AI!');
 
