@@ -76,8 +76,5 @@
             "Symfony\\AI\\Platform\\Tests\\": "tests/",
             "Symfony\\AI\\Fixtures\\": "../../fixtures"
         }
-    },
-    "repositories": [
-        {"type": "path", "url": "../agent"}
-    ]
+    }
 }
