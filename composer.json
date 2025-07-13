@@ -50,10 +50,6 @@
         "symfony/process": "^6.4 || ^7.1",
         "symfony/var-dumper": "^6.4 || ^7.1"
     },
-    "suggest": {
-        "async-aws/bedrock-runtime": "For using the Bedrock platform.",
-        "codewithkyrian/transformers": "For using the TransformersPHP with FFI to run models in PHP."
-    },
     "config": {
         "allow-plugins": {
             "codewithkyrian/transformers-libsloader": true
