@@ -12,6 +12,8 @@
 namespace Symfony\AI\Platform\Message;
 
 use Symfony\AI\Platform\Response\ToolCall;
+use Symfony\Component\Uid\AbstractUid;
+use Symfony\Component\Uid\TimeBasedUidInterface;
 use Symfony\Component\Uid\Uuid;
 
 /**
@@ -19,7 +21,7 @@ use Symfony\Component\Uid\Uuid;
  */
 final readonly class ToolCallMessage implements MessageInterface
 {
-    public Uuid $id;
+    public AbstractUid&TimeBasedUidInterface $id;
 
     public function __construct(
         public ToolCall $toolCall,
@@ -33,7 +35,7 @@ final readonly class ToolCallMessage implements MessageInterface
         return Role::ToolCall;
     }
 
-    public function getId(): Uuid
+    public function getId(): AbstractUid&TimeBasedUidInterface
     {
         return $this->id;
     }

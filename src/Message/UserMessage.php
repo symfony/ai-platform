@@ -15,6 +15,8 @@ use Symfony\AI\Platform\Message\Content\Audio;
 use Symfony\AI\Platform\Message\Content\ContentInterface;
 use Symfony\AI\Platform\Message\Content\Image;
 use Symfony\AI\Platform\Message\Content\ImageUrl;
+use Symfony\Component\Uid\AbstractUid;
+use Symfony\Component\Uid\TimeBasedUidInterface;
 use Symfony\Component\Uid\Uuid;
 
 /**
@@ -27,7 +29,7 @@ final readonly class UserMessage implements MessageInterface
      */
     public array $content;
 
-    public Uuid $id;
+    public AbstractUid&TimeBasedUidInterface $id;
 
     public function __construct(
         ContentInterface ...$content,
@@ -41,7 +43,7 @@ final readonly class UserMessage implements MessageInterface
         return Role::User;
     }
 
-    public function getId(): Uuid
+    public function getId(): AbstractUid&TimeBasedUidInterface
     {
         return $this->id;
     }

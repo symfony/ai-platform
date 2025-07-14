@@ -11,6 +11,8 @@
 
 namespace Symfony\AI\Platform\Message;
 
+use Symfony\Component\Uid\AbstractUid;
+use Symfony\Component\Uid\TimeBasedUidInterface;
 use Symfony\Component\Uid\Uuid;
 
 /**
@@ -18,7 +20,7 @@ use Symfony\Component\Uid\Uuid;
  */
 final readonly class SystemMessage implements MessageInterface
 {
-    public Uuid $id;
+    public AbstractUid&TimeBasedUidInterface $id;
 
     public function __construct(public string $content)
     {
@@ -30,7 +32,7 @@ final readonly class SystemMessage implements MessageInterface
         return Role::System;
     }
 
-    public function getId(): Uuid
+    public function getId(): AbstractUid&TimeBasedUidInterface
     {
         return $this->id;
     }

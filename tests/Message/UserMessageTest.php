@@ -22,6 +22,8 @@ use Symfony\AI\Platform\Message\Content\Text;
 use Symfony\AI\Platform\Message\Role;
 use Symfony\AI\Platform\Message\UserMessage;
 use Symfony\AI\Platform\Tests\Helper\UuidAssertionTrait;
+use Symfony\Component\Uid\AbstractUid;
+use Symfony\Component\Uid\TimeBasedUidInterface;
 use Symfony\Component\Uid\UuidV7;
 
 #[CoversClass(UserMessage::class)]
@@ -115,5 +117,15 @@ final class UserMessageTest extends TestCase
         self::assertNotSame($message1->getId()->toRfc4122(), $message2->getId()->toRfc4122());
         self::assertIsUuidV7($message1->getId()->toRfc4122());
         self::assertIsUuidV7($message2->getId()->toRfc4122());
+    }
+
+    #[Test]
+    public function messageIdImplementsRequiredInterfaces(): void
+    {
+        $message = new UserMessage(new Text('test'));
+
+        self::assertInstanceOf(AbstractUid::class, $message->getId());
+        self::assertInstanceOf(TimeBasedUidInterface::class, $message->getId());
+        self::assertInstanceOf(UuidV7::class, $message->getId());
     }
 }
