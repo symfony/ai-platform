@@ -86,6 +86,7 @@ usually defined by the specific models and their documentation.
 * **Other Models**
     * `OpenAI's Dall·E`_ with `OpenAI`_ as Platform
     * `OpenAI's Whisper`_ with `OpenAI`_ and `Azure`_ as Platform
+    * `LM Studio Catalog`_ and `HuggingFace`_ Models  with `LM Studio`_ as Platform.
     * All models provided by `HuggingFace`_ can be listed with a command in the examples folder,
       and also filtered, e.g. ``php examples/huggingface/_model-listing.php --provider=hf-inference --task=object-detection``
 
@@ -332,3 +333,5 @@ which can be useful to speed up the processing::
 .. _`Embeddings with Mistral`: https://github.com/symfony/ai/blob/main/examples/mistral/embeddings.php
 .. _`Parallel GPT Calls`: https://github.com/symfony/ai/blob/main/examples/misc/parallel-chat-gpt.php
 .. _`Parallel Embeddings Calls`: https://github.com/symfony/ai/blob/main/examples/misc/parallel-embeddings.php
+.. _`LM Studio`: https://lmstudio.ai/
+.. _`LM Studio Catalog`: https://lmstudio.ai/models

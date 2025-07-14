@@ -20,6 +20,7 @@ CHANGELOG
    - Voyage AI (specialized embeddings)
    - HuggingFace (extensive model support with multiple tasks)
    - TransformersPHP (local PHP-based transformer models)
+   - LM Studio (local model hosting)
  * Add comprehensive message system with role-based messaging:
    - `UserMessage` for user inputs with multi-modal content
    - `SystemMessage` for system instructions
