@@ -44,6 +44,17 @@ final class OllamaTest extends TestCase
         );
     }
 
+    #[DataProvider('provideModelsWithMultipleInputCapabilities')]
+    public function testModelsWithMultipleInputCapabilities(string $modelName)
+    {
+        $model = new Ollama($modelName);
+
+        $this->assertTrue(
+            $model->supports(Capability::INPUT_MULTIPLE),
+            \sprintf('Model "%s" should not support multiple input capabilities', $modelName)
+        );
+    }
+
     /**
      * @return iterable<array{string}>
      */
@@ -81,5 +92,15 @@ final class OllamaTest extends TestCase
         yield 'phi3' => [Ollama::PHI_3];
         yield 'llava' => [Ollama::LLAVA];
         yield 'qwen2.5vl' => [Ollama::QWEN_2_5_VL]; // This has 'vl' suffix which doesn't match the pattern
+    }
+
+    /**
+     * @return iterable<array{string}>
+     */
+    public static function provideModelsWithMultipleInputCapabilities(): iterable
+    {
+        yield 'nomic-embed-text' => [Ollama::NOMIC_EMBED_TEXT];
+        yield 'bge-m3' => [Ollama::BGE_M3];
+        yield 'all-minilm' => [Ollama::ALL_MINILM];
     }
 }

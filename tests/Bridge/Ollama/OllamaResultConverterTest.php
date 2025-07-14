@@ -20,9 +20,13 @@ use Symfony\AI\Platform\Bridge\Ollama\OllamaResultConverter;
 use Symfony\AI\Platform\Exception\RuntimeException;
 use Symfony\AI\Platform\Model;
 use Symfony\AI\Platform\Result\InMemoryRawResult;
+use Symfony\AI\Platform\Result\RawHttpResult;
 use Symfony\AI\Platform\Result\TextResult;
 use Symfony\AI\Platform\Result\ToolCall;
 use Symfony\AI\Platform\Result\ToolCallResult;
+use Symfony\AI\Platform\Result\VectorResult;
+use Symfony\AI\Platform\Vector\Vector;
+use Symfony\Contracts\HttpClient\ResponseInterface;
 
 #[CoversClass(OllamaResultConverter::class)]
 #[Small]
@@ -30,6 +34,8 @@ use Symfony\AI\Platform\Result\ToolCallResult;
 #[UsesClass(TextResult::class)]
 #[UsesClass(ToolCall::class)]
 #[UsesClass(ToolCallResult::class)]
+#[UsesClass(Vector::class)]
+#[UsesClass(VectorResult::class)]
 final class OllamaResultConverterTest extends TestCase
 {
     public function testSupportsLlamaModel()
@@ -142,5 +148,30 @@ final class OllamaResultConverterTest extends TestCase
         $this->expectExceptionMessage('Message does not contain content');
 
         $converter->convert($rawResult);
+    }
+
+    public function testItConvertsAResponseToAVectorResult()
+    {
+        $result = $this->createStub(ResponseInterface::class);
+        $result
+            ->method('toArray')
+            ->willReturn([
+                'model' => 'all-minilm',
+                'embeddings' => [
+                    [0.3, 0.4, 0.4],
+                    [0.0, 0.0, 0.2],
+                ],
+                'total_duration' => 14143917,
+                'load_duration' => 1019500,
+                'prompt_eval_count' => 8,
+            ]);
+
+        $vectorResult = (new OllamaResultConverter())->convert(new RawHttpResult($result));
+        $convertedContent = $vectorResult->getContent();
+
+        $this->assertCount(2, $convertedContent);
+
+        $this->assertSame([0.3, 0.4, 0.4], $convertedContent[0]->getData());
+        $this->assertSame([0.0, 0.0, 0.2], $convertedContent[1]->getData());
     }
 }
