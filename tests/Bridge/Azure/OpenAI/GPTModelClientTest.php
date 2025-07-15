@@ -19,9 +19,9 @@ use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\Azure\OpenAI\GPTModelClient;
 use Symfony\AI\Platform\Bridge\OpenAI\GPT;
+use Symfony\AI\Platform\Exception\InvalidArgumentException;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
-use Webmozart\Assert\InvalidArgumentException;
 
 #[CoversClass(GPTModelClient::class)]
 #[UsesClass(GPT::class)]

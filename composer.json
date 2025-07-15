@@ -32,15 +32,13 @@
         "symfony/property-info": "^6.4 || ^7.1",
         "symfony/serializer": "^6.4 || ^7.1",
         "symfony/type-info": "^7.2.3",
-        "symfony/uid": "^6.4 || ^7.1",
-        "webmozart/assert": "^1.11"
+        "symfony/uid": "^6.4 || ^7.1"
     },
     "require-dev": {
         "async-aws/bedrock-runtime": "^0.1.0",
         "codewithkyrian/transformers": "^0.5.3",
         "phpstan/phpstan": "^2.1.17",
         "phpstan/phpstan-symfony": "^2.0.6",
-        "phpstan/phpstan-webmozart-assert": "^2.0.0",
         "phpunit/phpunit": "^11.5",
         "symfony/console": "^6.4 || ^7.1",
         "symfony/dotenv": "^6.4 || ^7.1",

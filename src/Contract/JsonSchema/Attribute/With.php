@@ -11,7 +11,7 @@
 
 namespace Symfony\AI\Platform\Contract\JsonSchema\Attribute;
 
-use Webmozart\Assert\Assert;
+use Symfony\AI\Platform\Exception\InvalidArgumentException;
 
 /**
  * @author Oskar Stark <oskarstark@googlemail.com>
@@ -54,95 +54,95 @@ final readonly class With
         public ?bool $dependentRequired = null,
     ) {
         if (\is_array($enum)) {
-            Assert::allString($enum);
+            array_filter($enum, fn ($item) => \is_string($item)) === $enum || throw new InvalidArgumentException('All enum values must be strings.');
         }
 
         if (\is_string($const)) {
-            Assert::stringNotEmpty(trim($const));
+            '' !== trim($const) || throw new InvalidArgumentException('Const string must not be empty.');
         }
 
         if (\is_string($pattern)) {
-            Assert::stringNotEmpty(trim($pattern));
+            '' !== trim($pattern) || throw new InvalidArgumentException('Pattern string must not be empty.');
         }
 
         if (\is_int($minLength)) {
-            Assert::greaterThanEq($minLength, 0);
+            $minLength >= 0 || throw new InvalidArgumentException('MinLength must be greater than or equal to 0.');
 
             if (\is_int($maxLength)) {
-                Assert::greaterThanEq($maxLength, $minLength);
+                $maxLength >= $minLength || throw new InvalidArgumentException('MaxLength must be greater than or equal to minLength.');
             }
         }
 
         if (\is_int($maxLength)) {
-            Assert::greaterThanEq($maxLength, 0);
+            $maxLength >= 0 || throw new InvalidArgumentException('MaxLength must be greater than or equal to 0.');
         }
 
         if (\is_int($minimum)) {
-            Assert::greaterThanEq($minimum, 0);
+            $minimum >= 0 || throw new InvalidArgumentException('Minimum must be greater than or equal to 0.');
 
             if (\is_int($maximum)) {
-                Assert::greaterThanEq($maximum, $minimum);
+                $maximum >= $minimum || throw new InvalidArgumentException('Maximum must be greater than or equal to minimum.');
             }
         }
 
         if (\is_int($maximum)) {
-            Assert::greaterThanEq($maximum, 0);
+            $maximum >= 0 || throw new InvalidArgumentException('Maximum must be greater than or equal to 0.');
         }
 
         if (\is_int($multipleOf)) {
-            Assert::greaterThanEq($multipleOf, 0);
+            $multipleOf >= 0 || throw new InvalidArgumentException('MultipleOf must be greater than or equal to 0.');
         }
 
         if (\is_int($exclusiveMinimum)) {
-            Assert::greaterThanEq($exclusiveMinimum, 0);
+            $exclusiveMinimum >= 0 || throw new InvalidArgumentException('ExclusiveMinimum must be greater than or equal to 0.');
 
             if (\is_int($exclusiveMaximum)) {
-                Assert::greaterThanEq($exclusiveMaximum, $exclusiveMinimum);
+                $exclusiveMaximum >= $exclusiveMinimum || throw new InvalidArgumentException('ExclusiveMaximum must be greater than or equal to exclusiveMinimum.');
             }
         }
 
         if (\is_int($exclusiveMaximum)) {
-            Assert::greaterThanEq($exclusiveMaximum, 0);
+            $exclusiveMaximum >= 0 || throw new InvalidArgumentException('ExclusiveMaximum must be greater than or equal to 0.');
         }
 
         if (\is_int($minItems)) {
-            Assert::greaterThanEq($minItems, 0);
+            $minItems >= 0 || throw new InvalidArgumentException('MinItems must be greater than or equal to 0.');
 
             if (\is_int($maxItems)) {
-                Assert::greaterThanEq($maxItems, $minItems);
+                $maxItems >= $minItems || throw new InvalidArgumentException('MaxItems must be greater than or equal to minItems.');
             }
         }
 
         if (\is_int($maxItems)) {
-            Assert::greaterThanEq($maxItems, 0);
+            $maxItems >= 0 || throw new InvalidArgumentException('MaxItems must be greater than or equal to 0.');
         }
 
         if (\is_bool($uniqueItems)) {
-            Assert::true($uniqueItems);
+            true === $uniqueItems || throw new InvalidArgumentException('UniqueItems must be true when specified.');
         }
 
         if (\is_int($minContains)) {
-            Assert::greaterThanEq($minContains, 0);
+            $minContains >= 0 || throw new InvalidArgumentException('MinContains must be greater than or equal to 0.');
 
             if (\is_int($maxContains)) {
-                Assert::greaterThanEq($maxContains, $minContains);
+                $maxContains >= $minContains || throw new InvalidArgumentException('MaxContains must be greater than or equal to minContains.');
             }
         }
 
         if (\is_int($maxContains)) {
-            Assert::greaterThanEq($maxContains, 0);
+            $maxContains >= 0 || throw new InvalidArgumentException('MaxContains must be greater than or equal to 0.');
         }
 
         if (\is_int($minProperties)) {
-            Assert::greaterThanEq($minProperties, 0);
+            $minProperties >= 0 || throw new InvalidArgumentException('MinProperties must be greater than or equal to 0.');
 
             if (\is_int($maxProperties)) {
-                Assert::greaterThanEq($maxProperties, $minProperties);
+                $maxProperties >= $minProperties || throw new InvalidArgumentException('MaxProperties must be greater than or equal to minProperties.');
             }
         }
 
         if (\is_int($maxProperties)) {
-            Assert::greaterThanEq($maxProperties, 0);
+            $maxProperties >= 0 || throw new InvalidArgumentException('MaxProperties must be greater than or equal to 0.');
         }
     }
 }

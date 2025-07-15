@@ -19,9 +19,9 @@ use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\Azure\OpenAI\EmbeddingsModelClient;
 use Symfony\AI\Platform\Bridge\OpenAI\Embeddings;
+use Symfony\AI\Platform\Exception\InvalidArgumentException;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
-use Webmozart\Assert\InvalidArgumentException;
 
 #[CoversClass(EmbeddingsModelClient::class)]
 #[UsesClass(Embeddings::class)]

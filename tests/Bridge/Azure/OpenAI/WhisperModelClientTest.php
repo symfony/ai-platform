@@ -19,9 +19,9 @@ use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\Azure\OpenAI\WhisperModelClient;
 use Symfony\AI\Platform\Bridge\OpenAI\Whisper;
 use Symfony\AI\Platform\Bridge\OpenAI\Whisper\Task;
+use Symfony\AI\Platform\Exception\InvalidArgumentException;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
-use Webmozart\Assert\InvalidArgumentException;
 
 #[CoversClass(WhisperModelClient::class)]
 #[Small]

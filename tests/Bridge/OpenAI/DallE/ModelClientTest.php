@@ -22,10 +22,10 @@ use Symfony\AI\Platform\Bridge\OpenAI\DallE\Base64Image;
 use Symfony\AI\Platform\Bridge\OpenAI\DallE\ImageResponse;
 use Symfony\AI\Platform\Bridge\OpenAI\DallE\ModelClient;
 use Symfony\AI\Platform\Bridge\OpenAI\DallE\UrlImage;
+use Symfony\AI\Platform\Exception\InvalidArgumentException;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
 use Symfony\Contracts\HttpClient\ResponseInterface as HttpResponse;
-use Webmozart\Assert\InvalidArgumentException;
 
 #[CoversClass(ModelClient::class)]
 #[UsesClass(DallE::class)]

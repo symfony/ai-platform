@@ -15,7 +15,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Contract\JsonSchema\Attribute\With;
-use Webmozart\Assert\InvalidArgumentException;
+use Symfony\AI\Platform\Exception\InvalidArgumentException;
 
 #[CoversClass(With::class)]
 final class ToolParameterTest extends TestCase
