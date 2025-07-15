@@ -14,17 +14,67 @@ namespace Symfony\AI\Platform\Tests\Bridge\Azure\OpenAI;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\Azure\OpenAI\WhisperModelClient;
 use Symfony\AI\Platform\Bridge\OpenAI\Whisper;
 use Symfony\AI\Platform\Bridge\OpenAI\Whisper\Task;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
+use Webmozart\Assert\InvalidArgumentException;
 
 #[CoversClass(WhisperModelClient::class)]
 #[Small]
 final class WhisperModelClientTest extends TestCase
 {
+    #[Test]
+    #[TestWith(['http://test.azure.com', 'The base URL must not contain the protocol.'])]
+    #[TestWith(['https://test.azure.com', 'The base URL must not contain the protocol.'])]
+    #[TestWith(['http://test.azure.com:8080', 'The base URL must not contain the protocol.'])]
+    #[TestWith(['https://test.azure.com:443', 'The base URL must not contain the protocol.'])]
+    public function itThrowsExceptionWhenBaseUrlContainsProtocol(string $invalidUrl, string $expectedMessage): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage($expectedMessage);
+
+        new WhisperModelClient(new MockHttpClient(), $invalidUrl, 'deployment', 'api-version', 'api-key');
+    }
+
+    #[Test]
+    public function itThrowsExceptionWhenDeploymentIsEmpty(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The deployment must not be empty.');
+
+        new WhisperModelClient(new MockHttpClient(), 'test.azure.com', '', 'api-version', 'api-key');
+    }
+
+    #[Test]
+    public function itThrowsExceptionWhenApiVersionIsEmpty(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The API version must not be empty.');
+
+        new WhisperModelClient(new MockHttpClient(), 'test.azure.com', 'deployment', '', 'api-key');
+    }
+
+    #[Test]
+    public function itThrowsExceptionWhenApiKeyIsEmpty(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The API key must not be empty.');
+
+        new WhisperModelClient(new MockHttpClient(), 'test.azure.com', 'deployment', 'api-version', '');
+    }
+
+    #[Test]
+    public function itAcceptsValidParameters(): void
+    {
+        $client = new WhisperModelClient(new MockHttpClient(), 'test.azure.com', 'valid-deployment', '2023-12-01', 'valid-api-key');
+
+        $this->assertInstanceOf(WhisperModelClient::class, $client);
+    }
+
     #[Test]
     public function itSupportsWhisperModel(): void
     {

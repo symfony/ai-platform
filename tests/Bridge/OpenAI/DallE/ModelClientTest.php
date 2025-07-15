@@ -14,6 +14,7 @@ namespace Symfony\AI\Platform\Tests\Bridge\OpenAI\DallE;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\OpenAI\DallE;
@@ -24,6 +25,7 @@ use Symfony\AI\Platform\Bridge\OpenAI\DallE\UrlImage;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
 use Symfony\Contracts\HttpClient\ResponseInterface as HttpResponse;
+use Webmozart\Assert\InvalidArgumentException;
 
 #[CoversClass(ModelClient::class)]
 #[UsesClass(DallE::class)]
@@ -33,6 +35,38 @@ use Symfony\Contracts\HttpClient\ResponseInterface as HttpResponse;
 #[Small]
 final class ModelClientTest extends TestCase
 {
+    #[Test]
+    public function itThrowsExceptionWhenApiKeyIsEmpty(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The API key must not be empty.');
+
+        new ModelClient(new MockHttpClient(), '');
+    }
+
+    #[Test]
+    #[TestWith(['api-key-without-prefix'])]
+    #[TestWith(['pk-api-key'])]
+    #[TestWith(['SK-api-key'])]
+    #[TestWith(['skapikey'])]
+    #[TestWith(['sk api-key'])]
+    #[TestWith(['sk'])]
+    public function itThrowsExceptionWhenApiKeyDoesNotStartWithSk(string $invalidApiKey): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The API key must start with "sk-".');
+
+        new ModelClient(new MockHttpClient(), $invalidApiKey);
+    }
+
+    #[Test]
+    public function itAcceptsValidApiKey(): void
+    {
+        $modelClient = new ModelClient(new MockHttpClient(), 'sk-valid-api-key');
+
+        $this->assertInstanceOf(ModelClient::class, $modelClient);
+    }
+
     #[Test]
     public function itIsSupportingTheCorrectModel(): void
     {
