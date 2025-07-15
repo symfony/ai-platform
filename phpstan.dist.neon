@@ -1,4 +1,5 @@
 includes:
+    - ../../.phpstan/extension.neon
     - vendor/phpstan/phpstan-symfony/extension.neon
 
 parameters:

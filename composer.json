@@ -68,7 +68,8 @@
     "autoload-dev": {
         "psr-4": {
             "Symfony\\AI\\Platform\\Tests\\": "tests/",
-            "Symfony\\AI\\Fixtures\\": "../../fixtures"
+            "Symfony\\AI\\Fixtures\\": "../../fixtures",
+            "Symfony\\AI\\PHPStan\\": "../../.phpstan/"
         }
     }
 }
