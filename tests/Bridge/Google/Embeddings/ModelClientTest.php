@@ -28,7 +28,7 @@ use Symfony\Contracts\HttpClient\ResponseInterface;
 #[UsesClass(Vector::class)]
 #[UsesClass(VectorResponse::class)]
 #[UsesClass(Embeddings::class)]
-final class EmbeddingsModelClientTest extends TestCase
+final class ModelClientTest extends TestCase
 {
     #[Test]
     public function itMakesARequestWithCorrectPayload(): void
@@ -70,25 +70,6 @@ final class EmbeddingsModelClientTest extends TestCase
 
         $httpResponse = (new ModelClient($httpClient, 'test'))->request($model, ['payload1', 'payload2']);
         self::assertSame(json_decode($this->getEmbeddingStub(), true), $httpResponse->toArray());
-    }
-
-    #[Test]
-    public function itConvertsAResponseToAVectorResponse(): void
-    {
-        $response = $this->createStub(ResponseInterface::class);
-        $response
-            ->method('toArray')
-            ->willReturn(json_decode($this->getEmbeddingStub(), true));
-
-        $httpClient = self::createMock(HttpClientInterface::class);
-
-        $vectorResponse = (new ModelClient($httpClient, 'test'))->convert($response);
-        $convertedContent = $vectorResponse->getContent();
-
-        self::assertCount(2, $convertedContent);
-
-        self::assertSame([0.3, 0.4, 0.4], $convertedContent[0]->getData());
-        self::assertSame([0.0, 0.0, 0.2], $convertedContent[1]->getData());
     }
 
     private function getEmbeddingStub(): string
