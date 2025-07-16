@@ -17,5 +17,5 @@ parameters:
             path: src/*
             reportUnmatched: false # only needed for older Symfony versions
         -
-            message: '#no value type specified in iterable type array#'
+            identifier: missingType.iterableValue
             path: tests/*

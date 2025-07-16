@@ -77,6 +77,7 @@ usually defined by the specific models and their documentation.
     * `DeepSeek's R1`_ with `OpenRouter`_ as Platform
     * `Amazon's Nova`_ with `AWS Bedrock`_ as Platform
     * `Mistral's Mistral`_ with `Mistral`_ as Platform
+    * `Albert API`_ models with `Albert`_ as Platform (French government's sovereign AI gateway)
 * **Embeddings Models**
     * `Google's Text Embeddings`_ with `Google`_
     * `OpenAI's Text Embeddings`_ with `OpenAI`_ and `Azure`_ as Platform
@@ -307,6 +308,8 @@ which can be useful to speed up the processing::
 .. _`DeepSeek's R1`: https://www.deepseek.com/
 .. _`Amazon's Nova`: https://nova.amazon.com
 .. _`Mistral's Mistral`: https://www.mistral.ai/
+.. _`Albert API`: https://github.com/etalab-ia/albert-api
+.. _`Albert`: https://alliance.numerique.gouv.fr/produit/albert/
 .. _`Mistral`: https://www.mistral.ai/
 .. _`Google's Text Embeddings`: https://ai.google.dev/gemini-api/docs/embeddings
 .. _`OpenAI's Text Embeddings`: https://platform.openai.com/docs/guides/embeddings/embedding-models
