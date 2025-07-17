@@ -4,6 +4,7 @@ CHANGELOG
 0.1
 ---
 
+ * Add support for Albert API for French/EU data sovereignty
  * Add unified abstraction layer for interacting with various AI models and providers
  * Add support for 13+ AI providers:
    - OpenAI (GPT-4, GPT-3.5, DALL·E, Whisper)
