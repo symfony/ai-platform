@@ -45,7 +45,7 @@ final class ResponsePromise
     public function await(): ResponseInterface
     {
         if (!$this->isConverted) {
-            $this->convertedResponse = ($this->responseConverter)($this->response->getRawObject(), $this->options);
+            $this->convertedResponse = ($this->responseConverter)($this->response, $this->options);
 
             if (null === $this->convertedResponse->getRawResponse()) {
                 // Fallback to set the raw response when it was not handled by the response converter itself

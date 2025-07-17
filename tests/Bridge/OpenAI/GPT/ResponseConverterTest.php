@@ -20,6 +20,7 @@ use Symfony\AI\Platform\Exception\ContentFilterException;
 use Symfony\AI\Platform\Exception\RuntimeException;
 use Symfony\AI\Platform\Response\Choice;
 use Symfony\AI\Platform\Response\ChoiceResponse;
+use Symfony\AI\Platform\Response\RawHttpResponse;
 use Symfony\AI\Platform\Response\TextResponse;
 use Symfony\AI\Platform\Response\ToolCall;
 use Symfony\AI\Platform\Response\ToolCallResponse;
@@ -51,7 +52,7 @@ class ResponseConverterTest extends TestCase
             ],
         ]);
 
-        $response = $converter->convert($httpResponse);
+        $response = $converter->convert(new RawHttpResponse($httpResponse));
 
         self::assertInstanceOf(TextResponse::class, $response);
         self::assertSame('Hello world', $response->getContent());
@@ -83,7 +84,7 @@ class ResponseConverterTest extends TestCase
             ],
         ]);
 
-        $response = $converter->convert($httpResponse);
+        $response = $converter->convert(new RawHttpResponse($httpResponse));
 
         self::assertInstanceOf(ToolCallResponse::class, $response);
         $toolCalls = $response->getContent();
@@ -116,7 +117,7 @@ class ResponseConverterTest extends TestCase
             ],
         ]);
 
-        $response = $converter->convert($httpResponse);
+        $response = $converter->convert(new RawHttpResponse($httpResponse));
 
         self::assertInstanceOf(ChoiceResponse::class, $response);
         $choices = $response->getContent();
@@ -130,7 +131,7 @@ class ResponseConverterTest extends TestCase
         $converter = new ResponseConverter();
         $httpResponse = self::createMock(ResponseInterface::class);
 
-        $httpResponse->expects($this->exactly(2))
+        $httpResponse->expects($this->exactly(1))
             ->method('toArray')
             ->willReturnCallback(function ($throw = true) {
                 if ($throw) {
@@ -153,7 +154,7 @@ class ResponseConverterTest extends TestCase
         self::expectException(ContentFilterException::class);
         self::expectExceptionMessage('Content was filtered');
 
-        $converter->convert($httpResponse);
+        $converter->convert(new RawHttpResponse($httpResponse));
     }
 
     public function testThrowsExceptionWhenNoChoices(): void
@@ -165,7 +166,7 @@ class ResponseConverterTest extends TestCase
         self::expectException(RuntimeException::class);
         self::expectExceptionMessage('Response does not contain choices');
 
-        $converter->convert($httpResponse);
+        $converter->convert(new RawHttpResponse($httpResponse));
     }
 
     public function testThrowsExceptionForUnsupportedFinishReason(): void
@@ -187,6 +188,6 @@ class ResponseConverterTest extends TestCase
         self::expectException(RuntimeException::class);
         self::expectExceptionMessage('Unsupported finish reason "unsupported_reason"');
 
-        $converter->convert($httpResponse);
+        $converter->convert(new RawHttpResponse($httpResponse));
     }
 }

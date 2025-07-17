@@ -18,6 +18,7 @@ use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\Google\Embeddings;
 use Symfony\AI\Platform\Bridge\Google\Embeddings\ResponseConverter;
+use Symfony\AI\Platform\Response\RawHttpResponse;
 use Symfony\AI\Platform\Response\VectorResponse;
 use Symfony\AI\Platform\Vector\Vector;
 use Symfony\Contracts\HttpClient\ResponseInterface;
@@ -37,7 +38,7 @@ final class ResponseConverterTest extends TestCase
             ->method('toArray')
             ->willReturn(json_decode($this->getEmbeddingStub(), true));
 
-        $vectorResponse = (new ResponseConverter())->convert($response);
+        $vectorResponse = (new ResponseConverter())->convert(new RawHttpResponse($response));
         $convertedContent = $vectorResponse->getContent();
 
         self::assertCount(2, $convertedContent);

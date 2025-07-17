@@ -68,8 +68,8 @@ final class ModelClientTest extends TestCase
 
         $model = new Embeddings(Embeddings::GEMINI_EMBEDDING_EXP_03_07, ['dimensions' => 1536, 'task_type' => 'CLASSIFICATION']);
 
-        $httpResponse = (new ModelClient($httpClient, 'test'))->request($model, ['payload1', 'payload2']);
-        self::assertSame(json_decode($this->getEmbeddingStub(), true), $httpResponse->toArray());
+        $response = (new ModelClient($httpClient, 'test'))->request($model, ['payload1', 'payload2']);
+        self::assertSame(json_decode($this->getEmbeddingStub(), true), $response->getRawData());
     }
 
     private function getEmbeddingStub(): string

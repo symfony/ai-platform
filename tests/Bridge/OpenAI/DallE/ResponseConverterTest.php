@@ -20,6 +20,7 @@ use Symfony\AI\Platform\Bridge\OpenAI\DallE\Base64Image;
 use Symfony\AI\Platform\Bridge\OpenAI\DallE\ImageResponse;
 use Symfony\AI\Platform\Bridge\OpenAI\DallE\ResponseConverter;
 use Symfony\AI\Platform\Bridge\OpenAI\DallE\UrlImage;
+use Symfony\AI\Platform\Response\RawHttpResponse;
 use Symfony\Contracts\HttpClient\ResponseInterface as HttpResponse;
 
 #[CoversClass(ResponseConverter::class)]
@@ -40,7 +41,7 @@ final class ResponseConverterTest extends TestCase
         ]);
 
         $responseConverter = new ResponseConverter();
-        $response = $responseConverter->convert($httpResponse, ['response_format' => 'url']);
+        $response = $responseConverter->convert(new RawHttpResponse($httpResponse), ['response_format' => 'url']);
 
         self::assertCount(1, $response->getContent());
         self::assertInstanceOf(UrlImage::class, $response->getContent()[0]);
@@ -60,7 +61,7 @@ final class ResponseConverterTest extends TestCase
         ]);
 
         $responseConverter = new ResponseConverter();
-        $response = $responseConverter->convert($httpResponse, ['response_format' => 'b64_json']);
+        $response = $responseConverter->convert(new RawHttpResponse($httpResponse), ['response_format' => 'b64_json']);
 
         self::assertInstanceOf(ImageResponse::class, $response);
         self::assertCount(1, $response->getContent());

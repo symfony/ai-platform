@@ -38,15 +38,16 @@ final class ResponsePromiseTest extends TestCase
     public function itUnwrapsTheResponseWhenGettingContent(): void
     {
         $httpResponse = $this->createStub(SymfonyHttpResponse::class);
+        $rawHttpResponse = new RawHttpResponse($httpResponse);
         $textResponse = new TextResponse('test content');
 
         $responseConverter = self::createMock(ResponseConverterInterface::class);
         $responseConverter->expects(self::once())
             ->method('convert')
-            ->with($httpResponse, [])
+            ->with($rawHttpResponse, [])
             ->willReturn($textResponse);
 
-        $responsePromise = new ResponsePromise($responseConverter->convert(...), new RawHttpResponse($httpResponse));
+        $responsePromise = new ResponsePromise($responseConverter->convert(...), $rawHttpResponse);
 
         self::assertSame('test content', $responsePromise->getResponse()->getContent());
     }
@@ -55,15 +56,16 @@ final class ResponsePromiseTest extends TestCase
     public function itConvertsTheResponseOnlyOnce(): void
     {
         $httpResponse = $this->createStub(SymfonyHttpResponse::class);
+        $rawHttpResponse = new RawHttpResponse($httpResponse);
         $textResponse = new TextResponse('test content');
 
         $responseConverter = self::createMock(ResponseConverterInterface::class);
         $responseConverter->expects(self::once())
             ->method('convert')
-            ->with($httpResponse, [])
+            ->with($rawHttpResponse, [])
             ->willReturn($textResponse);
 
-        $responsePromise = new ResponsePromise($responseConverter->convert(...), new RawHttpResponse($httpResponse));
+        $responsePromise = new ResponsePromise($responseConverter->convert(...), $rawHttpResponse);
 
         // Call unwrap multiple times, but the converter should only be called once
         $responsePromise->await();
@@ -117,6 +119,23 @@ final class ResponsePromiseTest extends TestCase
         self::assertSame($anotherHttpResponse, $unwrappedResponse->getRawResponse()->getRawObject());
     }
 
+    #[Test]
+    public function itPassesOptionsToConverter(): void
+    {
+        $httpResponse = $this->createStub(SymfonyHttpResponse::class);
+        $rawHttpResponse = new RawHttpResponse($httpResponse);
+        $options = ['option1' => 'value1', 'option2' => 'value2'];
+
+        $responseConverter = self::createMock(ResponseConverterInterface::class);
+        $responseConverter->expects(self::once())
+            ->method('convert')
+            ->with($rawHttpResponse, $options)
+            ->willReturn($this->createResponse(null));
+
+        $responsePromise = new ResponsePromise($responseConverter->convert(...), $rawHttpResponse, $options);
+        $responsePromise->await();
+    }
+
     /**
      * Workaround for low deps because mocking the ResponseInterface leads to an exception with
      * mock creation "Type Traversable|object|array|string|null contains both object and a class type"
@@ -136,21 +155,5 @@ final class ResponsePromiseTest extends TestCase
                 return 'test content';
             }
         };
-    }
-
-    #[Test]
-    public function itPassesOptionsToConverter(): void
-    {
-        $httpResponse = $this->createStub(SymfonyHttpResponse::class);
-        $options = ['option1' => 'value1', 'option2' => 'value2'];
-
-        $responseConverter = self::createMock(ResponseConverterInterface::class);
-        $responseConverter->expects(self::once())
-            ->method('convert')
-            ->with($httpResponse, $options)
-            ->willReturn($this->createResponse(null));
-
-        $responsePromise = new ResponsePromise($responseConverter->convert(...), new RawHttpResponse($httpResponse), $options);
-        $responsePromise->await();
     }
 }

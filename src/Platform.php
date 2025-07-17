@@ -12,9 +12,8 @@
 namespace Symfony\AI\Platform;
 
 use Symfony\AI\Platform\Exception\RuntimeException;
-use Symfony\AI\Platform\Response\RawHttpResponse;
+use Symfony\AI\Platform\Response\RawResponseInterface;
 use Symfony\AI\Platform\Response\ResponsePromise;
-use Symfony\Contracts\HttpClient\ResponseInterface;
 
 /**
  * @author Christopher Hertel <mail@christopher-hertel.de>
@@ -63,7 +62,7 @@ final class Platform implements PlatformInterface
      * @param array<string, mixed> $payload
      * @param array<string, mixed> $options
      */
-    private function doRequest(Model $model, array|string $payload, array $options = []): ResponseInterface
+    private function doRequest(Model $model, array|string $payload, array $options = []): RawResponseInterface
     {
         foreach ($this->modelClients as $modelClient) {
             if ($modelClient->supports($model)) {
@@ -77,15 +76,11 @@ final class Platform implements PlatformInterface
     /**
      * @param array<string, mixed> $options
      */
-    private function convertResponse(Model $model, ResponseInterface $response, array $options): ResponsePromise
+    private function convertResponse(Model $model, RawResponseInterface $response, array $options): ResponsePromise
     {
         foreach ($this->responseConverter as $responseConverter) {
             if ($responseConverter->supports($model)) {
-                return new ResponsePromise(
-                    fn (ResponseInterface $response, array $options) => $responseConverter->convert($response, $options),
-                    new RawHttpResponse($response),
-                    $options,
-                );
+                return new ResponsePromise($responseConverter->convert(...), $response, $options);
             }
         }
 

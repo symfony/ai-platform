@@ -19,6 +19,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\LMStudio\Embeddings;
 use Symfony\AI\Platform\Bridge\LMStudio\Embeddings\ResponseConverter;
 use Symfony\AI\Platform\Exception\RuntimeException;
+use Symfony\AI\Platform\Response\RawHttpResponse;
 use Symfony\AI\Platform\Response\VectorResponse;
 use Symfony\AI\Platform\Vector\Vector;
 use Symfony\Contracts\HttpClient\ResponseInterface;
@@ -59,7 +60,7 @@ class ResponseConverterTest extends TestCase
                 )
             );
 
-        $vectorResponse = (new ResponseConverter())->convert($response);
+        $vectorResponse = (new ResponseConverter())->convert(new RawHttpResponse($response));
         $convertedContent = $vectorResponse->getContent();
 
         self::assertCount(2, $convertedContent);
@@ -79,7 +80,7 @@ class ResponseConverterTest extends TestCase
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Response does not contain data');
 
-        (new ResponseConverter())->convert($response);
+        (new ResponseConverter())->convert(new RawHttpResponse($response));
     }
 
     #[Test]

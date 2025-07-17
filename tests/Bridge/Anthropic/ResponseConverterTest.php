@@ -16,6 +16,7 @@ use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\Anthropic\ResponseConverter;
+use Symfony\AI\Platform\Response\RawHttpResponse;
 use Symfony\AI\Platform\Response\ToolCall;
 use Symfony\AI\Platform\Response\ToolCallResponse;
 use Symfony\Component\HttpClient\MockHttpClient;
@@ -42,7 +43,7 @@ final class ResponseConverterTest extends TestCase
         $httpResponse = $httpClient->request('POST', 'https://api.anthropic.com/v1/messages');
         $handler = new ResponseConverter();
 
-        $response = $handler->convert($httpResponse);
+        $response = $handler->convert(new RawHttpResponse($httpResponse));
         self::assertInstanceOf(ToolCallResponse::class, $response);
         self::assertCount(1, $response->getContent());
         self::assertSame('toolu_01UM4PcTjC1UDiorSXVHSVFM', $response->getContent()[0]->id);

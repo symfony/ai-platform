@@ -11,8 +11,8 @@
 
 namespace Symfony\AI\Platform;
 
-use Symfony\AI\Platform\Response\ResponseInterface as LlmResponse;
-use Symfony\Contracts\HttpClient\ResponseInterface as HttpResponse;
+use Symfony\AI\Platform\Response\RawResponseInterface;
+use Symfony\AI\Platform\Response\ResponseInterface;
 
 /**
  * @author Christopher Hertel <mail@christopher-hertel.de>
@@ -24,5 +24,5 @@ interface ResponseConverterInterface
     /**
      * @param array<string, mixed> $options
      */
-    public function convert(HttpResponse $response, array $options = []): LlmResponse;
+    public function convert(RawResponseInterface $response, array $options = []): ResponseInterface;
 }
