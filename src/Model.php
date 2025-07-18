@@ -17,7 +17,7 @@ namespace Symfony\AI\Platform;
 class Model
 {
     /**
-     * @param string[]             $capabilities
+     * @param Capability[]         $capabilities
      * @param array<string, mixed> $options
      */
     public function __construct(
@@ -33,14 +33,14 @@ class Model
     }
 
     /**
-     * @return string[]
+     * @return Capability[]
      */
     public function getCapabilities(): array
     {
         return $this->capabilities;
     }
 
-    public function supports(string $capability): bool
+    public function supports(Capability $capability): bool
     {
         return \in_array($capability, $this->capabilities, true);
     }
