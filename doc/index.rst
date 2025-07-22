@@ -305,7 +305,7 @@ which can be useful to speed up the processing::
 .. _`Replicate`: https://replicate.com/
 .. _`Google's Gemini`: https://gemini.google.com/
 .. _`Google`: https://ai.google.dev/
-.. _`OpenRouter`: https://www.openrouter.com/
+.. _`OpenRouter`: https://www.openrouter.ai/
 .. _`DeepSeek's R1`: https://www.deepseek.com/
 .. _`Amazon's Nova`: https://nova.amazon.com
 .. _`Mistral's Mistral`: https://www.mistral.ai/
