@@ -56,3 +56,6 @@ CHANGELOG
  * Add exception handling with specific error types
  * Add support for embeddings generation across multiple providers
  * Add response promises for async operations
+ * Add InMemoryPlatform and InMemoryRawResult for testing Platform without external Providers calls
+
+
