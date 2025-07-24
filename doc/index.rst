@@ -122,7 +122,7 @@ have different content types, like ``Text``, ``Image`` or ``Audio``, and can be 
 
     // Create a message bag with a user message
     $messageBag = new MessageBag(
-        Message::ofSystem('You are a helpful assistant.')
+        Message::forSystem('You are a helpful assistant.')
         Message::ofUser('Please describe this picture?', Image::fromFile('/path/to/image.jpg')),
     );
 
