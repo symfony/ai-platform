@@ -9,15 +9,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\AI\Platform\Tests\Bridge\Google\Embeddings;
+namespace Symfony\AI\Platform\Tests\Bridge\Gemini\Embeddings;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Symfony\AI\Platform\Bridge\Google\Embeddings;
-use Symfony\AI\Platform\Bridge\Google\Embeddings\ModelClient;
+use Symfony\AI\Platform\Bridge\Gemini\Embeddings;
+use Symfony\AI\Platform\Bridge\Gemini\Embeddings\ModelClient;
 use Symfony\AI\Platform\Result\VectorResult;
 use Symfony\AI\Platform\Vector\Vector;
 use Symfony\Contracts\HttpClient\HttpClientInterface;

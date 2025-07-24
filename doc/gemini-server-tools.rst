@@ -1,12 +1,12 @@
-Google Gemini Server Tools
-==========================
+Gemini Server Tools
+===================
 
-Server tools are built-in capabilities provided by Google Gemini that allow the model to perform specific actions without requiring custom tool implementations. These tools run on Google's servers and provide access to external data and execution environments.
+Server tools are built-in capabilities provided by Gemini that allow the model to perform specific actions without requiring custom tool implementations. These tools run on Google's servers and provide access to external data and execution environments.
 
 Overview
 --------
 
-Google Gemini provides several server-side tools that can be enabled when calling the model:
+Gemini provides several server-side tools that can be enabled when calling the model:
 
 - **URL Context** - Fetches and analyzes content from URLs
 - **Google Search** - Performs web searches using Google
@@ -86,7 +86,7 @@ You can enable multiple server tools simultaneously::
 Example
 -------
 
-See `examples/google/server-tools.php`_ for a complete working example.
+See `examples/gemini/server-tools.php`_ for a complete working example.
 
 Limitations
 -----------
@@ -96,4 +96,4 @@ Limitations
 - Response times may vary based on the complexity of server tool operations
 - Not all Gemini model versions support all server tools
 
-.. _`examples/google/server-tools.php`: https://github.com/symfony/ai/blob/main/examples/google/server-tools.php
+.. _`examples/gemini/server-tools.php`: https://github.com/symfony/ai/blob/main/examples/gemini/server-tools.php
