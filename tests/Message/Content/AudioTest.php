@@ -26,8 +26,8 @@ final class AudioTest extends TestCase
     {
         $audio = new Audio('somedata', 'audio/mpeg');
 
-        self::assertSame('somedata', $audio->asBinary());
-        self::assertSame('audio/mpeg', $audio->getFormat());
+        $this->assertSame('somedata', $audio->asBinary());
+        $this->assertSame('audio/mpeg', $audio->getFormat());
     }
 
     #[Test]
@@ -36,8 +36,8 @@ final class AudioTest extends TestCase
         $dataUrl = 'data:audio/mpeg;base64,SUQzBAAAAAAAfVREUkMAAAAMAAADMg==';
         $audio = Audio::fromDataUrl($dataUrl);
 
-        self::assertSame('SUQzBAAAAAAAfVREUkMAAAAMAAADMg==', $audio->asBase64());
-        self::assertSame('audio/mpeg', $audio->getFormat());
+        $this->assertSame('SUQzBAAAAAAAfVREUkMAAAAMAAADMg==', $audio->asBase64());
+        $this->assertSame('audio/mpeg', $audio->getFormat());
     }
 
     #[Test]
@@ -54,8 +54,8 @@ final class AudioTest extends TestCase
     {
         $audio = Audio::fromFile(\dirname(__DIR__, 5).'/fixtures/audio.mp3');
 
-        self::assertSame('audio/mpeg', $audio->getFormat());
-        self::assertNotEmpty($audio->asBinary());
+        $this->assertSame('audio/mpeg', $audio->getFormat());
+        $this->assertNotEmpty($audio->asBinary());
     }
 
     #[Test]

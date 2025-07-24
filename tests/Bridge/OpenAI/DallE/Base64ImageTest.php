@@ -27,7 +27,7 @@ final class Base64ImageTest extends TestCase
         $emptyPixel = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
         $base64Image = new Base64Image($emptyPixel);
 
-        self::assertSame($emptyPixel, $base64Image->encodedImage);
+        $this->assertSame($emptyPixel, $base64Image->encodedImage);
     }
 
     #[Test]

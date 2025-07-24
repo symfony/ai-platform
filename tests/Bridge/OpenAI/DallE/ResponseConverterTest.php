@@ -33,7 +33,7 @@ final class ResponseConverterTest extends TestCase
     #[Test]
     public function itIsConvertingTheResponse(): void
     {
-        $httpResponse = self::createStub(HttpResponse::class);
+        $httpResponse = $this->createStub(HttpResponse::class);
         $httpResponse->method('toArray')->willReturn([
             'data' => [
                 ['url' => 'https://example.com/image.jpg'],
@@ -43,9 +43,9 @@ final class ResponseConverterTest extends TestCase
         $resultConverter = new ResultConverter();
         $result = $resultConverter->convert(new RawHttpResult($httpResponse), ['response_format' => 'url']);
 
-        self::assertCount(1, $result->getContent());
-        self::assertInstanceOf(UrlImage::class, $result->getContent()[0]);
-        self::assertSame('https://example.com/image.jpg', $result->getContent()[0]->url);
+        $this->assertCount(1, $result->getContent());
+        $this->assertInstanceOf(UrlImage::class, $result->getContent()[0]);
+        $this->assertSame('https://example.com/image.jpg', $result->getContent()[0]->url);
     }
 
     #[Test]
@@ -53,7 +53,7 @@ final class ResponseConverterTest extends TestCase
     {
         $emptyPixel = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
 
-        $httpResponse = self::createStub(HttpResponse::class);
+        $httpResponse = $this->createStub(HttpResponse::class);
         $httpResponse->method('toArray')->willReturn([
             'data' => [
                 ['b64_json' => $emptyPixel, 'revised_prompt' => 'revised prompt'],
@@ -63,10 +63,10 @@ final class ResponseConverterTest extends TestCase
         $resultConverter = new ResultConverter();
         $result = $resultConverter->convert(new RawHttpResult($httpResponse), ['response_format' => 'b64_json']);
 
-        self::assertInstanceOf(ImageResult::class, $result);
-        self::assertCount(1, $result->getContent());
-        self::assertInstanceOf(Base64Image::class, $result->getContent()[0]);
-        self::assertSame($emptyPixel, $result->getContent()[0]->encodedImage);
-        self::assertSame('revised prompt', $result->revisedPrompt);
+        $this->assertInstanceOf(ImageResult::class, $result);
+        $this->assertCount(1, $result->getContent());
+        $this->assertInstanceOf(Base64Image::class, $result->getContent()[0]);
+        $this->assertSame($emptyPixel, $result->getContent()[0]->encodedImage);
+        $this->assertSame('revised prompt', $result->revisedPrompt);
     }
 }

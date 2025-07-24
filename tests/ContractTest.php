@@ -73,7 +73,7 @@ final class ContractTest extends TestCase
 
         $actual = $contract->createRequestPayload($model, $input);
 
-        self::assertSame($expected, $actual);
+        $this->assertSame($expected, $actual);
     }
 
     /**
@@ -245,9 +245,9 @@ final class ContractTest extends TestCase
 
         $actual = $contract->createRequestPayload(new Whisper(), $audio);
 
-        self::assertArrayHasKey('model', $actual);
-        self::assertSame('whisper-1', $actual['model']);
-        self::assertArrayHasKey('file', $actual);
-        self::assertTrue(\is_resource($actual['file']));
+        $this->assertArrayHasKey('model', $actual);
+        $this->assertSame('whisper-1', $actual['model']);
+        $this->assertArrayHasKey('file', $actual);
+        $this->assertTrue(\is_resource($actual['file']));
     }
 }

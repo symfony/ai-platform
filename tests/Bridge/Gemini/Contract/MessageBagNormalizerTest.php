@@ -47,10 +47,10 @@ final class MessageBagNormalizerTest extends TestCase
     {
         $normalizer = new MessageBagNormalizer();
 
-        self::assertTrue($normalizer->supportsNormalization(new MessageBag(), context: [
+        $this->assertTrue($normalizer->supportsNormalization(new MessageBag(), context: [
             Contract::CONTEXT_MODEL => new Gemini(),
         ]));
-        self::assertFalse($normalizer->supportsNormalization('not a message bag'));
+        $this->assertFalse($normalizer->supportsNormalization('not a message bag'));
     }
 
     #[Test]
@@ -62,7 +62,7 @@ final class MessageBagNormalizerTest extends TestCase
             MessageBagInterface::class => true,
         ];
 
-        self::assertSame($expected, $normalizer->getSupportedTypes(null));
+        $this->assertSame($expected, $normalizer->getSupportedTypes(null));
     }
 
     #[Test]
@@ -93,7 +93,7 @@ final class MessageBagNormalizerTest extends TestCase
 
         $normalized = $normalizer->normalize($bag);
 
-        self::assertEquals($expected, $normalized);
+        $this->assertEquals($expected, $normalized);
     }
 
     /**

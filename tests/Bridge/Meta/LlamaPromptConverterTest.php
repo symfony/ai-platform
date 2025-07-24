@@ -45,7 +45,7 @@ final class LlamaPromptConverterTest extends TestCase
             $messageBag->add($message[1]);
         }
 
-        self::assertSame(<<<EXPECTED
+        $this->assertSame(<<<EXPECTED
             <|begin_of_text|><|start_header_id|>system<|end_header_id|>
 
             You are a helpful chatbot.<|eot_id|>
@@ -79,7 +79,7 @@ final class LlamaPromptConverterTest extends TestCase
     #[DataProvider('provideMessages')]
     public function convertMessage(string $expected, UserMessage|SystemMessage|AssistantMessage $message): void
     {
-        self::assertSame(
+        $this->assertSame(
             $expected,
             (new LlamaPromptConverter())->convertMessage($message)
         );

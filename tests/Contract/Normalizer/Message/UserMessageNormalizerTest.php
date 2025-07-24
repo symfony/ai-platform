@@ -37,14 +37,14 @@ final class UserMessageNormalizerTest extends TestCase
     #[Test]
     public function supportsNormalization(): void
     {
-        self::assertTrue($this->normalizer->supportsNormalization(new UserMessage(new Text('content'))));
-        self::assertFalse($this->normalizer->supportsNormalization(new \stdClass()));
+        $this->assertTrue($this->normalizer->supportsNormalization(new UserMessage(new Text('content'))));
+        $this->assertFalse($this->normalizer->supportsNormalization(new \stdClass()));
     }
 
     #[Test]
     public function getSupportedTypes(): void
     {
-        self::assertSame([UserMessage::class => true], $this->normalizer->getSupportedTypes(null));
+        $this->assertSame([UserMessage::class => true], $this->normalizer->getSupportedTypes(null));
     }
 
     #[Test]
@@ -58,7 +58,7 @@ final class UserMessageNormalizerTest extends TestCase
             'content' => 'Hello, how can you help me?',
         ];
 
-        self::assertSame($expected, $this->normalizer->normalize($message));
+        $this->assertSame($expected, $this->normalizer->normalize($message));
     }
 
     #[Test]
@@ -74,7 +74,7 @@ final class UserMessageNormalizerTest extends TestCase
         ];
 
         $innerNormalizer = $this->createMock(NormalizerInterface::class);
-        $innerNormalizer->expects(self::once())
+        $innerNormalizer->expects($this->once())
             ->method('normalize')
             ->with($message->content, null, [])
             ->willReturn($expectedContent);
@@ -86,6 +86,6 @@ final class UserMessageNormalizerTest extends TestCase
             'content' => $expectedContent,
         ];
 
-        self::assertSame($expected, $this->normalizer->normalize($message));
+        $this->assertSame($expected, $this->normalizer->normalize($message));
     }
 }

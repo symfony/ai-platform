@@ -39,7 +39,7 @@ final class ModelClientTest extends TestCase
             ->willReturn(json_decode($this->getEmbeddingStub(), true));
 
         $httpClient = self::createMock(HttpClientInterface::class);
-        $httpClient->expects(self::once())
+        $httpClient->expects($this->once())
             ->method('request')
             ->with(
                 'POST',
@@ -69,7 +69,7 @@ final class ModelClientTest extends TestCase
         $model = new Embeddings(Embeddings::GEMINI_EMBEDDING_EXP_03_07, ['dimensions' => 1536, 'task_type' => 'CLASSIFICATION']);
 
         $result = (new ModelClient($httpClient, 'test'))->request($model, ['payload1', 'payload2']);
-        self::assertSame(json_decode($this->getEmbeddingStub(), true), $result->getData());
+        $this->assertSame(json_decode($this->getEmbeddingStub(), true), $result->getData());
     }
 
     private function getEmbeddingStub(): string

@@ -25,16 +25,16 @@ final class ToolCallTest extends TestCase
     public function toolCall(): void
     {
         $toolCall = new ToolCall('id', 'name', ['foo' => 'bar']);
-        self::assertSame('id', $toolCall->id);
-        self::assertSame('name', $toolCall->name);
-        self::assertSame(['foo' => 'bar'], $toolCall->arguments);
+        $this->assertSame('id', $toolCall->id);
+        $this->assertSame('name', $toolCall->name);
+        $this->assertSame(['foo' => 'bar'], $toolCall->arguments);
     }
 
     #[Test]
     public function toolCallJsonSerialize(): void
     {
         $toolCall = new ToolCall('id', 'name', ['foo' => 'bar']);
-        self::assertSame([
+        $this->assertSame([
             'id' => 'id',
             'type' => 'function',
             'function' => [

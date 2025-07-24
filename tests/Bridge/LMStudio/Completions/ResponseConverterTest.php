@@ -31,6 +31,6 @@ class ResponseConverterTest extends TestCase
     {
         $converter = new ResultConverter();
 
-        self::assertTrue($converter->supports(new Completions('test-model')));
+        $this->assertTrue($converter->supports(new Completions('test-model')));
     }
 }

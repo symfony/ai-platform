@@ -63,7 +63,7 @@ final class EmbeddingsModelClientTest extends TestCase
         );
 
         $embeddingsModel = new Embeddings('text-embedding-ada-002');
-        self::assertTrue($client->supports($embeddingsModel));
+        $this->assertTrue($client->supports($embeddingsModel));
     }
 
     #[Test]
@@ -76,7 +76,7 @@ final class EmbeddingsModelClientTest extends TestCase
         );
 
         $gptModel = new GPT('gpt-3.5-turbo');
-        self::assertFalse($client->supports($gptModel));
+        $this->assertFalse($client->supports($gptModel));
     }
 
     #[Test]
@@ -99,19 +99,19 @@ final class EmbeddingsModelClientTest extends TestCase
         $model = new Embeddings('text-embedding-ada-002');
         $result = $client->request($model, $payload, $options);
 
-        self::assertNotNull($capturedRequest);
-        self::assertSame('POST', $capturedRequest['method']);
-        self::assertSame('https://albert.example.com/v1/embeddings', $capturedRequest['url']);
-        self::assertArrayHasKey('normalized_headers', $capturedRequest['options']);
-        self::assertArrayHasKey('authorization', $capturedRequest['options']['normalized_headers']);
-        self::assertStringContainsString('Bearer test-api-key', (string) $capturedRequest['options']['normalized_headers']['authorization'][0]);
+        $this->assertNotNull($capturedRequest);
+        $this->assertSame('POST', $capturedRequest['method']);
+        $this->assertSame('https://albert.example.com/v1/embeddings', $capturedRequest['url']);
+        $this->assertArrayHasKey('normalized_headers', $capturedRequest['options']);
+        $this->assertArrayHasKey('authorization', $capturedRequest['options']['normalized_headers']);
+        $this->assertStringContainsString('Bearer test-api-key', (string) $capturedRequest['options']['normalized_headers']['authorization'][0]);
 
         // Check JSON body - it might be in 'body' after processing
         if (isset($capturedRequest['options']['body'])) {
             $actualJson = json_decode($capturedRequest['options']['body'], true);
-            self::assertEquals($expectedJson, $actualJson);
+            $this->assertEquals($expectedJson, $actualJson);
         } else {
-            self::assertSame($expectedJson, $capturedRequest['options']['json']);
+            $this->assertSame($expectedJson, $capturedRequest['options']['json']);
         }
     }
 
@@ -161,7 +161,7 @@ final class EmbeddingsModelClientTest extends TestCase
         $model = new Embeddings('text-embedding-ada-002');
         $client->request($model, ['input' => 'test']);
 
-        self::assertSame('https://albert.example.com/v1/embeddings', $capturedUrl);
+        $this->assertSame('https://albert.example.com/v1/embeddings', $capturedUrl);
     }
 
     #[Test]
@@ -183,6 +183,6 @@ final class EmbeddingsModelClientTest extends TestCase
         $model = new Embeddings('text-embedding-ada-002');
         $client->request($model, ['input' => 'test']);
 
-        self::assertSame('https://albert.example.com/v1/embeddings', $capturedUrl);
+        $this->assertSame('https://albert.example.com/v1/embeddings', $capturedUrl);
     }
 }

@@ -29,7 +29,7 @@ final class ModelTest extends TestCase
     {
         $model = new Model('gpt-4');
 
-        self::assertSame('gpt-4', $model->getName());
+        $this->assertSame('gpt-4', $model->getName());
     }
 
     #[Test]
@@ -37,7 +37,7 @@ final class ModelTest extends TestCase
     {
         $model = new Model('gpt-4', [Capability::INPUT_TEXT, Capability::OUTPUT_TEXT]);
 
-        self::assertSame([Capability::INPUT_TEXT, Capability::OUTPUT_TEXT], $model->getCapabilities());
+        $this->assertSame([Capability::INPUT_TEXT, Capability::OUTPUT_TEXT], $model->getCapabilities());
     }
 
     #[Test]
@@ -45,9 +45,9 @@ final class ModelTest extends TestCase
     {
         $model = new Model('gpt-4', [Capability::INPUT_TEXT, Capability::OUTPUT_TEXT]);
 
-        self::assertTrue($model->supports(Capability::INPUT_TEXT));
-        self::assertTrue($model->supports(Capability::OUTPUT_TEXT));
-        self::assertFalse($model->supports(Capability::INPUT_IMAGE));
+        $this->assertTrue($model->supports(Capability::INPUT_TEXT));
+        $this->assertTrue($model->supports(Capability::OUTPUT_TEXT));
+        $this->assertFalse($model->supports(Capability::INPUT_IMAGE));
     }
 
     #[Test]
@@ -55,7 +55,7 @@ final class ModelTest extends TestCase
     {
         $model = new Model('gpt-4');
 
-        self::assertSame([], $model->getCapabilities());
+        $this->assertSame([], $model->getCapabilities());
     }
 
     #[Test]
@@ -67,7 +67,7 @@ final class ModelTest extends TestCase
         ];
         $model = new Model('gpt-4', [], $options);
 
-        self::assertSame($options, $model->getOptions());
+        $this->assertSame($options, $model->getOptions());
     }
 
     #[Test]
@@ -75,6 +75,6 @@ final class ModelTest extends TestCase
     {
         $model = new Model('gpt-4');
 
-        self::assertSame([], $model->getOptions());
+        $this->assertSame([], $model->getOptions());
     }
 }

@@ -47,7 +47,7 @@ final class ModelClientTest extends TestCase
 
         $actualUrl = $getUrlMethod->invoke($modelClient, $model, $task);
 
-        self::assertEquals($expectedUrl, $actualUrl);
+        $this->assertEquals($expectedUrl, $actualUrl);
     }
 
     public static function urlTestCases(): \Iterator
@@ -99,7 +99,7 @@ final class ModelClientTest extends TestCase
 
         // Check that expected keys exist
         foreach ($expectedKeys as $key) {
-            self::assertArrayHasKey($key, $actual);
+            $this->assertArrayHasKey($key, $actual);
         }
 
         // Check expected values if specified
@@ -107,11 +107,11 @@ final class ModelClientTest extends TestCase
             $keys = explode('.', $path);
             $current = $actual;
             foreach ($keys as $key) {
-                self::assertArrayHasKey($key, $current);
+                $this->assertArrayHasKey($key, $current);
                 $current = $current[$key];
             }
 
-            self::assertEquals($value, $current);
+            $this->assertEquals($value, $current);
         }
     }
 

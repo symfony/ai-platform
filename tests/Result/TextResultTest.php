@@ -25,6 +25,6 @@ final class TextResultTest extends TestCase
     public function getContent(): void
     {
         $result = new TextResult($expected = 'foo');
-        self::assertSame($expected, $result->getContent());
+        $this->assertSame($expected, $result->getContent());
     }
 }

@@ -34,14 +34,14 @@ final class ImageNormalizerTest extends TestCase
     #[Test]
     public function supportsNormalization(): void
     {
-        self::assertTrue($this->normalizer->supportsNormalization(Image::fromFile(\dirname(__DIR__, 7).'/fixtures/image.jpg')));
-        self::assertFalse($this->normalizer->supportsNormalization(new \stdClass()));
+        $this->assertTrue($this->normalizer->supportsNormalization(Image::fromFile(\dirname(__DIR__, 7).'/fixtures/image.jpg')));
+        $this->assertFalse($this->normalizer->supportsNormalization(new \stdClass()));
     }
 
     #[Test]
     public function getSupportedTypes(): void
     {
-        self::assertSame([Image::class => true], $this->normalizer->getSupportedTypes(null));
+        $this->assertSame([Image::class => true], $this->normalizer->getSupportedTypes(null));
     }
 
     #[Test]
@@ -54,6 +54,6 @@ final class ImageNormalizerTest extends TestCase
             'image_url' => ['url' => 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABKklEQVR42mNk+A8AAwMhIv9n+Q=='],
         ];
 
-        self::assertSame($expected, $this->normalizer->normalize($image));
+        $this->assertSame($expected, $this->normalizer->normalize($image));
     }
 }

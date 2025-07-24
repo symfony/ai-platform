@@ -26,7 +26,7 @@ final class UrlImageTest extends TestCase
     {
         $urlImage = new UrlImage('https://example.com/image.jpg');
 
-        self::assertSame('https://example.com/image.jpg', $urlImage->url);
+        $this->assertSame('https://example.com/image.jpg', $urlImage->url);
     }
 
     #[Test]

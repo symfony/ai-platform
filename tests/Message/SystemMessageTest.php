@@ -33,8 +33,8 @@ final class SystemMessageTest extends TestCase
     {
         $message = new SystemMessage('foo');
 
-        self::assertSame(Role::System, $message->getRole());
-        self::assertSame('foo', $message->content);
+        $this->assertSame(Role::System, $message->getRole());
+        $this->assertSame('foo', $message->content);
     }
 
     #[Test]
@@ -42,9 +42,9 @@ final class SystemMessageTest extends TestCase
     {
         $message = new SystemMessage('foo');
 
-        self::assertInstanceOf(UuidV7::class, $message->id);
-        self::assertInstanceOf(UuidV7::class, $message->getId());
-        self::assertSame($message->id, $message->getId());
+        $this->assertInstanceOf(UuidV7::class, $message->id);
+        $this->assertInstanceOf(UuidV7::class, $message->getId());
+        $this->assertSame($message->id, $message->getId());
     }
 
     #[Test]
@@ -53,7 +53,7 @@ final class SystemMessageTest extends TestCase
         $message1 = new SystemMessage('foo');
         $message2 = new SystemMessage('bar');
 
-        self::assertNotSame($message1->getId()->toRfc4122(), $message2->getId()->toRfc4122());
+        $this->assertNotSame($message1->getId()->toRfc4122(), $message2->getId()->toRfc4122());
         self::assertIsUuidV7($message1->getId()->toRfc4122());
         self::assertIsUuidV7($message2->getId()->toRfc4122());
     }
@@ -64,7 +64,7 @@ final class SystemMessageTest extends TestCase
         $message1 = new SystemMessage('foo');
         $message2 = new SystemMessage('foo');
 
-        self::assertNotSame($message1->getId()->toRfc4122(), $message2->getId()->toRfc4122());
+        $this->assertNotSame($message1->getId()->toRfc4122(), $message2->getId()->toRfc4122());
         self::assertIsUuidV7($message1->getId()->toRfc4122());
         self::assertIsUuidV7($message2->getId()->toRfc4122());
     }
@@ -74,8 +74,8 @@ final class SystemMessageTest extends TestCase
     {
         $message = new SystemMessage('test');
 
-        self::assertInstanceOf(AbstractUid::class, $message->getId());
-        self::assertInstanceOf(TimeBasedUidInterface::class, $message->getId());
-        self::assertInstanceOf(UuidV7::class, $message->getId());
+        $this->assertInstanceOf(AbstractUid::class, $message->getId());
+        $this->assertInstanceOf(TimeBasedUidInterface::class, $message->getId());
+        $this->assertInstanceOf(UuidV7::class, $message->getId());
     }
 }

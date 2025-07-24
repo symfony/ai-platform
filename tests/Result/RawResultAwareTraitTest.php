@@ -33,7 +33,7 @@ final class RawResultAwareTraitTest extends TestCase
         $rawResponse = self::createMock(SymfonyHttpResponse::class);
 
         $result->setRawResult(new RawHttpResult($rawResponse));
-        self::assertSame($rawResponse, $result->getRawResult()?->getObject());
+        $this->assertSame($rawResponse, $result->getRawResult()?->getObject());
     }
 
     #[Test]

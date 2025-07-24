@@ -46,10 +46,10 @@ final class ResultConverterTest extends TestCase
         $handler = new ResultConverter();
 
         $result = $handler->convert(new RawHttpResult($httpResponse));
-        self::assertInstanceOf(ToolCallResult::class, $result);
-        self::assertCount(1, $result->getContent());
-        self::assertSame('toolu_01UM4PcTjC1UDiorSXVHSVFM', $result->getContent()[0]->id);
-        self::assertSame('xxx_tool', $result->getContent()[0]->name);
-        self::assertSame(['action' => 'get_data'], $result->getContent()[0]->arguments);
+        $this->assertInstanceOf(ToolCallResult::class, $result);
+        $this->assertCount(1, $result->getContent());
+        $this->assertSame('toolu_01UM4PcTjC1UDiorSXVHSVFM', $result->getContent()[0]->id);
+        $this->assertSame('xxx_tool', $result->getContent()[0]->name);
+        $this->assertSame(['action' => 'get_data'], $result->getContent()[0]->arguments);
     }
 }

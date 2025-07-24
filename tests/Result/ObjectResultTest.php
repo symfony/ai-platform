@@ -25,13 +25,13 @@ final class ObjectResultTest extends TestCase
     public function getContentWithArray(): void
     {
         $result = new ObjectResult($expected = ['foo' => 'bar', 'baz' => ['qux']]);
-        self::assertSame($expected, $result->getContent());
+        $this->assertSame($expected, $result->getContent());
     }
 
     #[Test]
     public function getContentWithObject(): void
     {
         $result = new ObjectResult($expected = (object) ['foo' => 'bar', 'baz' => ['qux']]);
-        self::assertSame($expected, $result->getContent());
+        $this->assertSame($expected, $result->getContent());
     }
 }

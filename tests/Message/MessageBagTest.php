@@ -50,7 +50,7 @@ final class MessageBagTest extends TestCase
 
         $systemMessage = $messageBag->getSystemMessage();
 
-        self::assertSame('My amazing system prompt.', $systemMessage->content);
+        $this->assertSame('My amazing system prompt.', $systemMessage->content);
     }
 
     #[Test]
@@ -62,7 +62,7 @@ final class MessageBagTest extends TestCase
             Message::ofToolCall(new ToolCall('tool', 'tool_name', ['param' => 'value']), 'Yes, go sleeping.'),
         );
 
-        self::assertNull($messageBag->getSystemMessage());
+        $this->assertNull($messageBag->getSystemMessage());
     }
 
     #[Test]
@@ -77,13 +77,13 @@ final class MessageBagTest extends TestCase
         $newMessage = Message::ofAssistant('It is time to wake up.');
         $newMessageBag = $messageBag->with($newMessage);
 
-        self::assertCount(3, $messageBag);
-        self::assertCount(4, $newMessageBag);
+        $this->assertCount(3, $messageBag);
+        $this->assertCount(4, $newMessageBag);
 
         $newMessageFromBag = $newMessageBag->getMessages()[3];
 
-        self::assertInstanceOf(AssistantMessage::class, $newMessageFromBag);
-        self::assertSame('It is time to wake up.', $newMessageFromBag->content);
+        $this->assertInstanceOf(AssistantMessage::class, $newMessageFromBag);
+        $this->assertSame('It is time to wake up.', $newMessageFromBag->content);
     }
 
     #[Test]
@@ -99,12 +99,12 @@ final class MessageBagTest extends TestCase
             Message::ofAssistant('It is time to wake up.')
         ));
 
-        self::assertCount(4, $messageBag);
+        $this->assertCount(4, $messageBag);
 
         $messageFromBag = $messageBag->getMessages()[3];
 
-        self::assertInstanceOf(AssistantMessage::class, $messageFromBag);
-        self::assertSame('It is time to wake up.', $messageFromBag->content);
+        $this->assertInstanceOf(AssistantMessage::class, $messageFromBag);
+        $this->assertSame('It is time to wake up.', $messageFromBag->content);
     }
 
     #[Test]
@@ -120,17 +120,17 @@ final class MessageBagTest extends TestCase
 
         $newMessageBag = $messageBag->withoutSystemMessage();
 
-        self::assertCount(5, $messageBag);
-        self::assertCount(2, $newMessageBag);
+        $this->assertCount(5, $messageBag);
+        $this->assertCount(2, $newMessageBag);
 
         $assistantMessage = $newMessageBag->getMessages()[0];
-        self::assertInstanceOf(AssistantMessage::class, $assistantMessage);
-        self::assertSame('It is time to sleep.', $assistantMessage->content);
+        $this->assertInstanceOf(AssistantMessage::class, $assistantMessage);
+        $this->assertSame('It is time to sleep.', $assistantMessage->content);
 
         $userMessage = $newMessageBag->getMessages()[1];
-        self::assertInstanceOf(UserMessage::class, $userMessage);
-        self::assertInstanceOf(Text::class, $userMessage->content[0]);
-        self::assertSame('Hello, world!', $userMessage->content[0]->text);
+        $this->assertInstanceOf(UserMessage::class, $userMessage);
+        $this->assertInstanceOf(Text::class, $userMessage->content[0]);
+        $this->assertSame('Hello, world!', $userMessage->content[0]->text);
     }
 
     #[Test]
@@ -144,13 +144,13 @@ final class MessageBagTest extends TestCase
         $newMessage = Message::forSystem('My amazing system prompt.');
         $newMessageBag = $messageBag->prepend($newMessage);
 
-        self::assertCount(2, $messageBag);
-        self::assertCount(3, $newMessageBag);
+        $this->assertCount(2, $messageBag);
+        $this->assertCount(3, $newMessageBag);
 
         $newMessageBagMessage = $newMessageBag->getMessages()[0];
 
-        self::assertInstanceOf(SystemMessage::class, $newMessageBagMessage);
-        self::assertSame('My amazing system prompt.', $newMessageBagMessage->content);
+        $this->assertInstanceOf(SystemMessage::class, $newMessageBagMessage);
+        $this->assertSame('My amazing system prompt.', $newMessageBagMessage->content);
     }
 
     #[Test]
@@ -161,7 +161,7 @@ final class MessageBagTest extends TestCase
             Message::ofUser('Hello, world!'),
         );
 
-        self::assertFalse($messageBag->containsImage());
+        $this->assertFalse($messageBag->containsImage());
     }
 
     #[Test]
@@ -173,6 +173,6 @@ final class MessageBagTest extends TestCase
             Message::ofUser('My hint for how to analyze an image.', new ImageUrl('http://image-generator.local/my-fancy-image.png')),
         );
 
-        self::assertTrue($messageBag->containsImage());
+        $this->assertTrue($messageBag->containsImage());
     }
 }

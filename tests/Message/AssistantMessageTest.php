@@ -34,7 +34,7 @@ final class AssistantMessageTest extends TestCase
     #[Test]
     public function theRoleOfTheMessageIsAsExpected(): void
     {
-        self::assertSame(Role::Assistant, (new AssistantMessage())->getRole());
+        $this->assertSame(Role::Assistant, (new AssistantMessage())->getRole());
     }
 
     #[Test]
@@ -42,8 +42,8 @@ final class AssistantMessageTest extends TestCase
     {
         $message = new AssistantMessage('foo');
 
-        self::assertSame('foo', $message->content);
-        self::assertNull($message->toolCalls);
+        $this->assertSame('foo', $message->content);
+        $this->assertNull($message->toolCalls);
     }
 
     #[Test]
@@ -52,9 +52,9 @@ final class AssistantMessageTest extends TestCase
         $toolCall = new ToolCall('foo', 'foo');
         $message = new AssistantMessage(toolCalls: [$toolCall]);
 
-        self::assertNull($message->content);
-        self::assertSame([$toolCall], $message->toolCalls);
-        self::assertTrue($message->hasToolCalls());
+        $this->assertNull($message->content);
+        $this->assertSame([$toolCall], $message->toolCalls);
+        $this->assertTrue($message->hasToolCalls());
     }
 
     #[Test]
@@ -62,9 +62,9 @@ final class AssistantMessageTest extends TestCase
     {
         $message = new AssistantMessage('foo');
 
-        self::assertInstanceOf(UuidV7::class, $message->id);
-        self::assertInstanceOf(UuidV7::class, $message->getId());
-        self::assertSame($message->id, $message->getId());
+        $this->assertInstanceOf(UuidV7::class, $message->id);
+        $this->assertInstanceOf(UuidV7::class, $message->getId());
+        $this->assertSame($message->id, $message->getId());
     }
 
     #[Test]
@@ -73,7 +73,7 @@ final class AssistantMessageTest extends TestCase
         $message1 = new AssistantMessage('foo');
         $message2 = new AssistantMessage('bar');
 
-        self::assertNotSame($message1->getId()->toRfc4122(), $message2->getId()->toRfc4122());
+        $this->assertNotSame($message1->getId()->toRfc4122(), $message2->getId()->toRfc4122());
         self::assertIsUuidV7($message1->getId()->toRfc4122());
         self::assertIsUuidV7($message2->getId()->toRfc4122());
     }
@@ -84,7 +84,7 @@ final class AssistantMessageTest extends TestCase
         $message1 = new AssistantMessage('foo');
         $message2 = new AssistantMessage('foo');
 
-        self::assertNotSame($message1->getId()->toRfc4122(), $message2->getId()->toRfc4122());
+        $this->assertNotSame($message1->getId()->toRfc4122(), $message2->getId()->toRfc4122());
         self::assertIsUuidV7($message1->getId()->toRfc4122());
         self::assertIsUuidV7($message2->getId()->toRfc4122());
     }
@@ -94,8 +94,8 @@ final class AssistantMessageTest extends TestCase
     {
         $message = new AssistantMessage('test');
 
-        self::assertInstanceOf(AbstractUid::class, $message->getId());
-        self::assertInstanceOf(TimeBasedUidInterface::class, $message->getId());
-        self::assertInstanceOf(UuidV7::class, $message->getId());
+        $this->assertInstanceOf(AbstractUid::class, $message->getId());
+        $this->assertInstanceOf(TimeBasedUidInterface::class, $message->getId());
+        $this->assertInstanceOf(UuidV7::class, $message->getId());
     }
 }

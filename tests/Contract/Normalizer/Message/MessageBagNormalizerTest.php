@@ -47,14 +47,14 @@ final class MessageBagNormalizerTest extends TestCase
     {
         $messageBag = $this->createMock(MessageBagInterface::class);
 
-        self::assertTrue($this->normalizer->supportsNormalization($messageBag));
-        self::assertFalse($this->normalizer->supportsNormalization(new \stdClass()));
+        $this->assertTrue($this->normalizer->supportsNormalization($messageBag));
+        $this->assertFalse($this->normalizer->supportsNormalization(new \stdClass()));
     }
 
     #[Test]
     public function getSupportedTypes(): void
     {
-        self::assertSame([MessageBagInterface::class => true], $this->normalizer->getSupportedTypes(null));
+        $this->assertSame([MessageBagInterface::class => true], $this->normalizer->getSupportedTypes(null));
     }
 
     #[Test]
@@ -68,7 +68,7 @@ final class MessageBagNormalizerTest extends TestCase
         $messageBag = new MessageBag(...$messages);
 
         $innerNormalizer = $this->createMock(NormalizerInterface::class);
-        $innerNormalizer->expects(self::once())
+        $innerNormalizer->expects($this->once())
             ->method('normalize')
             ->with($messages, null, [])
             ->willReturn([
@@ -85,7 +85,7 @@ final class MessageBagNormalizerTest extends TestCase
             ],
         ];
 
-        self::assertSame($expected, $this->normalizer->normalize($messageBag));
+        $this->assertSame($expected, $this->normalizer->normalize($messageBag));
     }
 
     #[Test]
@@ -99,7 +99,7 @@ final class MessageBagNormalizerTest extends TestCase
         $messageBag = new MessageBag(...$messages);
 
         $innerNormalizer = $this->createMock(NormalizerInterface::class);
-        $innerNormalizer->expects(self::once())
+        $innerNormalizer->expects($this->once())
             ->method('normalize')
             ->with($messages, null, [Contract::CONTEXT_MODEL => new GPT()])
             ->willReturn([
@@ -117,7 +117,7 @@ final class MessageBagNormalizerTest extends TestCase
             'model' => 'gpt-4o',
         ];
 
-        self::assertSame($expected, $this->normalizer->normalize($messageBag, context: [
+        $this->assertSame($expected, $this->normalizer->normalize($messageBag, context: [
             Contract::CONTEXT_MODEL => new GPT(),
         ]));
     }

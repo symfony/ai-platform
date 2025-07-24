@@ -29,7 +29,7 @@ final class PlatformFactoryTest extends TestCase
     {
         $platform = PlatformFactory::create('test-key', 'https://albert.example.com/v1');
 
-        self::assertInstanceOf(Platform::class, $platform);
+        $this->assertInstanceOf(Platform::class, $platform);
     }
 
     #[Test]
@@ -38,7 +38,7 @@ final class PlatformFactoryTest extends TestCase
     {
         $platform = PlatformFactory::create('test-key', $url);
 
-        self::assertInstanceOf(Platform::class, $platform);
+        $this->assertInstanceOf(Platform::class, $platform);
     }
 
     public static function provideValidUrls(): \Iterator

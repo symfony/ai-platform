@@ -37,10 +37,10 @@ final class ToolCallMessageNormalizerTest extends TestCase
     {
         $normalizer = new ToolCallMessageNormalizer();
 
-        self::assertTrue($normalizer->supportsNormalization(new ToolCallMessage(new ToolCall('', '', []), ''), context: [
+        $this->assertTrue($normalizer->supportsNormalization(new ToolCallMessage(new ToolCall('', '', []), ''), context: [
             Contract::CONTEXT_MODEL => new Gemini(),
         ]));
-        self::assertFalse($normalizer->supportsNormalization('not a tool call'));
+        $this->assertFalse($normalizer->supportsNormalization('not a tool call'));
     }
 
     #[Test]
@@ -52,7 +52,7 @@ final class ToolCallMessageNormalizerTest extends TestCase
             ToolCallMessage::class => true,
         ];
 
-        self::assertSame($expected, $normalizer->getSupportedTypes(null));
+        $this->assertSame($expected, $normalizer->getSupportedTypes(null));
     }
 
     #[Test]
@@ -63,7 +63,7 @@ final class ToolCallMessageNormalizerTest extends TestCase
 
         $normalized = $normalizer->normalize($message);
 
-        self::assertEquals($expected, $normalized);
+        $this->assertEquals($expected, $normalized);
     }
 
     /**

@@ -41,10 +41,10 @@ final class UserMessageTest extends TestCase
     {
         $obj = new UserMessage(new Text('foo'));
 
-        self::assertSame(Role::User, $obj->getRole());
-        self::assertCount(1, $obj->content);
-        self::assertInstanceOf(Text::class, $obj->content[0]);
-        self::assertSame('foo', $obj->content[0]->text);
+        $this->assertSame(Role::User, $obj->getRole());
+        $this->assertCount(1, $obj->content);
+        $this->assertInstanceOf(Text::class, $obj->content[0]);
+        $this->assertSame('foo', $obj->content[0]->text);
     }
 
     #[Test]
@@ -52,7 +52,7 @@ final class UserMessageTest extends TestCase
     {
         $message = new UserMessage(new Text('foo'), new ImageUrl('https://foo.com/bar.jpg'));
 
-        self::assertCount(2, $message->content);
+        $this->assertCount(2, $message->content);
     }
 
     #[Test]
@@ -60,7 +60,7 @@ final class UserMessageTest extends TestCase
     {
         $message = new UserMessage(new Text('foo'), new Text('bar'));
 
-        self::assertFalse($message->hasAudioContent());
+        $this->assertFalse($message->hasAudioContent());
     }
 
     #[Test]
@@ -68,7 +68,7 @@ final class UserMessageTest extends TestCase
     {
         $message = new UserMessage(new Text('foo'), Audio::fromFile(\dirname(__DIR__, 4).'/fixtures/audio.mp3'));
 
-        self::assertTrue($message->hasAudioContent());
+        $this->assertTrue($message->hasAudioContent());
     }
 
     #[Test]
@@ -76,7 +76,7 @@ final class UserMessageTest extends TestCase
     {
         $message = new UserMessage(new Text('foo'), new Text('bar'));
 
-        self::assertFalse($message->hasImageContent());
+        $this->assertFalse($message->hasImageContent());
     }
 
     #[Test]
@@ -84,7 +84,7 @@ final class UserMessageTest extends TestCase
     {
         $message = new UserMessage(new Text('foo'), new ImageUrl('https://foo.com/bar.jpg'));
 
-        self::assertTrue($message->hasImageContent());
+        $this->assertTrue($message->hasImageContent());
     }
 
     #[Test]
@@ -92,9 +92,9 @@ final class UserMessageTest extends TestCase
     {
         $message = new UserMessage(new Text('foo'));
 
-        self::assertInstanceOf(UuidV7::class, $message->id);
-        self::assertInstanceOf(UuidV7::class, $message->getId());
-        self::assertSame($message->id, $message->getId());
+        $this->assertInstanceOf(UuidV7::class, $message->id);
+        $this->assertInstanceOf(UuidV7::class, $message->getId());
+        $this->assertSame($message->id, $message->getId());
     }
 
     #[Test]
@@ -103,7 +103,7 @@ final class UserMessageTest extends TestCase
         $message1 = new UserMessage(new Text('foo'));
         $message2 = new UserMessage(new Text('bar'));
 
-        self::assertNotSame($message1->getId()->toRfc4122(), $message2->getId()->toRfc4122());
+        $this->assertNotSame($message1->getId()->toRfc4122(), $message2->getId()->toRfc4122());
         self::assertIsUuidV7($message1->getId()->toRfc4122());
         self::assertIsUuidV7($message2->getId()->toRfc4122());
     }
@@ -114,7 +114,7 @@ final class UserMessageTest extends TestCase
         $message1 = new UserMessage(new Text('foo'));
         $message2 = new UserMessage(new Text('foo'));
 
-        self::assertNotSame($message1->getId()->toRfc4122(), $message2->getId()->toRfc4122());
+        $this->assertNotSame($message1->getId()->toRfc4122(), $message2->getId()->toRfc4122());
         self::assertIsUuidV7($message1->getId()->toRfc4122());
         self::assertIsUuidV7($message2->getId()->toRfc4122());
     }
@@ -124,8 +124,8 @@ final class UserMessageTest extends TestCase
     {
         $message = new UserMessage(new Text('test'));
 
-        self::assertInstanceOf(AbstractUid::class, $message->getId());
-        self::assertInstanceOf(TimeBasedUidInterface::class, $message->getId());
-        self::assertInstanceOf(UuidV7::class, $message->getId());
+        $this->assertInstanceOf(AbstractUid::class, $message->getId());
+        $this->assertInstanceOf(TimeBasedUidInterface::class, $message->getId());
+        $this->assertInstanceOf(UuidV7::class, $message->getId());
     }
 }

@@ -26,8 +26,8 @@ final class DallETest extends TestCase
     {
         $dallE = new DallE();
 
-        self::assertSame(DallE::DALL_E_2, $dallE->getName());
-        self::assertSame([], $dallE->getOptions());
+        $this->assertSame(DallE::DALL_E_2, $dallE->getName());
+        $this->assertSame([], $dallE->getOptions());
     }
 
     #[Test]
@@ -35,7 +35,7 @@ final class DallETest extends TestCase
     {
         $dallE = new DallE(DallE::DALL_E_3, ['response_format' => 'base64', 'n' => 2]);
 
-        self::assertSame(DallE::DALL_E_3, $dallE->getName());
-        self::assertSame(['response_format' => 'base64', 'n' => 2], $dallE->getOptions());
+        $this->assertSame(DallE::DALL_E_3, $dallE->getName());
+        $this->assertSame(['response_format' => 'base64', 'n' => 2], $dallE->getOptions());
     }
 }

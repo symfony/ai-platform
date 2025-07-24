@@ -35,14 +35,14 @@ final class AudioNormalizerTest extends TestCase
     #[Test]
     public function supportsNormalization(): void
     {
-        self::assertTrue($this->normalizer->supportsNormalization(Audio::fromFile(\dirname(__DIR__, 7).'/fixtures/audio.mp3')));
-        self::assertFalse($this->normalizer->supportsNormalization(new \stdClass()));
+        $this->assertTrue($this->normalizer->supportsNormalization(Audio::fromFile(\dirname(__DIR__, 7).'/fixtures/audio.mp3')));
+        $this->assertFalse($this->normalizer->supportsNormalization(new \stdClass()));
     }
 
     #[Test]
     public function getSupportedTypes(): void
     {
-        self::assertSame([Audio::class => true], $this->normalizer->getSupportedTypes(null));
+        $this->assertSame([Audio::class => true], $this->normalizer->getSupportedTypes(null));
     }
 
     #[Test]
@@ -51,7 +51,7 @@ final class AudioNormalizerTest extends TestCase
     {
         $audio = new Audio(base64_decode($data), $format);
 
-        self::assertSame($expected, $this->normalizer->normalize($audio));
+        $this->assertSame($expected, $this->normalizer->normalize($audio));
     }
 
     public static function provideAudioData(): \Generator

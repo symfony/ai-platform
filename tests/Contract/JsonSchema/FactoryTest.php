@@ -63,7 +63,7 @@ final class FactoryTest extends TestCase
             'additionalProperties' => false,
         ];
 
-        self::assertSame($expected, $actual);
+        $this->assertSame($expected, $actual);
     }
 
     #[Test]
@@ -141,7 +141,7 @@ final class FactoryTest extends TestCase
             'additionalProperties' => false,
         ];
 
-        self::assertSame($expected, $actual);
+        $this->assertSame($expected, $actual);
     }
 
     #[Test]
@@ -164,7 +164,7 @@ final class FactoryTest extends TestCase
             'additionalProperties' => false,
         ];
 
-        self::assertSame($expected, $actual);
+        $this->assertSame($expected, $actual);
     }
 
     #[Test]
@@ -172,7 +172,7 @@ final class FactoryTest extends TestCase
     {
         $actual = $this->factory->buildParameters(ToolNoParams::class, '__invoke');
 
-        self::assertNull($actual);
+        $this->assertNull($actual);
     }
 
     #[Test]
@@ -199,7 +199,7 @@ final class FactoryTest extends TestCase
 
         $actual = $this->factory->buildProperties(User::class);
 
-        self::assertSame($expected, $actual);
+        $this->assertSame($expected, $actual);
     }
 
     #[Test]
@@ -228,7 +228,7 @@ final class FactoryTest extends TestCase
 
         $actual = $this->factory->buildProperties(MathReasoning::class);
 
-        self::assertSame($expected, $actual);
+        $this->assertSame($expected, $actual);
     }
 
     #[Test]
@@ -246,6 +246,6 @@ final class FactoryTest extends TestCase
 
         $actual = $this->factory->buildProperties(Step::class);
 
-        self::assertSame($expected, $actual);
+        $this->assertSame($expected, $actual);
     }
 }

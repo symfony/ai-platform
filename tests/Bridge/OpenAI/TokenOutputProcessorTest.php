@@ -45,7 +45,7 @@ final class TokenOutputProcessorTest extends TestCase
         $processor->processOutput($output);
 
         $metadata = $output->result->getMetadata();
-        self::assertCount(0, $metadata);
+        $this->assertCount(0, $metadata);
     }
 
     #[Test]
@@ -58,7 +58,7 @@ final class TokenOutputProcessorTest extends TestCase
         $processor->processOutput($output);
 
         $metadata = $output->result->getMetadata();
-        self::assertCount(0, $metadata);
+        $this->assertCount(0, $metadata);
     }
 
     #[Test]
@@ -74,8 +74,8 @@ final class TokenOutputProcessorTest extends TestCase
         $processor->processOutput($output);
 
         $metadata = $output->result->getMetadata();
-        self::assertCount(1, $metadata);
-        self::assertSame(1000, $metadata->get('remaining_tokens'));
+        $this->assertCount(1, $metadata);
+        $this->assertSame(1000, $metadata->get('remaining_tokens'));
     }
 
     #[Test]
@@ -99,11 +99,11 @@ final class TokenOutputProcessorTest extends TestCase
         $processor->processOutput($output);
 
         $metadata = $output->result->getMetadata();
-        self::assertCount(4, $metadata);
-        self::assertSame(1000, $metadata->get('remaining_tokens'));
-        self::assertSame(10, $metadata->get('prompt_tokens'));
-        self::assertSame(20, $metadata->get('completion_tokens'));
-        self::assertSame(30, $metadata->get('total_tokens'));
+        $this->assertCount(4, $metadata);
+        $this->assertSame(1000, $metadata->get('remaining_tokens'));
+        $this->assertSame(10, $metadata->get('prompt_tokens'));
+        $this->assertSame(20, $metadata->get('completion_tokens'));
+        $this->assertSame(30, $metadata->get('total_tokens'));
     }
 
     #[Test]
@@ -126,16 +126,16 @@ final class TokenOutputProcessorTest extends TestCase
         $processor->processOutput($output);
 
         $metadata = $output->result->getMetadata();
-        self::assertCount(4, $metadata);
-        self::assertSame(1000, $metadata->get('remaining_tokens'));
-        self::assertSame(10, $metadata->get('prompt_tokens'));
-        self::assertNull($metadata->get('completion_tokens'));
-        self::assertNull($metadata->get('total_tokens'));
+        $this->assertCount(4, $metadata);
+        $this->assertSame(1000, $metadata->get('remaining_tokens'));
+        $this->assertSame(10, $metadata->get('prompt_tokens'));
+        $this->assertNull($metadata->get('completion_tokens'));
+        $this->assertNull($metadata->get('total_tokens'));
     }
 
     private function createRawResult(array $data = []): RawHttpResult
     {
-        $rawResponse = self::createStub(SymfonyHttpResponse::class);
+        $rawResponse = $this->createStub(SymfonyHttpResponse::class);
         $rawResponse->method('getHeaders')->willReturn([
             'x-ratelimit-remaining-tokens' => ['1000'],
         ]);
@@ -147,9 +147,9 @@ final class TokenOutputProcessorTest extends TestCase
     private function createOutput(ResultInterface $result): Output
     {
         return new Output(
-            self::createStub(Model::class),
+            $this->createStub(Model::class),
             $result,
-            self::createStub(MessageBagInterface::class),
+            $this->createStub(MessageBagInterface::class),
             [],
         );
     }

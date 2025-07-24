@@ -24,7 +24,7 @@ final class NullVectorTest extends TestCase
     #[Test]
     public function implementsInterface(): void
     {
-        self::assertInstanceOf(VectorInterface::class, new NullVector());
+        $this->assertInstanceOf(VectorInterface::class, new NullVector());
     }
 
     #[Test]

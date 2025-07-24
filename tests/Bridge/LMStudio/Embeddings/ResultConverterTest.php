@@ -63,10 +63,10 @@ class ResultConverterTest extends TestCase
         $vectorResult = (new ResultConverter())->convert(new RawHttpResult($result));
         $convertedContent = $vectorResult->getContent();
 
-        self::assertCount(2, $convertedContent);
+        $this->assertCount(2, $convertedContent);
 
-        self::assertSame([0.3, 0.4, 0.4], $convertedContent[0]->getData());
-        self::assertSame([0.0, 0.0, 0.2], $convertedContent[1]->getData());
+        $this->assertSame([0.3, 0.4, 0.4], $convertedContent[0]->getData());
+        $this->assertSame([0.0, 0.0, 0.2], $convertedContent[1]->getData());
     }
 
     #[Test]
@@ -88,6 +88,6 @@ class ResultConverterTest extends TestCase
     {
         $converter = new ResultConverter();
 
-        self::assertTrue($converter->supports(new Embeddings('test-model')));
+        $this->assertTrue($converter->supports(new Embeddings('test-model')));
     }
 }

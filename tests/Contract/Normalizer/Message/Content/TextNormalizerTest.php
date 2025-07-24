@@ -32,14 +32,14 @@ final class TextNormalizerTest extends TestCase
     #[Test]
     public function supportsNormalization(): void
     {
-        self::assertTrue($this->normalizer->supportsNormalization(new Text('Hello, world!')));
-        self::assertFalse($this->normalizer->supportsNormalization(new \stdClass()));
+        $this->assertTrue($this->normalizer->supportsNormalization(new Text('Hello, world!')));
+        $this->assertFalse($this->normalizer->supportsNormalization(new \stdClass()));
     }
 
     #[Test]
     public function getSupportedTypes(): void
     {
-        self::assertSame([Text::class => true], $this->normalizer->getSupportedTypes(null));
+        $this->assertSame([Text::class => true], $this->normalizer->getSupportedTypes(null));
     }
 
     #[Test]
@@ -52,6 +52,6 @@ final class TextNormalizerTest extends TestCase
             'text' => 'Hello, world!',
         ];
 
-        self::assertSame($expected, $this->normalizer->normalize($text));
+        $this->assertSame($expected, $this->normalizer->normalize($text));
     }
 }

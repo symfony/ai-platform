@@ -30,12 +30,12 @@ final class StreamResultTest extends TestCase
         })();
 
         $result = new StreamResult($generator);
-        self::assertInstanceOf(\Generator::class, $result->getContent());
+        $this->assertInstanceOf(\Generator::class, $result->getContent());
 
         $content = iterator_to_array($result->getContent());
 
-        self::assertCount(2, $content);
-        self::assertSame('data1', $content[0]);
-        self::assertSame('data2', $content[1]);
+        $this->assertCount(2, $content);
+        $this->assertSame('data1', $content[0]);
+        $this->assertSame('data2', $content[1]);
     }
 }

@@ -38,10 +38,10 @@ final class ToolNormalizerTest extends TestCase
     {
         $normalizer = new ToolNormalizer();
 
-        self::assertTrue($normalizer->supportsNormalization(new Tool(new ExecutionReference(ToolNoParams::class), 'test', 'test'), context: [
+        $this->assertTrue($normalizer->supportsNormalization(new Tool(new ExecutionReference(ToolNoParams::class), 'test', 'test'), context: [
             Contract::CONTEXT_MODEL => new Gemini(),
         ]));
-        self::assertFalse($normalizer->supportsNormalization('not a tool'));
+        $this->assertFalse($normalizer->supportsNormalization('not a tool'));
     }
 
     #[Test]
@@ -53,7 +53,7 @@ final class ToolNormalizerTest extends TestCase
             Tool::class => true,
         ];
 
-        self::assertSame($expected, $normalizer->getSupportedTypes(null));
+        $this->assertSame($expected, $normalizer->getSupportedTypes(null));
     }
 
     #[Test]
@@ -64,7 +64,7 @@ final class ToolNormalizerTest extends TestCase
 
         $normalized = $normalizer->normalize($tool);
 
-        self::assertEquals($expected, $normalized);
+        $this->assertEquals($expected, $normalized);
     }
 
     /**

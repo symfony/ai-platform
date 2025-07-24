@@ -39,10 +39,10 @@ class ResponseConverterTest extends TestCase
         $vectorResponse = (new ResultConverter())->convert(new RawHttpResult($result));
         $convertedContent = $vectorResponse->getContent();
 
-        self::assertCount(2, $convertedContent);
+        $this->assertCount(2, $convertedContent);
 
-        self::assertSame([0.3, 0.4, 0.4], $convertedContent[0]->getData());
-        self::assertSame([0.0, 0.0, 0.2], $convertedContent[1]->getData());
+        $this->assertSame([0.3, 0.4, 0.4], $convertedContent[0]->getData());
+        $this->assertSame([0.0, 0.0, 0.2], $convertedContent[1]->getData());
     }
 
     private function getEmbeddingStub(): string

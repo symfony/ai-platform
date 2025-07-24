@@ -38,12 +38,12 @@ final class BaseResultTest extends TestCase
         $result = $this->createResponse();
         $metadata = $result->getMetadata();
 
-        self::assertCount(0, $metadata);
+        $this->assertCount(0, $metadata);
 
         $metadata->add('key', 'value');
         $metadata = $result->getMetadata();
 
-        self::assertCount(1, $metadata);
+        $this->assertCount(1, $metadata);
     }
 
     #[Test]
@@ -53,7 +53,7 @@ final class BaseResultTest extends TestCase
         $rawResponse = $this->createRawResponse();
 
         $result->setRawResult($rawResponse);
-        self::assertSame($rawResponse, $result->getRawResult());
+        $this->assertSame($rawResponse, $result->getRawResult());
     }
 
     #[Test]

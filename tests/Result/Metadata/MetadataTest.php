@@ -25,16 +25,16 @@ final class MetadataTest extends TestCase
     public function itCanBeCreatedEmpty(): void
     {
         $metadata = new Metadata();
-        self::assertCount(0, $metadata);
-        self::assertSame([], $metadata->all());
+        $this->assertCount(0, $metadata);
+        $this->assertSame([], $metadata->all());
     }
 
     #[Test]
     public function itCanBeCreatedWithInitialData(): void
     {
         $metadata = new Metadata(['key' => 'value']);
-        self::assertCount(1, $metadata);
-        self::assertSame(['key' => 'value'], $metadata->all());
+        $this->assertCount(1, $metadata);
+        $this->assertSame(['key' => 'value'], $metadata->all());
     }
 
     #[Test]
@@ -43,8 +43,8 @@ final class MetadataTest extends TestCase
         $metadata = new Metadata();
         $metadata->add('key', 'value');
 
-        self::assertTrue($metadata->has('key'));
-        self::assertSame('value', $metadata->get('key'));
+        $this->assertTrue($metadata->has('key'));
+        $this->assertSame('value', $metadata->get('key'));
     }
 
     #[Test]
@@ -52,8 +52,8 @@ final class MetadataTest extends TestCase
     {
         $metadata = new Metadata(['key' => 'value']);
 
-        self::assertTrue($metadata->has('key'));
-        self::assertFalse($metadata->has('nonexistent'));
+        $this->assertTrue($metadata->has('key'));
+        $this->assertFalse($metadata->has('nonexistent'));
     }
 
     #[Test]
@@ -61,19 +61,19 @@ final class MetadataTest extends TestCase
     {
         $metadata = new Metadata(['key' => 'value']);
 
-        self::assertSame('value', $metadata->get('key'));
-        self::assertSame('default', $metadata->get('nonexistent', 'default'));
-        self::assertNull($metadata->get('nonexistent'));
+        $this->assertSame('value', $metadata->get('key'));
+        $this->assertSame('default', $metadata->get('nonexistent', 'default'));
+        $this->assertNull($metadata->get('nonexistent'));
     }
 
     #[Test]
     public function itCanRemoveMetadata(): void
     {
         $metadata = new Metadata(['key' => 'value']);
-        self::assertTrue($metadata->has('key'));
+        $this->assertTrue($metadata->has('key'));
 
         $metadata->remove('key');
-        self::assertFalse($metadata->has('key'));
+        $this->assertFalse($metadata->has('key'));
     }
 
     #[Test]
@@ -82,17 +82,17 @@ final class MetadataTest extends TestCase
         $metadata = new Metadata(['key1' => 'value1']);
         $metadata->set(['key2' => 'value2', 'key3' => 'value3']);
 
-        self::assertFalse($metadata->has('key1'));
-        self::assertTrue($metadata->has('key2'));
-        self::assertTrue($metadata->has('key3'));
-        self::assertSame(['key2' => 'value2', 'key3' => 'value3'], $metadata->all());
+        $this->assertFalse($metadata->has('key1'));
+        $this->assertTrue($metadata->has('key2'));
+        $this->assertTrue($metadata->has('key3'));
+        $this->assertSame(['key2' => 'value2', 'key3' => 'value3'], $metadata->all());
     }
 
     #[Test]
     public function itImplementsJsonSerializable(): void
     {
         $metadata = new Metadata(['key' => 'value']);
-        self::assertSame(['key' => 'value'], $metadata->jsonSerialize());
+        $this->assertSame(['key' => 'value'], $metadata->jsonSerialize());
     }
 
     #[Test]
@@ -100,14 +100,14 @@ final class MetadataTest extends TestCase
     {
         $metadata = new Metadata(['key' => 'value']);
 
-        self::assertArrayHasKey('key', $metadata);
-        self::assertSame('value', $metadata['key']);
+        $this->assertArrayHasKey('key', $metadata);
+        $this->assertSame('value', $metadata['key']);
 
         $metadata['new'] = 'newValue';
-        self::assertSame('newValue', $metadata['new']);
+        $this->assertSame('newValue', $metadata['new']);
 
         unset($metadata['key']);
-        self::assertArrayNotHasKey('key', $metadata);
+        $this->assertArrayNotHasKey('key', $metadata);
     }
 
     #[Test]
@@ -116,22 +116,22 @@ final class MetadataTest extends TestCase
         $metadata = new Metadata(['key1' => 'value1', 'key2' => 'value2']);
         $result = iterator_to_array($metadata);
 
-        self::assertSame(['key1' => 'value1', 'key2' => 'value2'], $result);
+        $this->assertSame(['key1' => 'value1', 'key2' => 'value2'], $result);
     }
 
     #[Test]
     public function itImplementsCountable(): void
     {
         $metadata = new Metadata();
-        self::assertCount(0, $metadata);
+        $this->assertCount(0, $metadata);
 
         $metadata->add('key', 'value');
-        self::assertCount(1, $metadata);
+        $this->assertCount(1, $metadata);
 
         $metadata->add('key2', 'value2');
-        self::assertCount(2, $metadata);
+        $this->assertCount(2, $metadata);
 
         $metadata->remove('key');
-        self::assertCount(1, $metadata);
+        $this->assertCount(1, $metadata);
     }
 }

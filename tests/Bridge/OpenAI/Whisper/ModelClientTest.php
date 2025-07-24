@@ -31,7 +31,7 @@ final class ModelClientTest extends TestCase
         $client = new ModelClient(new MockHttpClient(), 'test-key');
         $model = new Whisper();
 
-        self::assertTrue($client->supports($model));
+        $this->assertTrue($client->supports($model));
     }
 
     #[Test]
@@ -52,7 +52,7 @@ final class ModelClientTest extends TestCase
 
         $client->request($model, $payload);
 
-        self::assertSame(1, $httpClient->getRequestsCount());
+        $this->assertSame(1, $httpClient->getRequestsCount());
     }
 
     #[Test]
@@ -74,7 +74,7 @@ final class ModelClientTest extends TestCase
 
         $client->request($model, $payload, $options);
 
-        self::assertSame(1, $httpClient->getRequestsCount());
+        $this->assertSame(1, $httpClient->getRequestsCount());
     }
 
     #[Test]
@@ -96,6 +96,6 @@ final class ModelClientTest extends TestCase
 
         $client->request($model, $payload, $options);
 
-        self::assertSame(1, $httpClient->getRequestsCount());
+        $this->assertSame(1, $httpClient->getRequestsCount());
     }
 }

@@ -31,7 +31,7 @@ class ModelClientTest extends TestCase
     {
         $client = new ModelClient(new MockHttpClient(), 'http://localhost:1234');
 
-        self::assertTrue($client->supports(new Embeddings('test-model')));
+        $this->assertTrue($client->supports(new Embeddings('test-model')));
     }
 
     #[Test]

@@ -30,9 +30,9 @@ final class BinaryTest extends TestCase
 
         $binary = File::fromDataUrl($dataUrl);
 
-        self::assertSame('image/png', $binary->getFormat());
-        self::assertNotEmpty($binary->asBinary());
-        self::assertSame('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=', $binary->asBase64());
+        $this->assertSame('image/png', $binary->getFormat());
+        $this->assertNotEmpty($binary->asBinary());
+        $this->assertSame('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=', $binary->asBase64());
     }
 
     #[Test]
@@ -54,8 +54,8 @@ final class BinaryTest extends TestCase
         try {
             $binary = File::fromFile($filename);
 
-            self::assertSame('text/plain', $binary->getFormat());
-            self::assertSame($content, $binary->asBinary());
+            $this->assertSame('text/plain', $binary->getFormat());
+            $this->assertSame($content, $binary->asBinary());
         } finally {
             unlink($filename);
         }
@@ -67,8 +67,8 @@ final class BinaryTest extends TestCase
     {
         $binary = File::fromFile($filePath);
 
-        self::assertSame($expectedFormat, $binary->getFormat());
-        self::assertNotEmpty($binary->asBinary());
+        $this->assertSame($expectedFormat, $binary->getFormat());
+        $this->assertNotEmpty($binary->asBinary());
     }
 
     /**
@@ -97,7 +97,7 @@ final class BinaryTest extends TestCase
 
         $dataUrl = $binary->asDataUrl();
 
-        self::assertSame('data:text/plain;base64,'.base64_encode($data), $dataUrl);
+        $this->assertSame('data:text/plain;base64,'.base64_encode($data), $dataUrl);
     }
 
     #[Test]
@@ -108,8 +108,8 @@ final class BinaryTest extends TestCase
         $binary = File::fromDataUrl($originalDataUrl);
         $resultDataUrl = $binary->asDataUrl();
 
-        self::assertSame($originalDataUrl, $resultDataUrl);
-        self::assertSame('application/pdf', $binary->getFormat());
-        self::assertSame('JVBERi0xLjQKJcfsj6IKNSAwIG9iago8PC9MZW5ndGggNiAwIFIvRmls', $binary->asBase64());
+        $this->assertSame($originalDataUrl, $resultDataUrl);
+        $this->assertSame('application/pdf', $binary->getFormat());
+        $this->assertSame('JVBERi0xLjQKJcfsj6IKNSAwIG9iago8PC9MZW5ndGggNiAwIFIvRmls', $binary->asBase64());
     }
 }

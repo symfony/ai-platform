@@ -43,10 +43,10 @@ final class UserMessageNormalizerTest extends TestCase
     {
         $normalizer = new UserMessageNormalizer();
 
-        self::assertTrue($normalizer->supportsNormalization(new UserMessage(new Text('Hello')), context: [
+        $this->assertTrue($normalizer->supportsNormalization(new UserMessage(new Text('Hello')), context: [
             Contract::CONTEXT_MODEL => new Gemini(),
         ]));
-        self::assertFalse($normalizer->supportsNormalization('not a user message'));
+        $this->assertFalse($normalizer->supportsNormalization('not a user message'));
     }
 
     #[Test]
@@ -54,7 +54,7 @@ final class UserMessageNormalizerTest extends TestCase
     {
         $normalizer = new UserMessageNormalizer();
 
-        self::assertSame([UserMessage::class => true], $normalizer->getSupportedTypes(null));
+        $this->assertSame([UserMessage::class => true], $normalizer->getSupportedTypes(null));
     }
 
     #[Test]
@@ -65,7 +65,7 @@ final class UserMessageNormalizerTest extends TestCase
 
         $normalized = $normalizer->normalize($message);
 
-        self::assertSame([['text' => 'Write a story about a magic backpack.']], $normalized);
+        $this->assertSame([['text' => 'Write a story about a magic backpack.']], $normalized);
     }
 
     #[DataProvider('binaryContentProvider')]
@@ -77,14 +77,14 @@ final class UserMessageNormalizerTest extends TestCase
 
         $normalized = $normalizer->normalize($message);
 
-        self::assertCount(2, $normalized);
-        self::assertSame(['text' => 'Tell me about this instrument'], $normalized[0]);
-        self::assertArrayHasKey('inline_data', $normalized[1]);
-        self::assertSame($expectedMimeType, $normalized[1]['inline_data']['mime_type']);
-        self::assertNotEmpty($normalized[1]['inline_data']['data']);
+        $this->assertCount(2, $normalized);
+        $this->assertSame(['text' => 'Tell me about this instrument'], $normalized[0]);
+        $this->assertArrayHasKey('inline_data', $normalized[1]);
+        $this->assertSame($expectedMimeType, $normalized[1]['inline_data']['mime_type']);
+        $this->assertNotEmpty($normalized[1]['inline_data']['data']);
 
         // Verify that the base64 data string starts correctly
-        self::assertStringStartsWith($expectedPrefix, $normalized[1]['inline_data']['data']);
+        $this->assertStringStartsWith($expectedPrefix, $normalized[1]['inline_data']['data']);
     }
 
     /**

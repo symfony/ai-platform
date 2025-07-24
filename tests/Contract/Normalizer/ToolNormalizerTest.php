@@ -32,7 +32,7 @@ class ToolNormalizerTest extends TestCase
     #[DataProvider('provideTools')]
     public function normalize(Tool $tool, array $expected): void
     {
-        self::assertSame($expected, (new ToolNormalizer())->normalize($tool));
+        $this->assertSame($expected, (new ToolNormalizer())->normalize($tool));
     }
 
     public static function provideTools(): \Generator

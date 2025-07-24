@@ -36,8 +36,8 @@ final class ToolCallMessageTest extends TestCase
         $toolCall = new ToolCall('foo', 'bar');
         $obj = new ToolCallMessage($toolCall, 'bar');
 
-        self::assertSame($toolCall, $obj->toolCall);
-        self::assertSame('bar', $obj->content);
+        $this->assertSame($toolCall, $obj->toolCall);
+        $this->assertSame('bar', $obj->content);
     }
 
     #[Test]
@@ -46,9 +46,9 @@ final class ToolCallMessageTest extends TestCase
         $toolCall = new ToolCall('foo', 'bar');
         $message = new ToolCallMessage($toolCall, 'bar');
 
-        self::assertInstanceOf(UuidV7::class, $message->id);
-        self::assertInstanceOf(UuidV7::class, $message->getId());
-        self::assertSame($message->id, $message->getId());
+        $this->assertInstanceOf(UuidV7::class, $message->id);
+        $this->assertInstanceOf(UuidV7::class, $message->getId());
+        $this->assertSame($message->id, $message->getId());
     }
 
     #[Test]
@@ -58,7 +58,7 @@ final class ToolCallMessageTest extends TestCase
         $message1 = new ToolCallMessage($toolCall, 'bar');
         $message2 = new ToolCallMessage($toolCall, 'baz');
 
-        self::assertNotSame($message1->getId()->toRfc4122(), $message2->getId()->toRfc4122());
+        $this->assertNotSame($message1->getId()->toRfc4122(), $message2->getId()->toRfc4122());
         self::assertIsUuidV7($message1->getId()->toRfc4122());
         self::assertIsUuidV7($message2->getId()->toRfc4122());
     }
@@ -70,7 +70,7 @@ final class ToolCallMessageTest extends TestCase
         $message1 = new ToolCallMessage($toolCall, 'bar');
         $message2 = new ToolCallMessage($toolCall, 'bar');
 
-        self::assertNotSame($message1->getId()->toRfc4122(), $message2->getId()->toRfc4122());
+        $this->assertNotSame($message1->getId()->toRfc4122(), $message2->getId()->toRfc4122());
         self::assertIsUuidV7($message1->getId()->toRfc4122());
         self::assertIsUuidV7($message2->getId()->toRfc4122());
     }
@@ -81,8 +81,8 @@ final class ToolCallMessageTest extends TestCase
         $toolCall = new ToolCall('foo', 'bar');
         $message = new ToolCallMessage($toolCall, 'test');
 
-        self::assertInstanceOf(AbstractUid::class, $message->getId());
-        self::assertInstanceOf(TimeBasedUidInterface::class, $message->getId());
-        self::assertInstanceOf(UuidV7::class, $message->getId());
+        $this->assertInstanceOf(AbstractUid::class, $message->getId());
+        $this->assertInstanceOf(TimeBasedUidInterface::class, $message->getId());
+        $this->assertInstanceOf(UuidV7::class, $message->getId());
     }
 }

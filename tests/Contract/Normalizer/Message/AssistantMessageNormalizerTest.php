@@ -35,14 +35,14 @@ final class AssistantMessageNormalizerTest extends TestCase
     #[Test]
     public function supportsNormalization(): void
     {
-        self::assertTrue($this->normalizer->supportsNormalization(new AssistantMessage('content')));
-        self::assertFalse($this->normalizer->supportsNormalization(new \stdClass()));
+        $this->assertTrue($this->normalizer->supportsNormalization(new AssistantMessage('content')));
+        $this->assertFalse($this->normalizer->supportsNormalization(new \stdClass()));
     }
 
     #[Test]
     public function getSupportedTypes(): void
     {
-        self::assertSame([AssistantMessage::class => true], $this->normalizer->getSupportedTypes(null));
+        $this->assertSame([AssistantMessage::class => true], $this->normalizer->getSupportedTypes(null));
     }
 
     #[Test]
@@ -55,7 +55,7 @@ final class AssistantMessageNormalizerTest extends TestCase
             'content' => 'I am an assistant',
         ];
 
-        self::assertSame($expected, $this->normalizer->normalize($message));
+        $this->assertSame($expected, $this->normalizer->normalize($message));
     }
 
     #[Test]
@@ -73,7 +73,7 @@ final class AssistantMessageNormalizerTest extends TestCase
         ];
 
         $innerNormalizer = $this->createMock(NormalizerInterface::class);
-        $innerNormalizer->expects(self::once())
+        $innerNormalizer->expects($this->once())
             ->method('normalize')
             ->with($message->toolCalls, null, [])
             ->willReturn($expectedToolCalls);
@@ -86,7 +86,7 @@ final class AssistantMessageNormalizerTest extends TestCase
             'tool_calls' => $expectedToolCalls,
         ];
 
-        self::assertSame($expected, $this->normalizer->normalize($message));
+        $this->assertSame($expected, $this->normalizer->normalize($message));
     }
 
     #[Test]
@@ -98,7 +98,7 @@ final class AssistantMessageNormalizerTest extends TestCase
         $expectedToolCalls = [['id' => 'id1', 'function' => 'function1', 'arguments' => ['param' => 'value']]];
 
         $innerNormalizer = $this->createMock(NormalizerInterface::class);
-        $innerNormalizer->expects(self::once())
+        $innerNormalizer->expects($this->once())
             ->method('normalize')
             ->with($message->toolCalls, null, [])
             ->willReturn($expectedToolCalls);
@@ -110,6 +110,6 @@ final class AssistantMessageNormalizerTest extends TestCase
             'tool_calls' => $expectedToolCalls,
         ];
 
-        self::assertSame($expected, $this->normalizer->normalize($message));
+        $this->assertSame($expected, $this->normalizer->normalize($message));
     }
 }

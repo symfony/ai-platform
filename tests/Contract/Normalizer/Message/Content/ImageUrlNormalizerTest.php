@@ -32,14 +32,14 @@ final class ImageUrlNormalizerTest extends TestCase
     #[Test]
     public function supportsNormalization(): void
     {
-        self::assertTrue($this->normalizer->supportsNormalization(new ImageUrl('https://example.com/image.jpg')));
-        self::assertFalse($this->normalizer->supportsNormalization(new \stdClass()));
+        $this->assertTrue($this->normalizer->supportsNormalization(new ImageUrl('https://example.com/image.jpg')));
+        $this->assertFalse($this->normalizer->supportsNormalization(new \stdClass()));
     }
 
     #[Test]
     public function getSupportedTypes(): void
     {
-        self::assertSame([ImageUrl::class => true], $this->normalizer->getSupportedTypes(null));
+        $this->assertSame([ImageUrl::class => true], $this->normalizer->getSupportedTypes(null));
     }
 
     #[Test]
@@ -52,6 +52,6 @@ final class ImageUrlNormalizerTest extends TestCase
             'image_url' => ['url' => 'https://example.com/image.jpg'],
         ];
 
-        self::assertSame($expected, $this->normalizer->normalize($imageUrl));
+        $this->assertSame($expected, $this->normalizer->normalize($imageUrl));
     }
 }

@@ -56,8 +56,8 @@ class ResultConverterTest extends TestCase
 
         $result = $converter->convert(new RawHttpResult($httpResponse));
 
-        self::assertInstanceOf(TextResult::class, $result);
-        self::assertSame('Hello world', $result->getContent());
+        $this->assertInstanceOf(TextResult::class, $result);
+        $this->assertSame('Hello world', $result->getContent());
     }
 
     #[Test]
@@ -89,12 +89,12 @@ class ResultConverterTest extends TestCase
 
         $result = $converter->convert(new RawHttpResult($httpResponse));
 
-        self::assertInstanceOf(ToolCallResult::class, $result);
+        $this->assertInstanceOf(ToolCallResult::class, $result);
         $toolCalls = $result->getContent();
-        self::assertCount(1, $toolCalls);
-        self::assertSame('call_123', $toolCalls[0]->id);
-        self::assertSame('test_function', $toolCalls[0]->name);
-        self::assertSame(['arg1' => 'value1'], $toolCalls[0]->arguments);
+        $this->assertCount(1, $toolCalls);
+        $this->assertSame('call_123', $toolCalls[0]->id);
+        $this->assertSame('test_function', $toolCalls[0]->name);
+        $this->assertSame(['arg1' => 'value1'], $toolCalls[0]->arguments);
     }
 
     #[Test]
@@ -123,11 +123,11 @@ class ResultConverterTest extends TestCase
 
         $result = $converter->convert(new RawHttpResult($httpResponse));
 
-        self::assertInstanceOf(ChoiceResult::class, $result);
+        $this->assertInstanceOf(ChoiceResult::class, $result);
         $choices = $result->getContent();
-        self::assertCount(2, $choices);
-        self::assertSame('Choice 1', $choices[0]->getContent());
-        self::assertSame('Choice 2', $choices[1]->getContent());
+        $this->assertCount(2, $choices);
+        $this->assertSame('Choice 1', $choices[0]->getContent());
+        $this->assertSame('Choice 2', $choices[1]->getContent());
     }
 
     #[Test]

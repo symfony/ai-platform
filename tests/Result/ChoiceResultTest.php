@@ -33,10 +33,10 @@ final class ChoiceResultTest extends TestCase
         $choice3 = new Choice('choice3');
         $result = new ChoiceResult($choice1, $choice2, $choice3);
 
-        self::assertCount(3, $result->getContent());
-        self::assertSame('choice1', $result->getContent()[0]->getContent());
-        self::assertNull($result->getContent()[1]->getContent());
-        self::assertSame('choice3', $result->getContent()[2]->getContent());
+        $this->assertCount(3, $result->getContent());
+        $this->assertSame('choice1', $result->getContent()[0]->getContent());
+        $this->assertNull($result->getContent()[1]->getContent());
+        $this->assertSame('choice3', $result->getContent()[2]->getContent());
     }
 
     #[Test]

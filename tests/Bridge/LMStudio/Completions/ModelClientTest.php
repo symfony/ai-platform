@@ -33,7 +33,7 @@ class ModelClientTest extends TestCase
     {
         $client = new ModelClient(new MockHttpClient(), 'http://localhost:1234');
 
-        self::assertTrue($client->supports(new Completions('test-model')));
+        $this->assertTrue($client->supports(new Completions('test-model')));
     }
 
     #[Test]
@@ -99,7 +99,7 @@ class ModelClientTest extends TestCase
         $reflection = new \ReflectionProperty($client, 'httpClient');
         $reflection->setAccessible(true);
 
-        self::assertInstanceOf(EventSourceHttpClient::class, $reflection->getValue($client));
+        $this->assertInstanceOf(EventSourceHttpClient::class, $reflection->getValue($client));
     }
 
     #[Test]
@@ -111,6 +111,6 @@ class ModelClientTest extends TestCase
         $reflection = new \ReflectionProperty($client, 'httpClient');
         $reflection->setAccessible(true);
 
-        self::assertSame($eventSourceHttpClient, $reflection->getValue($client));
+        $this->assertSame($eventSourceHttpClient, $reflection->getValue($client));
     }
 }

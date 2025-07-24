@@ -38,6 +38,6 @@ final class TollCallResultTest extends TestCase
     public function getContent(): void
     {
         $result = new ToolCallResult($toolCall = new ToolCall('ID', 'name', ['foo' => 'bar']));
-        self::assertSame([$toolCall], $result->getContent());
+        $this->assertSame([$toolCall], $result->getContent());
     }
 }

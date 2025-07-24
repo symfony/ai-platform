@@ -84,7 +84,7 @@ final class EmbeddingsModelClientTest extends TestCase
     {
         $client = new EmbeddingsModelClient(new MockHttpClient(), 'test.azure.com', 'deployment', '2023-12-01', 'api-key');
 
-        self::assertTrue($client->supports(new Embeddings()));
+        $this->assertTrue($client->supports(new Embeddings()));
     }
 
     #[Test]

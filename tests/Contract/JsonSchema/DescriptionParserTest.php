@@ -31,7 +31,7 @@ final class DescriptionParserTest extends TestCase
 
         $actual = (new DescriptionParser())->getDescription($property);
 
-        self::assertSame('', $actual);
+        $this->assertSame('', $actual);
     }
 
     #[Test]
@@ -41,7 +41,7 @@ final class DescriptionParserTest extends TestCase
 
         $actual = (new DescriptionParser())->getDescription($property);
 
-        self::assertSame('The name of the user in lowercase', $actual);
+        $this->assertSame('The name of the user in lowercase', $actual);
     }
 
     #[Test]
@@ -51,7 +51,7 @@ final class DescriptionParserTest extends TestCase
 
         $actual = (new DescriptionParser())->getDescription($property);
 
-        self::assertSame('The name of the user in lowercase', $actual);
+        $this->assertSame('The name of the user in lowercase', $actual);
     }
 
     #[Test]
@@ -61,7 +61,7 @@ final class DescriptionParserTest extends TestCase
 
         $actual = (new DescriptionParser())->getDescription($parameter);
 
-        self::assertSame('', $actual);
+        $this->assertSame('', $actual);
     }
 
     #[Test]
@@ -71,7 +71,7 @@ final class DescriptionParserTest extends TestCase
 
         $actual = (new DescriptionParser())->getDescription($parameter);
 
-        self::assertSame('The text given to the tool', $actual);
+        $this->assertSame('The text given to the tool', $actual);
     }
 
     #[Test]
@@ -86,7 +86,7 @@ final class DescriptionParserTest extends TestCase
 
         $actual = (new DescriptionParser())->getDescription($parameter);
 
-        self::assertSame($expected, $actual);
+        $this->assertSame($expected, $actual);
     }
 
     public static function provideMethodDescriptionCases(): \Generator

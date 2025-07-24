@@ -44,7 +44,7 @@ final class MessageTest extends TestCase
     {
         $message = Message::forSystem('My amazing system prompt.');
 
-        self::assertSame('My amazing system prompt.', $message->content);
+        $this->assertSame('My amazing system prompt.', $message->content);
     }
 
     #[Test]
@@ -57,7 +57,7 @@ final class MessageTest extends TestCase
             }
         });
 
-        self::assertSame('My amazing system prompt.', $message->content);
+        $this->assertSame('My amazing system prompt.', $message->content);
     }
 
     #[Test]
@@ -65,7 +65,7 @@ final class MessageTest extends TestCase
     {
         $message = Message::ofAssistant('It is time to sleep.');
 
-        self::assertSame('It is time to sleep.', $message->content);
+        $this->assertSame('It is time to sleep.', $message->content);
     }
 
     #[Test]
@@ -77,8 +77,8 @@ final class MessageTest extends TestCase
         ];
         $message = Message::ofAssistant(toolCalls: $toolCalls);
 
-        self::assertCount(2, $message->toolCalls);
-        self::assertTrue($message->hasToolCalls());
+        $this->assertCount(2, $message->toolCalls);
+        $this->assertTrue($message->hasToolCalls());
     }
 
     #[Test]
@@ -86,9 +86,9 @@ final class MessageTest extends TestCase
     {
         $message = Message::ofUser('Hi, my name is John.');
 
-        self::assertCount(1, $message->content);
-        self::assertInstanceOf(Text::class, $message->content[0]);
-        self::assertSame('Hi, my name is John.', $message->content[0]->text);
+        $this->assertCount(1, $message->content);
+        $this->assertInstanceOf(Text::class, $message->content[0]);
+        $this->assertSame('Hi, my name is John.', $message->content[0]->text);
     }
 
     #[Test]
@@ -101,9 +101,9 @@ final class MessageTest extends TestCase
             }
         });
 
-        self::assertCount(1, $message->content);
-        self::assertInstanceOf(Text::class, $message->content[0]);
-        self::assertSame('Hi, my name is John.', $message->content[0]->text);
+        $this->assertCount(1, $message->content);
+        $this->assertInstanceOf(Text::class, $message->content[0]);
+        $this->assertSame('Hi, my name is John.', $message->content[0]->text);
     }
 
     #[Test]
@@ -116,8 +116,8 @@ final class MessageTest extends TestCase
             }
         });
 
-        self::assertCount(1, $message->content);
-        self::assertInstanceOf(ContentInterface::class, $message->content[0]);
+        $this->assertCount(1, $message->content);
+        $this->assertInstanceOf(ContentInterface::class, $message->content[0]);
     }
 
     #[Test]
@@ -126,7 +126,7 @@ final class MessageTest extends TestCase
         $text = new Text('Hi, my name is John.');
         $message = Message::ofUser($text);
 
-        self::assertSame([$text], $message->content);
+        $this->assertSame([$text], $message->content);
     }
 
     #[Test]
@@ -139,7 +139,7 @@ final class MessageTest extends TestCase
             new ImageUrl('http://images.local/my-image2.png'),
         );
 
-        self::assertCount(4, $message->content);
+        $this->assertCount(4, $message->content);
     }
 
     #[Test]
@@ -148,7 +148,7 @@ final class MessageTest extends TestCase
         $toolCall = new ToolCall('call_123456', 'my_tool', ['foo' => 'bar']);
         $message = Message::ofToolCall($toolCall, 'Foo bar.');
 
-        self::assertSame('Foo bar.', $message->content);
-        self::assertSame($toolCall, $message->toolCall);
+        $this->assertSame('Foo bar.', $message->content);
+        $this->assertSame($toolCall, $message->toolCall);
     }
 }

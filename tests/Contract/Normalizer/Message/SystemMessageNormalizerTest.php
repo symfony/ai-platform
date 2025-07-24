@@ -32,14 +32,14 @@ final class SystemMessageNormalizerTest extends TestCase
     #[Test]
     public function supportsNormalization(): void
     {
-        self::assertTrue($this->normalizer->supportsNormalization(new SystemMessage('content')));
-        self::assertFalse($this->normalizer->supportsNormalization(new \stdClass()));
+        $this->assertTrue($this->normalizer->supportsNormalization(new SystemMessage('content')));
+        $this->assertFalse($this->normalizer->supportsNormalization(new \stdClass()));
     }
 
     #[Test]
     public function getSupportedTypes(): void
     {
-        self::assertSame([SystemMessage::class => true], $this->normalizer->getSupportedTypes(null));
+        $this->assertSame([SystemMessage::class => true], $this->normalizer->getSupportedTypes(null));
     }
 
     #[Test]
@@ -52,6 +52,6 @@ final class SystemMessageNormalizerTest extends TestCase
             'content' => 'You are a helpful assistant',
         ];
 
-        self::assertSame($expected, $this->normalizer->normalize($message));
+        $this->assertSame($expected, $this->normalizer->normalize($message));
     }
 }

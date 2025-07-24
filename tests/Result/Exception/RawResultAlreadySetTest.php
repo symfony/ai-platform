@@ -26,6 +26,6 @@ final class RawResultAlreadySetTest extends TestCase
     {
         $exception = new RawResultAlreadySetException();
 
-        self::assertSame('The raw result was already set.', $exception->getMessage());
+        $this->assertSame('The raw result was already set.', $exception->getMessage());
     }
 }

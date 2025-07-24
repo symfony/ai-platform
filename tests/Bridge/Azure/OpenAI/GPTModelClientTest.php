@@ -84,7 +84,7 @@ final class GPTModelClientTest extends TestCase
     {
         $client = new GPTModelClient(new MockHttpClient(), 'test.azure.com', 'deployment', '2023-12-01', 'api-key');
 
-        self::assertTrue($client->supports(new GPT()));
+        $this->assertTrue($client->supports(new GPT()));
     }
 
     #[Test]

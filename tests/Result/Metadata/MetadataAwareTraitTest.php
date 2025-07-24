@@ -30,12 +30,12 @@ final class MetadataAwareTraitTest extends TestCase
         $result = $this->createTestClass();
         $metadata = $result->getMetadata();
 
-        self::assertCount(0, $metadata);
+        $this->assertCount(0, $metadata);
 
         $metadata->add('key', 'value');
         $metadata = $result->getMetadata();
 
-        self::assertCount(1, $metadata);
+        $this->assertCount(1, $metadata);
     }
 
     private function createTestClass(): object

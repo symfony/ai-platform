@@ -28,39 +28,39 @@ final class ChoiceTest extends TestCase
     public function choiceEmpty(): void
     {
         $choice = new Choice();
-        self::assertFalse($choice->hasContent());
-        self::assertNull($choice->getContent());
-        self::assertFalse($choice->hasToolCall());
-        self::assertCount(0, $choice->getToolCalls());
+        $this->assertFalse($choice->hasContent());
+        $this->assertNull($choice->getContent());
+        $this->assertFalse($choice->hasToolCall());
+        $this->assertCount(0, $choice->getToolCalls());
     }
 
     #[Test]
     public function choiceWithContent(): void
     {
         $choice = new Choice('content');
-        self::assertTrue($choice->hasContent());
-        self::assertSame('content', $choice->getContent());
-        self::assertFalse($choice->hasToolCall());
-        self::assertCount(0, $choice->getToolCalls());
+        $this->assertTrue($choice->hasContent());
+        $this->assertSame('content', $choice->getContent());
+        $this->assertFalse($choice->hasToolCall());
+        $this->assertCount(0, $choice->getToolCalls());
     }
 
     #[Test]
     public function choiceWithToolCall(): void
     {
         $choice = new Choice(null, [new ToolCall('name', 'arguments')]);
-        self::assertFalse($choice->hasContent());
-        self::assertNull($choice->getContent());
-        self::assertTrue($choice->hasToolCall());
-        self::assertCount(1, $choice->getToolCalls());
+        $this->assertFalse($choice->hasContent());
+        $this->assertNull($choice->getContent());
+        $this->assertTrue($choice->hasToolCall());
+        $this->assertCount(1, $choice->getToolCalls());
     }
 
     #[Test]
     public function choiceWithContentAndToolCall(): void
     {
         $choice = new Choice('content', [new ToolCall('name', 'arguments')]);
-        self::assertTrue($choice->hasContent());
-        self::assertSame('content', $choice->getContent());
-        self::assertTrue($choice->hasToolCall());
-        self::assertCount(1, $choice->getToolCalls());
+        $this->assertTrue($choice->hasContent());
+        $this->assertSame('content', $choice->getContent());
+        $this->assertTrue($choice->hasToolCall());
+        $this->assertCount(1, $choice->getToolCalls());
     }
 }

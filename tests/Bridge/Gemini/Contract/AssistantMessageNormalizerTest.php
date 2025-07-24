@@ -37,10 +37,10 @@ final class AssistantMessageNormalizerTest extends TestCase
     {
         $normalizer = new AssistantMessageNormalizer();
 
-        self::assertTrue($normalizer->supportsNormalization(new AssistantMessage('Hello'), context: [
+        $this->assertTrue($normalizer->supportsNormalization(new AssistantMessage('Hello'), context: [
             Contract::CONTEXT_MODEL => new Gemini(),
         ]));
-        self::assertFalse($normalizer->supportsNormalization('not an assistant message'));
+        $this->assertFalse($normalizer->supportsNormalization('not an assistant message'));
     }
 
     #[Test]
@@ -48,7 +48,7 @@ final class AssistantMessageNormalizerTest extends TestCase
     {
         $normalizer = new AssistantMessageNormalizer();
 
-        self::assertSame([AssistantMessage::class => true], $normalizer->getSupportedTypes(null));
+        $this->assertSame([AssistantMessage::class => true], $normalizer->getSupportedTypes(null));
     }
 
     #[Test]
@@ -59,7 +59,7 @@ final class AssistantMessageNormalizerTest extends TestCase
 
         $normalized = $normalizer->normalize($message);
 
-        self::assertSame($expectedOutput, $normalized);
+        $this->assertSame($expectedOutput, $normalized);
     }
 
     /**

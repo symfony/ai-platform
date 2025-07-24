@@ -24,7 +24,7 @@ final class ImageTest extends TestCase
     {
         $image = Image::fromDataUrl('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABKklEQVR42mNk+A8AAwMhIv9n+X');
 
-        self::assertStringStartsWith('data:image/png;base64', $image->asDataUrl());
+        $this->assertStringStartsWith('data:image/png;base64', $image->asDataUrl());
     }
 
     #[Test]
@@ -32,7 +32,7 @@ final class ImageTest extends TestCase
     {
         $image = Image::fromFile(\dirname(__DIR__, 5).'/fixtures/image.jpg');
 
-        self::assertStringStartsWith('data:image/jpeg;base64,', $image->asDataUrl());
+        $this->assertStringStartsWith('data:image/jpeg;base64,', $image->asDataUrl());
     }
 
     #[Test]

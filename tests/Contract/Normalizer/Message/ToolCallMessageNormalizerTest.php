@@ -37,14 +37,14 @@ final class ToolCallMessageNormalizerTest extends TestCase
     {
         $toolCallMessage = new ToolCallMessage(new ToolCall('id', 'function'), 'content');
 
-        self::assertTrue($this->normalizer->supportsNormalization($toolCallMessage));
-        self::assertFalse($this->normalizer->supportsNormalization(new \stdClass()));
+        $this->assertTrue($this->normalizer->supportsNormalization($toolCallMessage));
+        $this->assertFalse($this->normalizer->supportsNormalization(new \stdClass()));
     }
 
     #[Test]
     public function getSupportedTypes(): void
     {
-        self::assertSame([ToolCallMessage::class => true], $this->normalizer->getSupportedTypes(null));
+        $this->assertSame([ToolCallMessage::class => true], $this->normalizer->getSupportedTypes(null));
     }
 
     #[Test]
@@ -55,7 +55,7 @@ final class ToolCallMessageNormalizerTest extends TestCase
         $expectedContent = 'Normalized weather data for Paris';
 
         $innerNormalizer = $this->createMock(NormalizerInterface::class);
-        $innerNormalizer->expects(self::once())
+        $innerNormalizer->expects($this->once())
             ->method('normalize')
             ->with($message->content, null, [])
             ->willReturn($expectedContent);
@@ -68,6 +68,6 @@ final class ToolCallMessageNormalizerTest extends TestCase
             'tool_call_id' => 'tool_call_123',
         ];
 
-        self::assertSame($expected, $this->normalizer->normalize($message));
+        $this->assertSame($expected, $this->normalizer->normalize($message));
     }
 }

@@ -25,7 +25,7 @@ final class ToolParameterTest extends TestCase
     {
         $enum = ['value1', 'value2'];
         $toolParameter = new With(enum: $enum);
-        self::assertSame($enum, $toolParameter->enum);
+        $this->assertSame($enum, $toolParameter->enum);
     }
 
     #[Test]
@@ -41,7 +41,7 @@ final class ToolParameterTest extends TestCase
     {
         $const = 'constant value';
         $toolParameter = new With(const: $const);
-        self::assertSame($const, $toolParameter->const);
+        $this->assertSame($const, $toolParameter->const);
     }
 
     #[Test]
@@ -57,7 +57,7 @@ final class ToolParameterTest extends TestCase
     {
         $pattern = '/^[a-z]+$/';
         $toolParameter = new With(pattern: $pattern);
-        self::assertSame($pattern, $toolParameter->pattern);
+        $this->assertSame($pattern, $toolParameter->pattern);
     }
 
     #[Test]
@@ -73,7 +73,7 @@ final class ToolParameterTest extends TestCase
     {
         $minLength = 5;
         $toolParameter = new With(minLength: $minLength);
-        self::assertSame($minLength, $toolParameter->minLength);
+        $this->assertSame($minLength, $toolParameter->minLength);
     }
 
     #[Test]
@@ -89,8 +89,8 @@ final class ToolParameterTest extends TestCase
         $minLength = 5;
         $maxLength = 10;
         $toolParameter = new With(minLength: $minLength, maxLength: $maxLength);
-        self::assertSame($minLength, $toolParameter->minLength);
-        self::assertSame($maxLength, $toolParameter->maxLength);
+        $this->assertSame($minLength, $toolParameter->minLength);
+        $this->assertSame($maxLength, $toolParameter->maxLength);
     }
 
     #[Test]
@@ -105,7 +105,7 @@ final class ToolParameterTest extends TestCase
     {
         $minimum = 0;
         $toolParameter = new With(minimum: $minimum);
-        self::assertSame($minimum, $toolParameter->minimum);
+        $this->assertSame($minimum, $toolParameter->minimum);
     }
 
     #[Test]
@@ -120,7 +120,7 @@ final class ToolParameterTest extends TestCase
     {
         $multipleOf = 5;
         $toolParameter = new With(multipleOf: $multipleOf);
-        self::assertSame($multipleOf, $toolParameter->multipleOf);
+        $this->assertSame($multipleOf, $toolParameter->multipleOf);
     }
 
     #[Test]
@@ -136,8 +136,8 @@ final class ToolParameterTest extends TestCase
         $exclusiveMinimum = 1;
         $exclusiveMaximum = 10;
         $toolParameter = new With(exclusiveMinimum: $exclusiveMinimum, exclusiveMaximum: $exclusiveMaximum);
-        self::assertSame($exclusiveMinimum, $toolParameter->exclusiveMinimum);
-        self::assertSame($exclusiveMaximum, $toolParameter->exclusiveMaximum);
+        $this->assertSame($exclusiveMinimum, $toolParameter->exclusiveMinimum);
+        $this->assertSame($exclusiveMaximum, $toolParameter->exclusiveMaximum);
     }
 
     #[Test]
@@ -153,8 +153,8 @@ final class ToolParameterTest extends TestCase
         $minItems = 1;
         $maxItems = 5;
         $toolParameter = new With(minItems: $minItems, maxItems: $maxItems);
-        self::assertSame($minItems, $toolParameter->minItems);
-        self::assertSame($maxItems, $toolParameter->maxItems);
+        $this->assertSame($minItems, $toolParameter->minItems);
+        $this->assertSame($maxItems, $toolParameter->maxItems);
     }
 
     #[Test]
@@ -168,7 +168,7 @@ final class ToolParameterTest extends TestCase
     public function validUniqueItemsTrue(): void
     {
         $toolParameter = new With(uniqueItems: true);
-        self::assertTrue($toolParameter->uniqueItems);
+        $this->assertTrue($toolParameter->uniqueItems);
     }
 
     #[Test]
@@ -184,8 +184,8 @@ final class ToolParameterTest extends TestCase
         $minContains = 1;
         $maxContains = 3;
         $toolParameter = new With(minContains: $minContains, maxContains: $maxContains);
-        self::assertSame($minContains, $toolParameter->minContains);
-        self::assertSame($maxContains, $toolParameter->maxContains);
+        $this->assertSame($minContains, $toolParameter->minContains);
+        $this->assertSame($maxContains, $toolParameter->maxContains);
     }
 
     #[Test]
@@ -199,7 +199,7 @@ final class ToolParameterTest extends TestCase
     public function validRequired(): void
     {
         $toolParameter = new With(required: true);
-        self::assertTrue($toolParameter->required);
+        $this->assertTrue($toolParameter->required);
     }
 
     #[Test]
@@ -208,8 +208,8 @@ final class ToolParameterTest extends TestCase
         $minProperties = 1;
         $maxProperties = 5;
         $toolParameter = new With(minProperties: $minProperties, maxProperties: $maxProperties);
-        self::assertSame($minProperties, $toolParameter->minProperties);
-        self::assertSame($maxProperties, $toolParameter->maxProperties);
+        $this->assertSame($minProperties, $toolParameter->minProperties);
+        $this->assertSame($maxProperties, $toolParameter->maxProperties);
     }
 
     #[Test]
@@ -223,7 +223,7 @@ final class ToolParameterTest extends TestCase
     public function validDependentRequired(): void
     {
         $toolParameter = new With(dependentRequired: true);
-        self::assertTrue($toolParameter->dependentRequired);
+        $this->assertTrue($toolParameter->dependentRequired);
     }
 
     #[Test]
@@ -251,7 +251,7 @@ final class ToolParameterTest extends TestCase
             dependentRequired: true
         );
 
-        self::assertInstanceOf(With::class, $toolParameter);
+        $this->assertInstanceOf(With::class, $toolParameter);
     }
 
     #[Test]

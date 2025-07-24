@@ -23,7 +23,7 @@ final class VectorTest extends TestCase
     #[Test]
     public function implementsInterface(): void
     {
-        self::assertInstanceOf(
+        $this->assertInstanceOf(
             VectorInterface::class,
             new Vector([1.0, 2.0, 3.0])
         );
@@ -34,7 +34,7 @@ final class VectorTest extends TestCase
     {
         $vector = new Vector($vectors = [1.0, 2.0, 3.0], null);
 
-        self::assertSame($vectors, $vector->getData());
-        self::assertSame(3, $vector->getDimensions());
+        $this->assertSame($vectors, $vector->getData());
+        $this->assertSame(3, $vector->getDimensions());
     }
 }

@@ -26,6 +26,6 @@ final class TextTest extends TestCase
     {
         $obj = new Text('foo');
 
-        self::assertSame('foo', $obj->text);
+        $this->assertSame('foo', $obj->text);
     }
 }

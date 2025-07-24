@@ -42,14 +42,14 @@ final class ResultPromiseTest extends TestCase
         $textResult = new TextResult('test content');
 
         $resultConverter = self::createMock(ResultConverterInterface::class);
-        $resultConverter->expects(self::once())
+        $resultConverter->expects($this->once())
             ->method('convert')
             ->with($rawHttpResult, [])
             ->willReturn($textResult);
 
         $resultPromise = new ResultPromise($resultConverter->convert(...), $rawHttpResult);
 
-        self::assertSame('test content', $resultPromise->getResult()->getContent());
+        $this->assertSame('test content', $resultPromise->getResult()->getContent());
     }
 
     #[Test]
@@ -60,7 +60,7 @@ final class ResultPromiseTest extends TestCase
         $textResult = new TextResult('test content');
 
         $resultConverter = self::createMock(ResultConverterInterface::class);
-        $resultConverter->expects(self::once())
+        $resultConverter->expects($this->once())
             ->method('convert')
             ->with($rawHttpResult, [])
             ->willReturn($textResult);
@@ -81,7 +81,7 @@ final class ResultPromiseTest extends TestCase
 
         $resultPromise = new ResultPromise($resultConverter->convert(...), new RawHttpResult($httpResponse));
 
-        self::assertSame($httpResponse, $resultPromise->getRawResult()->getObject());
+        $this->assertSame($httpResponse, $resultPromise->getRawResult()->getObject());
     }
 
     #[Test]
@@ -98,7 +98,7 @@ final class ResultPromiseTest extends TestCase
         $resultPromise->await();
 
         // The raw response in the model response is now set and not null anymore
-        self::assertSame($httpResponse, $unwrappedResponse->getRawResult()->getObject());
+        $this->assertSame($httpResponse, $unwrappedResponse->getRawResult()->getObject());
     }
 
     #[Test]
@@ -116,7 +116,7 @@ final class ResultPromiseTest extends TestCase
         $resultPromise->await();
 
         // It is still the same raw response as set initially and so not overwritten
-        self::assertSame($anotherHttpResponse, $unwrappedResult->getRawResult()->getObject());
+        $this->assertSame($anotherHttpResponse, $unwrappedResult->getRawResult()->getObject());
     }
 
     #[Test]
@@ -127,7 +127,7 @@ final class ResultPromiseTest extends TestCase
         $options = ['option1' => 'value1', 'option2' => 'value2'];
 
         $resultConverter = self::createMock(ResultConverterInterface::class);
-        $resultConverter->expects(self::once())
+        $resultConverter->expects($this->once())
             ->method('convert')
             ->with($rawHttpResponse, $options)
             ->willReturn($this->createResult(null));
