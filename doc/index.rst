@@ -281,6 +281,30 @@ which can be useful to speed up the processing::
         echo $result->asText().PHP_EOL;
     }
 
+Testing Tools
+-------------
+
+For unit or integration testing, you can use the `InMemoryPlatform`, which implements `PlatformInterface` without calling external APIs.
+
+It supports returning either:
+
+- A fixed string result
+- A callable that dynamically returns a response based on the model, input, and options::
+
+    use Symfony\AI\Platform\InMemoryPlatform;
+    use Symfony\AI\Platform\Model;
+
+    $platform = new InMemoryPlatform('Fake result');
+
+    $result = $platform->invoke(new Model('test'), 'What is the capital of France?');
+
+    echo $result->asText(); // "Fake result"
+
+
+Internally, it uses `InMemoryRawResult` to simulate the behavior of real API responses and support `ResultPromise`.
+
+This allows fast and isolated testing of AI-powered features without relying on live providers or HTTP requests.
+
 .. note::
 
     This requires `cURL` and the `ext-curl` extension to be installed.
