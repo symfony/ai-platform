@@ -13,7 +13,6 @@ namespace Symfony\AI\Platform\Tests\Result;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Result\ToolCall;
 
@@ -21,8 +20,7 @@ use Symfony\AI\Platform\Result\ToolCall;
 #[Small]
 final class ToolCallTest extends TestCase
 {
-    #[Test]
-    public function toolCall(): void
+    public function testToolCall(): void
     {
         $toolCall = new ToolCall('id', 'name', ['foo' => 'bar']);
         $this->assertSame('id', $toolCall->id);
@@ -30,8 +28,7 @@ final class ToolCallTest extends TestCase
         $this->assertSame(['foo' => 'bar'], $toolCall->arguments);
     }
 
-    #[Test]
-    public function toolCallJsonSerialize(): void
+    public function testToolCallJsonSerialize(): void
     {
         $toolCall = new ToolCall('id', 'name', ['foo' => 'bar']);
         $this->assertSame([

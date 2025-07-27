@@ -12,7 +12,6 @@
 namespace Symfony\AI\Platform\Tests\Contract\JsonSchema\Attribute;
 
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Contract\JsonSchema\Attribute\With;
 use Symfony\AI\Platform\Exception\InvalidArgumentException;
@@ -20,71 +19,62 @@ use Symfony\AI\Platform\Exception\InvalidArgumentException;
 #[CoversClass(With::class)]
 final class ToolParameterTest extends TestCase
 {
-    #[Test]
-    public function validEnum(): void
+    public function testValidEnum(): void
     {
         $enum = ['value1', 'value2'];
         $toolParameter = new With(enum: $enum);
         $this->assertSame($enum, $toolParameter->enum);
     }
 
-    #[Test]
-    public function invalidEnumContainsNonString(): void
+    public function testInvalidEnumContainsNonString(): void
     {
         self::expectException(InvalidArgumentException::class);
         $enum = ['value1', 2];
         new With(enum: $enum);
     }
 
-    #[Test]
-    public function validConstString(): void
+    public function testValidConstString(): void
     {
         $const = 'constant value';
         $toolParameter = new With(const: $const);
         $this->assertSame($const, $toolParameter->const);
     }
 
-    #[Test]
-    public function invalidConstEmptyString(): void
+    public function testInvalidConstEmptyString(): void
     {
         self::expectException(InvalidArgumentException::class);
         $const = '   ';
         new With(const: $const);
     }
 
-    #[Test]
-    public function validPattern(): void
+    public function testValidPattern(): void
     {
         $pattern = '/^[a-z]+$/';
         $toolParameter = new With(pattern: $pattern);
         $this->assertSame($pattern, $toolParameter->pattern);
     }
 
-    #[Test]
-    public function invalidPatternEmptyString(): void
+    public function testInvalidPatternEmptyString(): void
     {
         self::expectException(InvalidArgumentException::class);
         $pattern = '   ';
         new With(pattern: $pattern);
     }
 
-    #[Test]
-    public function validMinLength(): void
+    public function testValidMinLength(): void
     {
         $minLength = 5;
         $toolParameter = new With(minLength: $minLength);
         $this->assertSame($minLength, $toolParameter->minLength);
     }
 
-    #[Test]
-    public function invalidMinLengthNegative(): void
+    public function testInvalidMinLengthNegative(): void
     {
         self::expectException(InvalidArgumentException::class);
         new With(minLength: -1);
     }
 
-    #[Test]
-    public function validMinLengthAndMaxLength(): void
+    public function testValidMinLengthAndMaxLength(): void
     {
         $minLength = 5;
         $maxLength = 10;
@@ -93,45 +83,39 @@ final class ToolParameterTest extends TestCase
         $this->assertSame($maxLength, $toolParameter->maxLength);
     }
 
-    #[Test]
-    public function invalidMaxLengthLessThanMinLength(): void
+    public function testInvalidMaxLengthLessThanMinLength(): void
     {
         self::expectException(InvalidArgumentException::class);
         new With(minLength: 10, maxLength: 5);
     }
 
-    #[Test]
-    public function validMinimum(): void
+    public function testValidMinimum(): void
     {
         $minimum = 0;
         $toolParameter = new With(minimum: $minimum);
         $this->assertSame($minimum, $toolParameter->minimum);
     }
 
-    #[Test]
-    public function invalidMinimumNegative(): void
+    public function testInvalidMinimumNegative(): void
     {
         self::expectException(InvalidArgumentException::class);
         new With(minimum: -1);
     }
 
-    #[Test]
-    public function validMultipleOf(): void
+    public function testValidMultipleOf(): void
     {
         $multipleOf = 5;
         $toolParameter = new With(multipleOf: $multipleOf);
         $this->assertSame($multipleOf, $toolParameter->multipleOf);
     }
 
-    #[Test]
-    public function invalidMultipleOfNegative(): void
+    public function testInvalidMultipleOfNegative(): void
     {
         self::expectException(InvalidArgumentException::class);
         new With(multipleOf: -5);
     }
 
-    #[Test]
-    public function validExclusiveMinimumAndMaximum(): void
+    public function testValidExclusiveMinimumAndMaximum(): void
     {
         $exclusiveMinimum = 1;
         $exclusiveMaximum = 10;
@@ -140,15 +124,13 @@ final class ToolParameterTest extends TestCase
         $this->assertSame($exclusiveMaximum, $toolParameter->exclusiveMaximum);
     }
 
-    #[Test]
-    public function invalidExclusiveMaximumLessThanExclusiveMinimum(): void
+    public function testInvalidExclusiveMaximumLessThanExclusiveMinimum(): void
     {
         self::expectException(InvalidArgumentException::class);
         new With(exclusiveMinimum: 10, exclusiveMaximum: 5);
     }
 
-    #[Test]
-    public function validMinItemsAndMaxItems(): void
+    public function testValidMinItemsAndMaxItems(): void
     {
         $minItems = 1;
         $maxItems = 5;
@@ -157,29 +139,25 @@ final class ToolParameterTest extends TestCase
         $this->assertSame($maxItems, $toolParameter->maxItems);
     }
 
-    #[Test]
-    public function invalidMaxItemsLessThanMinItems(): void
+    public function testInvalidMaxItemsLessThanMinItems(): void
     {
         self::expectException(InvalidArgumentException::class);
         new With(minItems: 5, maxItems: 1);
     }
 
-    #[Test]
-    public function validUniqueItemsTrue(): void
+    public function testValidUniqueItemsTrue(): void
     {
         $toolParameter = new With(uniqueItems: true);
         $this->assertTrue($toolParameter->uniqueItems);
     }
 
-    #[Test]
-    public function invalidUniqueItemsFalse(): void
+    public function testInvalidUniqueItemsFalse(): void
     {
         self::expectException(InvalidArgumentException::class);
         new With(uniqueItems: false);
     }
 
-    #[Test]
-    public function validMinContainsAndMaxContains(): void
+    public function testValidMinContainsAndMaxContains(): void
     {
         $minContains = 1;
         $maxContains = 3;
@@ -188,22 +166,19 @@ final class ToolParameterTest extends TestCase
         $this->assertSame($maxContains, $toolParameter->maxContains);
     }
 
-    #[Test]
-    public function invalidMaxContainsLessThanMinContains(): void
+    public function testInvalidMaxContainsLessThanMinContains(): void
     {
         self::expectException(InvalidArgumentException::class);
         new With(minContains: 3, maxContains: 1);
     }
 
-    #[Test]
-    public function validRequired(): void
+    public function testValidRequired(): void
     {
         $toolParameter = new With(required: true);
         $this->assertTrue($toolParameter->required);
     }
 
-    #[Test]
-    public function validMinPropertiesAndMaxProperties(): void
+    public function testValidMinPropertiesAndMaxProperties(): void
     {
         $minProperties = 1;
         $maxProperties = 5;
@@ -212,22 +187,19 @@ final class ToolParameterTest extends TestCase
         $this->assertSame($maxProperties, $toolParameter->maxProperties);
     }
 
-    #[Test]
-    public function invalidMaxPropertiesLessThanMinProperties(): void
+    public function testInvalidMaxPropertiesLessThanMinProperties(): void
     {
         self::expectException(InvalidArgumentException::class);
         new With(minProperties: 5, maxProperties: 1);
     }
 
-    #[Test]
-    public function validDependentRequired(): void
+    public function testValidDependentRequired(): void
     {
         $toolParameter = new With(dependentRequired: true);
         $this->assertTrue($toolParameter->dependentRequired);
     }
 
-    #[Test]
-    public function validCombination(): void
+    public function testValidCombination(): void
     {
         $toolParameter = new With(
             enum: ['value1', 'value2'],
@@ -254,8 +226,7 @@ final class ToolParameterTest extends TestCase
         $this->assertInstanceOf(With::class, $toolParameter);
     }
 
-    #[Test]
-    public function invalidCombination(): void
+    public function testInvalidCombination(): void
     {
         self::expectException(InvalidArgumentException::class);
         new With(minLength: -1, maxLength: -2);

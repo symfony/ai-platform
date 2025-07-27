@@ -12,7 +12,6 @@
 namespace Symfony\AI\Platform\Tests\Contract\Normalizer\Message;
 
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Contract\Normalizer\Message\AssistantMessageNormalizer;
@@ -32,21 +31,18 @@ final class AssistantMessageNormalizerTest extends TestCase
         $this->normalizer = new AssistantMessageNormalizer();
     }
 
-    #[Test]
-    public function supportsNormalization(): void
+    public function testSupportsNormalization(): void
     {
         $this->assertTrue($this->normalizer->supportsNormalization(new AssistantMessage('content')));
         $this->assertFalse($this->normalizer->supportsNormalization(new \stdClass()));
     }
 
-    #[Test]
-    public function getSupportedTypes(): void
+    public function testGetSupportedTypes(): void
     {
         $this->assertSame([AssistantMessage::class => true], $this->normalizer->getSupportedTypes(null));
     }
 
-    #[Test]
-    public function normalizeWithContent(): void
+    public function testNormalizeWithContent(): void
     {
         $message = new AssistantMessage('I am an assistant');
 
@@ -58,8 +54,7 @@ final class AssistantMessageNormalizerTest extends TestCase
         $this->assertSame($expected, $this->normalizer->normalize($message));
     }
 
-    #[Test]
-    public function normalizeWithToolCalls(): void
+    public function testNormalizeWithToolCalls(): void
     {
         $toolCalls = [
             new ToolCall('id1', 'function1', ['param' => 'value']),
@@ -89,8 +84,7 @@ final class AssistantMessageNormalizerTest extends TestCase
         $this->assertSame($expected, $this->normalizer->normalize($message));
     }
 
-    #[Test]
-    public function normalizeWithNullContent(): void
+    public function testNormalizeWithNullContent(): void
     {
         $toolCalls = [new ToolCall('id1', 'function1', ['param' => 'value'])];
         $message = new AssistantMessage(null, $toolCalls);

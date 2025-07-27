@@ -13,7 +13,6 @@ namespace Symfony\AI\Platform\Tests\Message;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Message\ToolCallMessage;
@@ -30,8 +29,7 @@ final class ToolCallMessageTest extends TestCase
 {
     use UuidAssertionTrait;
 
-    #[Test]
-    public function constructionIsPossible(): void
+    public function testConstructionIsPossible(): void
     {
         $toolCall = new ToolCall('foo', 'bar');
         $obj = new ToolCallMessage($toolCall, 'bar');
@@ -40,8 +38,7 @@ final class ToolCallMessageTest extends TestCase
         $this->assertSame('bar', $obj->content);
     }
 
-    #[Test]
-    public function messageHasUid(): void
+    public function testMessageHasUid(): void
     {
         $toolCall = new ToolCall('foo', 'bar');
         $message = new ToolCallMessage($toolCall, 'bar');
@@ -51,8 +48,7 @@ final class ToolCallMessageTest extends TestCase
         $this->assertSame($message->id, $message->getId());
     }
 
-    #[Test]
-    public function differentMessagesHaveDifferentUids(): void
+    public function testDifferentMessagesHaveDifferentUids(): void
     {
         $toolCall = new ToolCall('foo', 'bar');
         $message1 = new ToolCallMessage($toolCall, 'bar');
@@ -63,8 +59,7 @@ final class ToolCallMessageTest extends TestCase
         self::assertIsUuidV7($message2->getId()->toRfc4122());
     }
 
-    #[Test]
-    public function sameMessagesHaveDifferentUids(): void
+    public function testSameMessagesHaveDifferentUids(): void
     {
         $toolCall = new ToolCall('foo', 'bar');
         $message1 = new ToolCallMessage($toolCall, 'bar');
@@ -75,8 +70,7 @@ final class ToolCallMessageTest extends TestCase
         self::assertIsUuidV7($message2->getId()->toRfc4122());
     }
 
-    #[Test]
-    public function messageIdImplementsRequiredInterfaces(): void
+    public function testMessageIdImplementsRequiredInterfaces(): void
     {
         $toolCall = new ToolCall('foo', 'bar');
         $message = new ToolCallMessage($toolCall, 'test');

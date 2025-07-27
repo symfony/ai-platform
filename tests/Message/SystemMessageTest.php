@@ -13,7 +13,6 @@ namespace Symfony\AI\Platform\Tests\Message;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Message\Role;
 use Symfony\AI\Platform\Message\SystemMessage;
@@ -28,8 +27,7 @@ final class SystemMessageTest extends TestCase
 {
     use UuidAssertionTrait;
 
-    #[Test]
-    public function constructionIsPossible(): void
+    public function testConstructionIsPossible(): void
     {
         $message = new SystemMessage('foo');
 
@@ -37,8 +35,7 @@ final class SystemMessageTest extends TestCase
         $this->assertSame('foo', $message->content);
     }
 
-    #[Test]
-    public function messageHasUid(): void
+    public function testMessageHasUid(): void
     {
         $message = new SystemMessage('foo');
 
@@ -47,8 +44,7 @@ final class SystemMessageTest extends TestCase
         $this->assertSame($message->id, $message->getId());
     }
 
-    #[Test]
-    public function differentMessagesHaveDifferentUids(): void
+    public function testDifferentMessagesHaveDifferentUids(): void
     {
         $message1 = new SystemMessage('foo');
         $message2 = new SystemMessage('bar');
@@ -58,8 +54,7 @@ final class SystemMessageTest extends TestCase
         self::assertIsUuidV7($message2->getId()->toRfc4122());
     }
 
-    #[Test]
-    public function sameMessagesHaveDifferentUids(): void
+    public function testSameMessagesHaveDifferentUids(): void
     {
         $message1 = new SystemMessage('foo');
         $message2 = new SystemMessage('foo');
@@ -69,8 +64,7 @@ final class SystemMessageTest extends TestCase
         self::assertIsUuidV7($message2->getId()->toRfc4122());
     }
 
-    #[Test]
-    public function messageIdImplementsRequiredInterfaces(): void
+    public function testMessageIdImplementsRequiredInterfaces(): void
     {
         $message = new SystemMessage('test');
 

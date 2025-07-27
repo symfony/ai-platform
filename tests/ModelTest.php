@@ -13,7 +13,6 @@ namespace Symfony\AI\Platform\Tests;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Capability;
@@ -24,24 +23,21 @@ use Symfony\AI\Platform\Model;
 #[UsesClass(Capability::class)]
 final class ModelTest extends TestCase
 {
-    #[Test]
-    public function returnsName(): void
+    public function testReturnsName(): void
     {
         $model = new Model('gpt-4');
 
         $this->assertSame('gpt-4', $model->getName());
     }
 
-    #[Test]
-    public function returnsCapabilities(): void
+    public function testReturnsCapabilities(): void
     {
         $model = new Model('gpt-4', [Capability::INPUT_TEXT, Capability::OUTPUT_TEXT]);
 
         $this->assertSame([Capability::INPUT_TEXT, Capability::OUTPUT_TEXT], $model->getCapabilities());
     }
 
-    #[Test]
-    public function checksSupportForCapability(): void
+    public function testChecksSupportForCapability(): void
     {
         $model = new Model('gpt-4', [Capability::INPUT_TEXT, Capability::OUTPUT_TEXT]);
 
@@ -50,16 +46,14 @@ final class ModelTest extends TestCase
         $this->assertFalse($model->supports(Capability::INPUT_IMAGE));
     }
 
-    #[Test]
-    public function returnsEmptyCapabilitiesByDefault(): void
+    public function testReturnsEmptyCapabilitiesByDefault(): void
     {
         $model = new Model('gpt-4');
 
         $this->assertSame([], $model->getCapabilities());
     }
 
-    #[Test]
-    public function returnsOptions(): void
+    public function testReturnsOptions(): void
     {
         $options = [
             'temperature' => 0.7,
@@ -70,8 +64,7 @@ final class ModelTest extends TestCase
         $this->assertSame($options, $model->getOptions());
     }
 
-    #[Test]
-    public function returnsEmptyOptionsByDefault(): void
+    public function testReturnsEmptyOptionsByDefault(): void
     {
         $model = new Model('gpt-4');
 

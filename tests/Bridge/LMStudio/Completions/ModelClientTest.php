@@ -13,7 +13,6 @@ namespace Symfony\AI\Platform\Tests\Bridge\LMStudio\Completions;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\LMStudio\Completions;
@@ -28,16 +27,14 @@ use Symfony\Component\HttpClient\Response\MockResponse;
 #[Small]
 class ModelClientTest extends TestCase
 {
-    #[Test]
-    public function itIsSupportingTheCorrectModel(): void
+    public function testItIsSupportingTheCorrectModel(): void
     {
         $client = new ModelClient(new MockHttpClient(), 'http://localhost:1234');
 
         $this->assertTrue($client->supports(new Completions('test-model')));
     }
 
-    #[Test]
-    public function itIsExecutingTheCorrectRequest(): void
+    public function testItIsExecutingTheCorrectRequest(): void
     {
         $resultCallback = static function (string $method, string $url, array $options): MockResponse {
             self::assertSame('POST', $method);
@@ -63,8 +60,7 @@ class ModelClientTest extends TestCase
         $client->request(new Completions('test-model'), $payload);
     }
 
-    #[Test]
-    public function itMergesOptionsWithPayload(): void
+    public function testItMergesOptionsWithPayload(): void
     {
         $resultCallback = static function (string $method, string $url, array $options): MockResponse {
             self::assertSame('POST', $method);
@@ -90,8 +86,7 @@ class ModelClientTest extends TestCase
         $client->request(new Completions('test-model'), $payload, ['temperature' => 0.7]);
     }
 
-    #[Test]
-    public function itUsesEventSourceHttpClient(): void
+    public function testItUsesEventSourceHttpClient(): void
     {
         $httpClient = new MockHttpClient();
         $client = new ModelClient($httpClient, 'http://localhost:1234');
@@ -102,8 +97,7 @@ class ModelClientTest extends TestCase
         $this->assertInstanceOf(EventSourceHttpClient::class, $reflection->getValue($client));
     }
 
-    #[Test]
-    public function itKeepsExistingEventSourceHttpClient(): void
+    public function testItKeepsExistingEventSourceHttpClient(): void
     {
         $eventSourceHttpClient = new EventSourceHttpClient(new MockHttpClient());
         $client = new ModelClient($eventSourceHttpClient, 'http://localhost:1234');

@@ -13,7 +13,6 @@ namespace Symfony\AI\Platform\Tests\Result\Metadata;
 
 use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Result\Metadata\Metadata;
@@ -24,8 +23,7 @@ use Symfony\AI\Platform\Result\Metadata\MetadataAwareTrait;
 #[UsesClass(Metadata::class)]
 final class MetadataAwareTraitTest extends TestCase
 {
-    #[Test]
-    public function itCanHandleMetadata(): void
+    public function testItCanHandleMetadata(): void
     {
         $result = $this->createTestClass();
         $metadata = $result->getMetadata();

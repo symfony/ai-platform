@@ -13,7 +13,6 @@ namespace Symfony\AI\Platform\Tests\Bridge\OpenAI\Embeddings;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\OpenAI\Embeddings\ResultConverter;
@@ -28,8 +27,7 @@ use Symfony\Contracts\HttpClient\ResponseInterface;
 #[UsesClass(VectorResult::class)]
 class ResultConverterTest extends TestCase
 {
-    #[Test]
-    public function itConvertsAResponseToAVectorResult(): void
+    public function testItConvertsAResponseToAVectorResult(): void
     {
         $result = $this->createStub(ResponseInterface::class);
         $result

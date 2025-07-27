@@ -13,7 +13,6 @@ namespace Symfony\AI\Platform\Tests\Result\Metadata;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Result\Metadata\Metadata;
 
@@ -21,24 +20,21 @@ use Symfony\AI\Platform\Result\Metadata\Metadata;
 #[Small]
 final class MetadataTest extends TestCase
 {
-    #[Test]
-    public function itCanBeCreatedEmpty(): void
+    public function testItCanBeCreatedEmpty(): void
     {
         $metadata = new Metadata();
         $this->assertCount(0, $metadata);
         $this->assertSame([], $metadata->all());
     }
 
-    #[Test]
-    public function itCanBeCreatedWithInitialData(): void
+    public function testItCanBeCreatedWithInitialData(): void
     {
         $metadata = new Metadata(['key' => 'value']);
         $this->assertCount(1, $metadata);
         $this->assertSame(['key' => 'value'], $metadata->all());
     }
 
-    #[Test]
-    public function itCanAddNewMetadata(): void
+    public function testItCanAddNewMetadata(): void
     {
         $metadata = new Metadata();
         $metadata->add('key', 'value');
@@ -47,8 +43,7 @@ final class MetadataTest extends TestCase
         $this->assertSame('value', $metadata->get('key'));
     }
 
-    #[Test]
-    public function itCanCheckIfMetadataExists(): void
+    public function testItCanCheckIfMetadataExists(): void
     {
         $metadata = new Metadata(['key' => 'value']);
 
@@ -56,8 +51,7 @@ final class MetadataTest extends TestCase
         $this->assertFalse($metadata->has('nonexistent'));
     }
 
-    #[Test]
-    public function itCanGetMetadataWithDefault(): void
+    public function testItCanGetMetadataWithDefault(): void
     {
         $metadata = new Metadata(['key' => 'value']);
 
@@ -66,8 +60,7 @@ final class MetadataTest extends TestCase
         $this->assertNull($metadata->get('nonexistent'));
     }
 
-    #[Test]
-    public function itCanRemoveMetadata(): void
+    public function testItCanRemoveMetadata(): void
     {
         $metadata = new Metadata(['key' => 'value']);
         $this->assertTrue($metadata->has('key'));
@@ -76,8 +69,7 @@ final class MetadataTest extends TestCase
         $this->assertFalse($metadata->has('key'));
     }
 
-    #[Test]
-    public function itCanSetEntireMetadataArray(): void
+    public function testItCanSetEntireMetadataArray(): void
     {
         $metadata = new Metadata(['key1' => 'value1']);
         $metadata->set(['key2' => 'value2', 'key3' => 'value3']);
@@ -88,15 +80,13 @@ final class MetadataTest extends TestCase
         $this->assertSame(['key2' => 'value2', 'key3' => 'value3'], $metadata->all());
     }
 
-    #[Test]
-    public function itImplementsJsonSerializable(): void
+    public function testItImplementsJsonSerializable(): void
     {
         $metadata = new Metadata(['key' => 'value']);
         $this->assertSame(['key' => 'value'], $metadata->jsonSerialize());
     }
 
-    #[Test]
-    public function itImplementsArrayAccess(): void
+    public function testItImplementsArrayAccess(): void
     {
         $metadata = new Metadata(['key' => 'value']);
 
@@ -110,8 +100,7 @@ final class MetadataTest extends TestCase
         $this->assertArrayNotHasKey('key', $metadata);
     }
 
-    #[Test]
-    public function itImplementsIteratorAggregate(): void
+    public function testItImplementsIteratorAggregate(): void
     {
         $metadata = new Metadata(['key1' => 'value1', 'key2' => 'value2']);
         $result = iterator_to_array($metadata);
@@ -119,8 +108,7 @@ final class MetadataTest extends TestCase
         $this->assertSame(['key1' => 'value1', 'key2' => 'value2'], $result);
     }
 
-    #[Test]
-    public function itImplementsCountable(): void
+    public function testItImplementsCountable(): void
     {
         $metadata = new Metadata();
         $this->assertCount(0, $metadata);

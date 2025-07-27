@@ -13,7 +13,6 @@ namespace Symfony\AI\Platform\Tests\Bridge\OpenAI\DallE;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\OpenAI\DallE\UrlImage;
 
@@ -21,16 +20,14 @@ use Symfony\AI\Platform\Bridge\OpenAI\DallE\UrlImage;
 #[Small]
 final class UrlImageTest extends TestCase
 {
-    #[Test]
-    public function itCreatesUrlImage(): void
+    public function testItCreatesUrlImage(): void
     {
         $urlImage = new UrlImage('https://example.com/image.jpg');
 
         $this->assertSame('https://example.com/image.jpg', $urlImage->url);
     }
 
-    #[Test]
-    public function itThrowsExceptionWhenUrlIsEmpty(): void
+    public function testItThrowsExceptionWhenUrlIsEmpty(): void
     {
         self::expectException(\InvalidArgumentException::class);
         self::expectExceptionMessage('The image url must be given.');

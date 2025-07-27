@@ -13,7 +13,6 @@ namespace Symfony\AI\Platform\Tests\Result;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Exception\InvalidArgumentException;
@@ -25,8 +24,7 @@ use Symfony\AI\Platform\Result\ChoiceResult;
 #[Small]
 final class ChoiceResultTest extends TestCase
 {
-    #[Test]
-    public function choiceResultCreation(): void
+    public function testChoiceResultCreation(): void
     {
         $choice1 = new Choice('choice1');
         $choice2 = new Choice(null);
@@ -39,8 +37,7 @@ final class ChoiceResultTest extends TestCase
         $this->assertSame('choice3', $result->getContent()[2]->getContent());
     }
 
-    #[Test]
-    public function choiceResultWithNoChoices(): void
+    public function testChoiceResultWithNoChoices(): void
     {
         self::expectException(InvalidArgumentException::class);
         self::expectExceptionMessage('Result must have at least one choice.');

@@ -13,7 +13,6 @@ namespace Symfony\AI\Platform\Tests\Bridge\OpenAI\DallE;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\OpenAI\DallE\Base64Image;
 
@@ -21,8 +20,7 @@ use Symfony\AI\Platform\Bridge\OpenAI\DallE\Base64Image;
 #[Small]
 final class Base64ImageTest extends TestCase
 {
-    #[Test]
-    public function itCreatesBase64Image(): void
+    public function testItCreatesBase64Image(): void
     {
         $emptyPixel = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
         $base64Image = new Base64Image($emptyPixel);
@@ -30,8 +28,7 @@ final class Base64ImageTest extends TestCase
         $this->assertSame($emptyPixel, $base64Image->encodedImage);
     }
 
-    #[Test]
-    public function itThrowsExceptionWhenBase64ImageIsEmpty(): void
+    public function testItThrowsExceptionWhenBase64ImageIsEmpty(): void
     {
         self::expectException(\InvalidArgumentException::class);
         self::expectExceptionMessage('The base64 encoded image generated must be given.');

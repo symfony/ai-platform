@@ -12,7 +12,6 @@
 namespace Symfony\AI\Platform\Tests\Contract\Normalizer\Message\Content;
 
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Contract\Normalizer\Message\Content\ImageNormalizer;
@@ -31,21 +30,18 @@ final class ImageNormalizerTest extends TestCase
         $this->normalizer = new ImageNormalizer();
     }
 
-    #[Test]
-    public function supportsNormalization(): void
+    public function testSupportsNormalization(): void
     {
         $this->assertTrue($this->normalizer->supportsNormalization(Image::fromFile(\dirname(__DIR__, 7).'/fixtures/image.jpg')));
         $this->assertFalse($this->normalizer->supportsNormalization(new \stdClass()));
     }
 
-    #[Test]
-    public function getSupportedTypes(): void
+    public function testGetSupportedTypes(): void
     {
         $this->assertSame([Image::class => true], $this->normalizer->getSupportedTypes(null));
     }
 
-    #[Test]
-    public function normalize(): void
+    public function testNormalize(): void
     {
         $image = Image::fromDataUrl('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABKklEQVR42mNk+A8AAwMhIv9n+Q==');
 

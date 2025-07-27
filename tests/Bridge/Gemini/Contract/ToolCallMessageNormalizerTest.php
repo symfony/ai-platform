@@ -14,7 +14,6 @@ namespace Symfony\AI\Platform\Tests\Bridge\Gemini\Contract;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\Gemini\Contract\ToolCallMessageNormalizer;
@@ -32,8 +31,7 @@ use Symfony\AI\Platform\Result\ToolCall;
 #[UsesClass(ToolCall::class)]
 final class ToolCallMessageNormalizerTest extends TestCase
 {
-    #[Test]
-    public function supportsNormalization(): void
+    public function testSupportsNormalization(): void
     {
         $normalizer = new ToolCallMessageNormalizer();
 
@@ -43,8 +41,7 @@ final class ToolCallMessageNormalizerTest extends TestCase
         $this->assertFalse($normalizer->supportsNormalization('not a tool call'));
     }
 
-    #[Test]
-    public function getSupportedTypes(): void
+    public function testGetSupportedTypes(): void
     {
         $normalizer = new ToolCallMessageNormalizer();
 
@@ -55,9 +52,8 @@ final class ToolCallMessageNormalizerTest extends TestCase
         $this->assertSame($expected, $normalizer->getSupportedTypes(null));
     }
 
-    #[Test]
     #[DataProvider('normalizeDataProvider')]
-    public function normalize(ToolCallMessage $message, array $expected): void
+    public function testNormalize(ToolCallMessage $message, array $expected): void
     {
         $normalizer = new ToolCallMessageNormalizer();
 

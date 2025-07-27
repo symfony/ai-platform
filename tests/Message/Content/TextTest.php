@@ -13,7 +13,6 @@ namespace Symfony\AI\Platform\Tests\Message\Content;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Message\Content\Text;
 
@@ -21,8 +20,7 @@ use Symfony\AI\Platform\Message\Content\Text;
 #[Small]
 final class TextTest extends TestCase
 {
-    #[Test]
-    public function constructionIsPossible(): void
+    public function testConstructionIsPossible(): void
     {
         $obj = new Text('foo');
 

@@ -13,7 +13,6 @@ namespace Symfony\AI\Platform\Tests\Message\Content;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Message\Content\Audio;
 
@@ -21,8 +20,7 @@ use Symfony\AI\Platform\Message\Content\Audio;
 #[Small]
 final class AudioTest extends TestCase
 {
-    #[Test]
-    public function constructWithValidData(): void
+    public function testConstructWithValidData(): void
     {
         $audio = new Audio('somedata', 'audio/mpeg');
 
@@ -30,8 +28,7 @@ final class AudioTest extends TestCase
         $this->assertSame('audio/mpeg', $audio->getFormat());
     }
 
-    #[Test]
-    public function fromDataUrlWithValidUrl(): void
+    public function testFromDataUrlWithValidUrl(): void
     {
         $dataUrl = 'data:audio/mpeg;base64,SUQzBAAAAAAAfVREUkMAAAAMAAADMg==';
         $audio = Audio::fromDataUrl($dataUrl);
@@ -40,8 +37,7 @@ final class AudioTest extends TestCase
         $this->assertSame('audio/mpeg', $audio->getFormat());
     }
 
-    #[Test]
-    public function fromDataUrlWithInvalidUrl(): void
+    public function testFromDataUrlWithInvalidUrl(): void
     {
         self::expectException(\InvalidArgumentException::class);
         self::expectExceptionMessage('Invalid audio data URL format.');
@@ -49,8 +45,7 @@ final class AudioTest extends TestCase
         Audio::fromDataUrl('invalid-url');
     }
 
-    #[Test]
-    public function fromFileWithValidPath(): void
+    public function testFromFileWithValidPath(): void
     {
         $audio = Audio::fromFile(\dirname(__DIR__, 5).'/fixtures/audio.mp3');
 
@@ -58,8 +53,7 @@ final class AudioTest extends TestCase
         $this->assertNotEmpty($audio->asBinary());
     }
 
-    #[Test]
-    public function fromFileWithInvalidPath(): void
+    public function testFromFileWithInvalidPath(): void
     {
         self::expectException(\InvalidArgumentException::class);
         self::expectExceptionMessage('The file "foo.mp3" does not exist or is not readable.');

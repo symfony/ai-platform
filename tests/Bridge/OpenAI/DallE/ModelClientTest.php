@@ -13,7 +13,6 @@ namespace Symfony\AI\Platform\Tests\Bridge\OpenAI\DallE;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
@@ -29,8 +28,7 @@ use Symfony\Contracts\HttpClient\ResponseInterface as HttpResponse;
 #[Small]
 final class ModelClientTest extends TestCase
 {
-    #[Test]
-    public function itThrowsExceptionWhenApiKeyIsEmpty(): void
+    public function testItThrowsExceptionWhenApiKeyIsEmpty(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The API key must not be empty.');
@@ -38,14 +36,13 @@ final class ModelClientTest extends TestCase
         new ModelClient(new MockHttpClient(), '');
     }
 
-    #[Test]
     #[TestWith(['api-key-without-prefix'])]
     #[TestWith(['pk-api-key'])]
     #[TestWith(['SK-api-key'])]
     #[TestWith(['skapikey'])]
     #[TestWith(['sk api-key'])]
     #[TestWith(['sk'])]
-    public function itThrowsExceptionWhenApiKeyDoesNotStartWithSk(string $invalidApiKey): void
+    public function testItThrowsExceptionWhenApiKeyDoesNotStartWithSk(string $invalidApiKey): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The API key must start with "sk-".');
@@ -53,24 +50,21 @@ final class ModelClientTest extends TestCase
         new ModelClient(new MockHttpClient(), $invalidApiKey);
     }
 
-    #[Test]
-    public function itAcceptsValidApiKey(): void
+    public function testItAcceptsValidApiKey(): void
     {
         $modelClient = new ModelClient(new MockHttpClient(), 'sk-valid-api-key');
 
         $this->assertInstanceOf(ModelClient::class, $modelClient);
     }
 
-    #[Test]
-    public function itIsSupportingTheCorrectModel(): void
+    public function testItIsSupportingTheCorrectModel(): void
     {
         $modelClient = new ModelClient(new MockHttpClient(), 'sk-api-key');
 
         $this->assertTrue($modelClient->supports(new DallE()));
     }
 
-    #[Test]
-    public function itIsExecutingTheCorrectRequest(): void
+    public function testItIsExecutingTheCorrectRequest(): void
     {
         $resultCallback = static function (string $method, string $url, array $options): HttpResponse {
             self::assertSame('POST', $method);

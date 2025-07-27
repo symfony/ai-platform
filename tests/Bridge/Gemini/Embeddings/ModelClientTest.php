@@ -13,7 +13,6 @@ namespace Symfony\AI\Platform\Tests\Bridge\Gemini\Embeddings;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\Gemini\Embeddings;
@@ -30,8 +29,7 @@ use Symfony\Contracts\HttpClient\ResponseInterface;
 #[UsesClass(Embeddings::class)]
 final class ModelClientTest extends TestCase
 {
-    #[Test]
-    public function itMakesARequestWithCorrectPayload(): void
+    public function testItMakesARequestWithCorrectPayload(): void
     {
         $result = $this->createStub(ResponseInterface::class);
         $result

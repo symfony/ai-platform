@@ -13,7 +13,6 @@ namespace Symfony\AI\Platform\Tests\Contract\Normalizer\Message\Content;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Contract\Normalizer\Message\Content\AudioNormalizer;
@@ -32,22 +31,19 @@ final class AudioNormalizerTest extends TestCase
         $this->normalizer = new AudioNormalizer();
     }
 
-    #[Test]
-    public function supportsNormalization(): void
+    public function testSupportsNormalization(): void
     {
         $this->assertTrue($this->normalizer->supportsNormalization(Audio::fromFile(\dirname(__DIR__, 7).'/fixtures/audio.mp3')));
         $this->assertFalse($this->normalizer->supportsNormalization(new \stdClass()));
     }
 
-    #[Test]
-    public function getSupportedTypes(): void
+    public function testGetSupportedTypes(): void
     {
         $this->assertSame([Audio::class => true], $this->normalizer->getSupportedTypes(null));
     }
 
-    #[Test]
     #[DataProvider('provideAudioData')]
-    public function normalize(string $data, string $format, array $expected): void
+    public function testNormalize(string $data, string $format, array $expected): void
     {
         $audio = new Audio(base64_decode($data), $format);
 

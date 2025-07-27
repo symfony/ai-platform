@@ -13,7 +13,6 @@ namespace Symfony\AI\Platform\Tests\Bridge\Mistral;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Agent\Output;
@@ -35,8 +34,7 @@ use Symfony\Contracts\HttpClient\ResponseInterface;
 #[Small]
 final class TokenOutputProcessorTest extends TestCase
 {
-    #[Test]
-    public function itHandlesStreamResponsesWithoutProcessing(): void
+    public function testItHandlesStreamResponsesWithoutProcessing(): void
     {
         $processor = new TokenOutputProcessor();
         $streamResult = new StreamResult((static function () { yield 'test'; })());
@@ -48,8 +46,7 @@ final class TokenOutputProcessorTest extends TestCase
         $this->assertCount(0, $metadata);
     }
 
-    #[Test]
-    public function itDoesNothingWithoutRawResponse(): void
+    public function testItDoesNothingWithoutRawResponse(): void
     {
         $processor = new TokenOutputProcessor();
         $textResult = new TextResult('test');
@@ -61,8 +58,7 @@ final class TokenOutputProcessorTest extends TestCase
         $this->assertCount(0, $metadata);
     }
 
-    #[Test]
-    public function itAddsRemainingTokensToMetadata(): void
+    public function testItAddsRemainingTokensToMetadata(): void
     {
         $processor = new TokenOutputProcessor();
         $textResult = new TextResult('test');
@@ -79,8 +75,7 @@ final class TokenOutputProcessorTest extends TestCase
         $this->assertSame(1000000, $metadata->get('remaining_tokens_month'));
     }
 
-    #[Test]
-    public function itAddsUsageTokensToMetadata(): void
+    public function testItAddsUsageTokensToMetadata(): void
     {
         $processor = new TokenOutputProcessor();
         $textResult = new TextResult('test');
@@ -108,8 +103,7 @@ final class TokenOutputProcessorTest extends TestCase
         $this->assertSame(30, $metadata->get('total_tokens'));
     }
 
-    #[Test]
-    public function itHandlesMissingUsageFields(): void
+    public function testItHandlesMissingUsageFields(): void
     {
         $processor = new TokenOutputProcessor();
         $textResult = new TextResult('test');

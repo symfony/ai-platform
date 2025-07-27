@@ -12,7 +12,6 @@
 namespace Symfony\AI\Platform\Tests\Contract\Normalizer\Message\Content;
 
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Contract\Normalizer\Message\Content\TextNormalizer;
@@ -29,21 +28,18 @@ final class TextNormalizerTest extends TestCase
         $this->normalizer = new TextNormalizer();
     }
 
-    #[Test]
-    public function supportsNormalization(): void
+    public function testSupportsNormalization(): void
     {
         $this->assertTrue($this->normalizer->supportsNormalization(new Text('Hello, world!')));
         $this->assertFalse($this->normalizer->supportsNormalization(new \stdClass()));
     }
 
-    #[Test]
-    public function getSupportedTypes(): void
+    public function testGetSupportedTypes(): void
     {
         $this->assertSame([Text::class => true], $this->normalizer->getSupportedTypes(null));
     }
 
-    #[Test]
-    public function normalize(): void
+    public function testNormalize(): void
     {
         $text = new Text('Hello, world!');
 

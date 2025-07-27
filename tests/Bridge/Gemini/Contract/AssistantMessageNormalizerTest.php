@@ -14,7 +14,6 @@ namespace Symfony\AI\Platform\Tests\Bridge\Gemini\Contract;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\Gemini\Contract\AssistantMessageNormalizer;
@@ -32,8 +31,7 @@ use Symfony\AI\Platform\Result\ToolCall;
 #[UsesClass(ToolCall::class)]
 final class AssistantMessageNormalizerTest extends TestCase
 {
-    #[Test]
-    public function supportsNormalization(): void
+    public function testSupportsNormalization(): void
     {
         $normalizer = new AssistantMessageNormalizer();
 
@@ -43,17 +41,15 @@ final class AssistantMessageNormalizerTest extends TestCase
         $this->assertFalse($normalizer->supportsNormalization('not an assistant message'));
     }
 
-    #[Test]
-    public function getSupportedTypes(): void
+    public function testGetSupportedTypes(): void
     {
         $normalizer = new AssistantMessageNormalizer();
 
         $this->assertSame([AssistantMessage::class => true], $normalizer->getSupportedTypes(null));
     }
 
-    #[Test]
     #[DataProvider('normalizeDataProvider')]
-    public function normalize(AssistantMessage $message, array $expectedOutput): void
+    public function testNormalize(AssistantMessage $message, array $expectedOutput): void
     {
         $normalizer = new AssistantMessageNormalizer();
 

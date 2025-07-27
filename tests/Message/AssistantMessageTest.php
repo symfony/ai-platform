@@ -13,7 +13,6 @@ namespace Symfony\AI\Platform\Tests\Message;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Message\AssistantMessage;
@@ -31,14 +30,12 @@ final class AssistantMessageTest extends TestCase
 {
     use UuidAssertionTrait;
 
-    #[Test]
-    public function theRoleOfTheMessageIsAsExpected(): void
+    public function testTheRoleOfTheMessageIsAsExpected(): void
     {
         $this->assertSame(Role::Assistant, (new AssistantMessage())->getRole());
     }
 
-    #[Test]
-    public function constructionWithoutToolCallIsPossible(): void
+    public function testConstructionWithoutToolCallIsPossible(): void
     {
         $message = new AssistantMessage('foo');
 
@@ -46,8 +43,7 @@ final class AssistantMessageTest extends TestCase
         $this->assertNull($message->toolCalls);
     }
 
-    #[Test]
-    public function constructionWithoutContentIsPossible(): void
+    public function testConstructionWithoutContentIsPossible(): void
     {
         $toolCall = new ToolCall('foo', 'foo');
         $message = new AssistantMessage(toolCalls: [$toolCall]);
@@ -57,8 +53,7 @@ final class AssistantMessageTest extends TestCase
         $this->assertTrue($message->hasToolCalls());
     }
 
-    #[Test]
-    public function messageHasUid(): void
+    public function testMessageHasUid(): void
     {
         $message = new AssistantMessage('foo');
 
@@ -67,8 +62,7 @@ final class AssistantMessageTest extends TestCase
         $this->assertSame($message->id, $message->getId());
     }
 
-    #[Test]
-    public function differentMessagesHaveDifferentUids(): void
+    public function testDifferentMessagesHaveDifferentUids(): void
     {
         $message1 = new AssistantMessage('foo');
         $message2 = new AssistantMessage('bar');
@@ -78,8 +72,7 @@ final class AssistantMessageTest extends TestCase
         self::assertIsUuidV7($message2->getId()->toRfc4122());
     }
 
-    #[Test]
-    public function sameMessagesHaveDifferentUids(): void
+    public function testSameMessagesHaveDifferentUids(): void
     {
         $message1 = new AssistantMessage('foo');
         $message2 = new AssistantMessage('foo');
@@ -89,8 +82,7 @@ final class AssistantMessageTest extends TestCase
         self::assertIsUuidV7($message2->getId()->toRfc4122());
     }
 
-    #[Test]
-    public function messageIdImplementsRequiredInterfaces(): void
+    public function testMessageIdImplementsRequiredInterfaces(): void
     {
         $message = new AssistantMessage('test');
 

@@ -10,7 +10,6 @@
  */
 
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\InMemoryPlatform;
 use Symfony\AI\Platform\Model;
@@ -18,8 +17,7 @@ use Symfony\AI\Platform\Model;
 #[CoversClass(InMemoryPlatform::class)]
 class InMemoryPlatformTest extends TestCase
 {
-    #[Test]
-    public function platformInvokeWithFixedResult(): void
+    public function testPlatformInvokeWithFixedResult(): void
     {
         $platform = new InMemoryPlatform('Mocked result');
         $result = $platform->invoke(new Model('test'), 'input');
@@ -29,8 +27,7 @@ class InMemoryPlatformTest extends TestCase
         $this->assertSame(['text' => 'Mocked result'], $result->getRawResult()->getData());
     }
 
-    #[Test]
-    public function platformInvokeWithCallableResult(): void
+    public function testPlatformInvokeWithCallableResult(): void
     {
         $platform = new InMemoryPlatform(function (Model $model, $input) {
             return strtoupper((string) $input);

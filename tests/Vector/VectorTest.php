@@ -12,7 +12,6 @@
 namespace Symfony\AI\Platform\Tests\Vector;
 
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Vector\Vector;
 use Symfony\AI\Platform\Vector\VectorInterface;
@@ -20,8 +19,7 @@ use Symfony\AI\Platform\Vector\VectorInterface;
 #[CoversClass(Vector::class)]
 final class VectorTest extends TestCase
 {
-    #[Test]
-    public function implementsInterface(): void
+    public function testImplementsInterface(): void
     {
         $this->assertInstanceOf(
             VectorInterface::class,
@@ -29,8 +27,7 @@ final class VectorTest extends TestCase
         );
     }
 
-    #[Test]
-    public function withDimensionNull(): void
+    public function testWithDimensionNull(): void
     {
         $vector = new Vector($vectors = [1.0, 2.0, 3.0], null);
 

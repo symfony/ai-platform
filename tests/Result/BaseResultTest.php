@@ -13,7 +13,6 @@ namespace Symfony\AI\Platform\Tests\Result;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\Attributes\UsesTrait;
 use PHPUnit\Framework\TestCase;
@@ -32,8 +31,7 @@ use Symfony\AI\Platform\Result\RawResultInterface;
 #[Small]
 final class BaseResultTest extends TestCase
 {
-    #[Test]
-    public function itCanHandleMetadata(): void
+    public function testItCanHandleMetadata(): void
     {
         $result = $this->createResult();
         $metadata = $result->getMetadata();
@@ -46,8 +44,7 @@ final class BaseResultTest extends TestCase
         $this->assertCount(1, $metadata);
     }
 
-    #[Test]
-    public function itCanBeEnrichedWithARawResponse(): void
+    public function testItCanBeEnrichedWithARawResponse(): void
     {
         $result = $this->createResult();
         $rawResult = $this->createRawResult();
@@ -56,8 +53,7 @@ final class BaseResultTest extends TestCase
         $this->assertSame($rawResult, $result->getRawResult());
     }
 
-    #[Test]
-    public function itThrowsAnExceptionWhenSettingARawResponseTwice(): void
+    public function testItThrowsAnExceptionWhenSettingARawResponseTwice(): void
     {
         self::expectException(RawResultAlreadySetException::class);
 

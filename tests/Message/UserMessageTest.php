@@ -13,7 +13,6 @@ namespace Symfony\AI\Platform\Tests\Message;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Message\Content\Audio;
@@ -36,8 +35,7 @@ final class UserMessageTest extends TestCase
 {
     use UuidAssertionTrait;
 
-    #[Test]
-    public function constructionIsPossible(): void
+    public function testConstructionIsPossible(): void
     {
         $obj = new UserMessage(new Text('foo'));
 
@@ -47,48 +45,42 @@ final class UserMessageTest extends TestCase
         $this->assertSame('foo', $obj->content[0]->text);
     }
 
-    #[Test]
-    public function constructionIsPossibleWithMultipleContent(): void
+    public function testConstructionIsPossibleWithMultipleContent(): void
     {
         $message = new UserMessage(new Text('foo'), new ImageUrl('https://foo.com/bar.jpg'));
 
         $this->assertCount(2, $message->content);
     }
 
-    #[Test]
-    public function hasAudioContentWithoutAudio(): void
+    public function testHasAudioContentWithoutAudio(): void
     {
         $message = new UserMessage(new Text('foo'), new Text('bar'));
 
         $this->assertFalse($message->hasAudioContent());
     }
 
-    #[Test]
-    public function hasAudioContentWithAudio(): void
+    public function testHasAudioContentWithAudio(): void
     {
         $message = new UserMessage(new Text('foo'), Audio::fromFile(\dirname(__DIR__, 4).'/fixtures/audio.mp3'));
 
         $this->assertTrue($message->hasAudioContent());
     }
 
-    #[Test]
-    public function hasImageContentWithoutImage(): void
+    public function testHasImageContentWithoutImage(): void
     {
         $message = new UserMessage(new Text('foo'), new Text('bar'));
 
         $this->assertFalse($message->hasImageContent());
     }
 
-    #[Test]
-    public function hasImageContentWithImage(): void
+    public function testHasImageContentWithImage(): void
     {
         $message = new UserMessage(new Text('foo'), new ImageUrl('https://foo.com/bar.jpg'));
 
         $this->assertTrue($message->hasImageContent());
     }
 
-    #[Test]
-    public function messageHasUid(): void
+    public function testMessageHasUid(): void
     {
         $message = new UserMessage(new Text('foo'));
 
@@ -97,8 +89,7 @@ final class UserMessageTest extends TestCase
         $this->assertSame($message->id, $message->getId());
     }
 
-    #[Test]
-    public function differentMessagesHaveDifferentUids(): void
+    public function testDifferentMessagesHaveDifferentUids(): void
     {
         $message1 = new UserMessage(new Text('foo'));
         $message2 = new UserMessage(new Text('bar'));
@@ -108,8 +99,7 @@ final class UserMessageTest extends TestCase
         self::assertIsUuidV7($message2->getId()->toRfc4122());
     }
 
-    #[Test]
-    public function sameMessagesHaveDifferentUids(): void
+    public function testSameMessagesHaveDifferentUids(): void
     {
         $message1 = new UserMessage(new Text('foo'));
         $message2 = new UserMessage(new Text('foo'));
@@ -119,8 +109,7 @@ final class UserMessageTest extends TestCase
         self::assertIsUuidV7($message2->getId()->toRfc4122());
     }
 
-    #[Test]
-    public function messageIdImplementsRequiredInterfaces(): void
+    public function testMessageIdImplementsRequiredInterfaces(): void
     {
         $message = new UserMessage(new Text('test'));
 

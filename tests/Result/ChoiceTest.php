@@ -13,7 +13,6 @@ namespace Symfony\AI\Platform\Tests\Result;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Result\Choice;
@@ -24,8 +23,7 @@ use Symfony\AI\Platform\Result\ToolCall;
 #[Small]
 final class ChoiceTest extends TestCase
 {
-    #[Test]
-    public function choiceEmpty(): void
+    public function testChoiceEmpty(): void
     {
         $choice = new Choice();
         $this->assertFalse($choice->hasContent());
@@ -34,8 +32,7 @@ final class ChoiceTest extends TestCase
         $this->assertCount(0, $choice->getToolCalls());
     }
 
-    #[Test]
-    public function choiceWithContent(): void
+    public function testChoiceWithContent(): void
     {
         $choice = new Choice('content');
         $this->assertTrue($choice->hasContent());
@@ -44,8 +41,7 @@ final class ChoiceTest extends TestCase
         $this->assertCount(0, $choice->getToolCalls());
     }
 
-    #[Test]
-    public function choiceWithToolCall(): void
+    public function testChoiceWithToolCall(): void
     {
         $choice = new Choice(null, [new ToolCall('name', 'arguments')]);
         $this->assertFalse($choice->hasContent());
@@ -54,8 +50,7 @@ final class ChoiceTest extends TestCase
         $this->assertCount(1, $choice->getToolCalls());
     }
 
-    #[Test]
-    public function choiceWithContentAndToolCall(): void
+    public function testChoiceWithContentAndToolCall(): void
     {
         $choice = new Choice('content', [new ToolCall('name', 'arguments')]);
         $this->assertTrue($choice->hasContent());

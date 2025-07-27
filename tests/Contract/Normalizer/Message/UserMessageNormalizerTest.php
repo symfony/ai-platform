@@ -12,7 +12,6 @@
 namespace Symfony\AI\Platform\Tests\Contract\Normalizer\Message;
 
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Contract\Normalizer\Message\UserMessageNormalizer;
@@ -34,21 +33,18 @@ final class UserMessageNormalizerTest extends TestCase
         $this->normalizer = new UserMessageNormalizer();
     }
 
-    #[Test]
-    public function supportsNormalization(): void
+    public function testSupportsNormalization(): void
     {
         $this->assertTrue($this->normalizer->supportsNormalization(new UserMessage(new Text('content'))));
         $this->assertFalse($this->normalizer->supportsNormalization(new \stdClass()));
     }
 
-    #[Test]
-    public function getSupportedTypes(): void
+    public function testGetSupportedTypes(): void
     {
         $this->assertSame([UserMessage::class => true], $this->normalizer->getSupportedTypes(null));
     }
 
-    #[Test]
-    public function normalizeWithSingleTextContent(): void
+    public function testNormalizeWithSingleTextContent(): void
     {
         $textContent = new Text('Hello, how can you help me?');
         $message = new UserMessage($textContent);
@@ -61,8 +57,7 @@ final class UserMessageNormalizerTest extends TestCase
         $this->assertSame($expected, $this->normalizer->normalize($message));
     }
 
-    #[Test]
-    public function normalizeWithMixedContent(): void
+    public function testNormalizeWithMixedContent(): void
     {
         $textContent = new Text('Please describe this image:');
         $imageContent = new ImageUrl('https://example.com/image.jpg');

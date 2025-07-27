@@ -13,7 +13,6 @@ namespace Symfony\AI\Platform\Tests\Message;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Message\AssistantMessage;
@@ -38,8 +37,7 @@ use Symfony\AI\Platform\Result\ToolCall;
 #[Small]
 final class MessageBagTest extends TestCase
 {
-    #[Test]
-    public function getSystemMessage(): void
+    public function testGetSystemMessage(): void
     {
         $messageBag = new MessageBag(
             Message::forSystem('My amazing system prompt.'),
@@ -53,8 +51,7 @@ final class MessageBagTest extends TestCase
         $this->assertSame('My amazing system prompt.', $systemMessage->content);
     }
 
-    #[Test]
-    public function getSystemMessageWithoutSystemMessage(): void
+    public function testGetSystemMessageWithoutSystemMessage(): void
     {
         $messageBag = new MessageBag(
             Message::ofAssistant('It is time to sleep.'),
@@ -65,8 +62,7 @@ final class MessageBagTest extends TestCase
         $this->assertNull($messageBag->getSystemMessage());
     }
 
-    #[Test]
-    public function with(): void
+    public function testWith(): void
     {
         $messageBag = new MessageBag(
             Message::forSystem('My amazing system prompt.'),
@@ -86,8 +82,7 @@ final class MessageBagTest extends TestCase
         $this->assertSame('It is time to wake up.', $newMessageFromBag->content);
     }
 
-    #[Test]
-    public function merge(): void
+    public function testMerge(): void
     {
         $messageBag = new MessageBag(
             Message::forSystem('My amazing system prompt.'),
@@ -107,8 +102,7 @@ final class MessageBagTest extends TestCase
         $this->assertSame('It is time to wake up.', $messageFromBag->content);
     }
 
-    #[Test]
-    public function withoutSystemMessage(): void
+    public function testWithoutSystemMessage(): void
     {
         $messageBag = new MessageBag(
             Message::forSystem('My amazing system prompt.'),
@@ -133,8 +127,7 @@ final class MessageBagTest extends TestCase
         $this->assertSame('Hello, world!', $userMessage->content[0]->text);
     }
 
-    #[Test]
-    public function prepend(): void
+    public function testPrepend(): void
     {
         $messageBag = new MessageBag(
             Message::ofAssistant('It is time to sleep.'),
@@ -153,8 +146,7 @@ final class MessageBagTest extends TestCase
         $this->assertSame('My amazing system prompt.', $newMessageBagMessage->content);
     }
 
-    #[Test]
-    public function containsImageReturnsFalseWithoutImage(): void
+    public function testContainsImageReturnsFalseWithoutImage(): void
     {
         $messageBag = new MessageBag(
             Message::ofAssistant('It is time to sleep.'),
@@ -164,8 +156,7 @@ final class MessageBagTest extends TestCase
         $this->assertFalse($messageBag->containsImage());
     }
 
-    #[Test]
-    public function containsImageReturnsTrueWithImage(): void
+    public function testContainsImageReturnsTrueWithImage(): void
     {
         $messageBag = new MessageBag(
             Message::ofAssistant('It is time to sleep.'),

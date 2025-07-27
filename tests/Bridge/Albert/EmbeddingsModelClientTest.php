@@ -14,7 +14,6 @@ namespace Symfony\AI\Platform\Tests\Bridge\Albert;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\Albert\EmbeddingsModelClient;
 use Symfony\AI\Platform\Bridge\OpenAI\Embeddings;
@@ -27,8 +26,7 @@ use Symfony\Component\HttpClient\Response\JsonMockResponse;
 #[Small]
 final class EmbeddingsModelClientTest extends TestCase
 {
-    #[Test]
-    public function constructorThrowsExceptionForEmptyApiKey(): void
+    public function testConstructorThrowsExceptionForEmptyApiKey(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The API key must not be empty.');
@@ -40,8 +38,7 @@ final class EmbeddingsModelClientTest extends TestCase
         );
     }
 
-    #[Test]
-    public function constructorThrowsExceptionForEmptyBaseUrl(): void
+    public function testConstructorThrowsExceptionForEmptyBaseUrl(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The base URL must not be empty.');
@@ -53,8 +50,7 @@ final class EmbeddingsModelClientTest extends TestCase
         );
     }
 
-    #[Test]
-    public function supportsEmbeddingsModel(): void
+    public function testSupportsEmbeddingsModel(): void
     {
         $client = new EmbeddingsModelClient(
             new MockHttpClient(),
@@ -66,8 +62,7 @@ final class EmbeddingsModelClientTest extends TestCase
         $this->assertTrue($client->supports($embeddingsModel));
     }
 
-    #[Test]
-    public function doesNotSupportNonEmbeddingsModel(): void
+    public function testDoesNotSupportNonEmbeddingsModel(): void
     {
         $client = new EmbeddingsModelClient(
             new MockHttpClient(),
@@ -79,9 +74,8 @@ final class EmbeddingsModelClientTest extends TestCase
         $this->assertFalse($client->supports($gptModel));
     }
 
-    #[Test]
     #[DataProvider('providePayloadToJson')]
-    public function requestSendsCorrectHttpRequest(array|string $payload, array $options, array|string $expectedJson): void
+    public function testRequestSendsCorrectHttpRequest(array|string $payload, array $options, array|string $expectedJson): void
     {
         $capturedRequest = null;
         $httpClient = new MockHttpClient(function ($method, $url, $options) use (&$capturedRequest) {
@@ -142,8 +136,7 @@ final class EmbeddingsModelClientTest extends TestCase
         ];
     }
 
-    #[Test]
-    public function requestHandlesBaseUrlWithoutTrailingSlash(): void
+    public function testRequestHandlesBaseUrlWithoutTrailingSlash(): void
     {
         $capturedUrl = null;
         $httpClient = new MockHttpClient(function ($method, $url) use (&$capturedUrl) {
@@ -164,8 +157,7 @@ final class EmbeddingsModelClientTest extends TestCase
         $this->assertSame('https://albert.example.com/v1/embeddings', $capturedUrl);
     }
 
-    #[Test]
-    public function requestHandlesBaseUrlWithTrailingSlash(): void
+    public function testRequestHandlesBaseUrlWithTrailingSlash(): void
     {
         $capturedUrl = null;
         $httpClient = new MockHttpClient(function ($method, $url) use (&$capturedUrl) {

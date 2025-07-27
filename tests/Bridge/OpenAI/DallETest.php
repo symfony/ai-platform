@@ -13,7 +13,6 @@ namespace Symfony\AI\Platform\Tests\Bridge\OpenAI;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\OpenAI\DallE;
 
@@ -21,8 +20,7 @@ use Symfony\AI\Platform\Bridge\OpenAI\DallE;
 #[Small]
 final class DallETest extends TestCase
 {
-    #[Test]
-    public function itCreatesDallEWithDefaultSettings(): void
+    public function testItCreatesDallEWithDefaultSettings(): void
     {
         $dallE = new DallE();
 
@@ -30,8 +28,7 @@ final class DallETest extends TestCase
         $this->assertSame([], $dallE->getOptions());
     }
 
-    #[Test]
-    public function itCreatesDallEWithCustomSettings(): void
+    public function testItCreatesDallEWithCustomSettings(): void
     {
         $dallE = new DallE(DallE::DALL_E_3, ['response_format' => 'base64', 'n' => 2]);
 

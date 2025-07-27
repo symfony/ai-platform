@@ -12,31 +12,27 @@
 namespace Symfony\AI\Platform\Tests\Message\Content;
 
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Message\Content\Image;
 
 #[CoversClass(Image::class)]
 final class ImageTest extends TestCase
 {
-    #[Test]
-    public function constructWithValidDataUrl(): void
+    public function testConstructWithValidDataUrl(): void
     {
         $image = Image::fromDataUrl('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABKklEQVR42mNk+A8AAwMhIv9n+X');
 
         $this->assertStringStartsWith('data:image/png;base64', $image->asDataUrl());
     }
 
-    #[Test]
-    public function withValidFile(): void
+    public function testWithValidFile(): void
     {
         $image = Image::fromFile(\dirname(__DIR__, 5).'/fixtures/image.jpg');
 
         $this->assertStringStartsWith('data:image/jpeg;base64,', $image->asDataUrl());
     }
 
-    #[Test]
-    public function fromBinaryWithInvalidFile(): void
+    public function testFromBinaryWithInvalidFile(): void
     {
         self::expectExceptionMessage('The file "foo.jpg" does not exist or is not readable.');
 

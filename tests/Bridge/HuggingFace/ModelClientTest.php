@@ -14,7 +14,6 @@ namespace Symfony\AI\Platform\Tests\Bridge\HuggingFace;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\HuggingFace\Contract\FileNormalizer;
@@ -33,9 +32,8 @@ use Symfony\Component\HttpClient\MockHttpClient;
 #[UsesClass(Model::class)]
 final class ModelClientTest extends TestCase
 {
-    #[Test]
     #[DataProvider('urlTestCases')]
-    public function getUrlForDifferentInputsAndTasks(?string $task, string $expectedUrl): void
+    public function testGetUrlForDifferentInputsAndTasks(?string $task, string $expectedUrl): void
     {
         $reflection = new \ReflectionClass(ModelClient::class);
         $getUrlMethod = $reflection->getMethod('getUrl');
@@ -76,9 +74,8 @@ final class ModelClientTest extends TestCase
         ];
     }
 
-    #[Test]
     #[DataProvider('payloadTestCases')]
-    public function getPayloadForDifferentInputsAndTasks(object|array|string $input, array $options, array $expectedKeys, array $expectedValues = []): void
+    public function testGetPayloadForDifferentInputsAndTasks(object|array|string $input, array $options, array $expectedKeys, array $expectedValues = []): void
     {
         // Contract handling first
         $contract = Contract::create(

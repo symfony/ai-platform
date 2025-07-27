@@ -13,7 +13,6 @@ namespace Symfony\AI\Platform\Tests\Message\Content;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Message\Content\ImageUrl;
 
@@ -21,8 +20,7 @@ use Symfony\AI\Platform\Message\Content\ImageUrl;
 #[Small]
 final class ImageUrlTest extends TestCase
 {
-    #[Test]
-    public function constructWithValidUrl(): void
+    public function testConstructWithValidUrl(): void
     {
         $image = new ImageUrl('https://foo.com/test.png');
 

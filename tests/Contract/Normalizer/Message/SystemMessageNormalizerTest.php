@@ -12,7 +12,6 @@
 namespace Symfony\AI\Platform\Tests\Contract\Normalizer\Message;
 
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Contract\Normalizer\Message\SystemMessageNormalizer;
@@ -29,21 +28,18 @@ final class SystemMessageNormalizerTest extends TestCase
         $this->normalizer = new SystemMessageNormalizer();
     }
 
-    #[Test]
-    public function supportsNormalization(): void
+    public function testSupportsNormalization(): void
     {
         $this->assertTrue($this->normalizer->supportsNormalization(new SystemMessage('content')));
         $this->assertFalse($this->normalizer->supportsNormalization(new \stdClass()));
     }
 
-    #[Test]
-    public function getSupportedTypes(): void
+    public function testGetSupportedTypes(): void
     {
         $this->assertSame([SystemMessage::class => true], $this->normalizer->getSupportedTypes(null));
     }
 
-    #[Test]
-    public function normalize(): void
+    public function testNormalize(): void
     {
         $message = new SystemMessage('You are a helpful assistant');
 

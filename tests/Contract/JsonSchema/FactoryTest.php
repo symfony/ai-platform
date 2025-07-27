@@ -12,7 +12,6 @@
 namespace Symfony\AI\Platform\Tests\Contract\JsonSchema;
 
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Fixtures\StructuredOutput\MathReasoning;
@@ -43,8 +42,7 @@ final class FactoryTest extends TestCase
         unset($this->factory);
     }
 
-    #[Test]
-    public function buildParametersDefinitionRequired(): void
+    public function testBuildParametersDefinitionRequired(): void
     {
         $actual = $this->factory->buildParameters(ToolRequiredParams::class, 'bar');
         $expected = [
@@ -66,8 +64,7 @@ final class FactoryTest extends TestCase
         $this->assertSame($expected, $actual);
     }
 
-    #[Test]
-    public function buildParametersDefinitionRequiredWithAdditionalToolParameterAttribute(): void
+    public function testBuildParametersDefinitionRequiredWithAdditionalToolParameterAttribute(): void
     {
         $actual = $this->factory->buildParameters(ToolWithToolParameterAttribute::class, '__invoke');
         $expected = [
@@ -144,8 +141,7 @@ final class FactoryTest extends TestCase
         $this->assertSame($expected, $actual);
     }
 
-    #[Test]
-    public function buildParametersDefinitionOptional(): void
+    public function testBuildParametersDefinitionOptional(): void
     {
         $actual = $this->factory->buildParameters(ToolOptionalParam::class, 'bar');
         $expected = [
@@ -167,16 +163,14 @@ final class FactoryTest extends TestCase
         $this->assertSame($expected, $actual);
     }
 
-    #[Test]
-    public function buildParametersDefinitionNone(): void
+    public function testBuildParametersDefinitionNone(): void
     {
         $actual = $this->factory->buildParameters(ToolNoParams::class, '__invoke');
 
         $this->assertNull($actual);
     }
 
-    #[Test]
-    public function buildPropertiesForUserClass(): void
+    public function testBuildPropertiesForUserClass(): void
     {
         $expected = [
             'type' => 'object',
@@ -202,8 +196,7 @@ final class FactoryTest extends TestCase
         $this->assertSame($expected, $actual);
     }
 
-    #[Test]
-    public function buildPropertiesForMathReasoningClass(): void
+    public function testBuildPropertiesForMathReasoningClass(): void
     {
         $expected = [
             'type' => 'object',
@@ -231,8 +224,7 @@ final class FactoryTest extends TestCase
         $this->assertSame($expected, $actual);
     }
 
-    #[Test]
-    public function buildPropertiesForStepClass(): void
+    public function testBuildPropertiesForStepClass(): void
     {
         $expected = [
             'type' => 'object',

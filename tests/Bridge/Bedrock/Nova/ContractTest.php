@@ -14,7 +14,6 @@ namespace Symfony\AI\Platform\Tests\Bridge\Bedrock\Nova;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Medium;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\Bedrock\Nova\Contract\AssistantMessageNormalizer;
@@ -45,7 +44,6 @@ use Symfony\AI\Platform\Result\ToolCall;
 #[UsesClass(MessageBag::class)]
 final class ContractTest extends TestCase
 {
-    #[Test]
     #[DataProvider('provideMessageBag')]
     public function testConvert(MessageBag $bag, array $expected): void
     {

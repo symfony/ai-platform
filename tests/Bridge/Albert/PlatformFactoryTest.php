@@ -14,7 +14,6 @@ namespace Symfony\AI\Platform\Tests\Bridge\Albert;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\Albert\PlatformFactory;
 use Symfony\AI\Platform\Exception\InvalidArgumentException;
@@ -24,17 +23,15 @@ use Symfony\AI\Platform\Platform;
 #[Small]
 final class PlatformFactoryTest extends TestCase
 {
-    #[Test]
-    public function createsPlatformWithCorrectBaseUrl(): void
+    public function testCreatesPlatformWithCorrectBaseUrl(): void
     {
         $platform = PlatformFactory::create('test-key', 'https://albert.example.com/v1');
 
         $this->assertInstanceOf(Platform::class, $platform);
     }
 
-    #[Test]
     #[DataProvider('provideValidUrls')]
-    public function handlesUrlsCorrectly(string $url): void
+    public function testHandlesUrlsCorrectly(string $url): void
     {
         $platform = PlatformFactory::create('test-key', $url);
 
@@ -50,8 +47,7 @@ final class PlatformFactoryTest extends TestCase
         yield 'with v99 path' => ['https://albert.example.com/v99'];
     }
 
-    #[Test]
-    public function throwsExceptionForNonHttpsUrl(): void
+    public function testThrowsExceptionForNonHttpsUrl(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The Albert URL must start with "https://".');
@@ -59,9 +55,8 @@ final class PlatformFactoryTest extends TestCase
         PlatformFactory::create('test-key', 'http://albert.example.com');
     }
 
-    #[Test]
     #[DataProvider('provideUrlsWithTrailingSlash')]
-    public function throwsExceptionForUrlsWithTrailingSlash(string $url): void
+    public function testThrowsExceptionForUrlsWithTrailingSlash(string $url): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The Albert URL must not end with a trailing slash.');
@@ -76,9 +71,8 @@ final class PlatformFactoryTest extends TestCase
         yield 'with v2 and trailing slash' => ['https://albert.example.com/v2/'];
     }
 
-    #[Test]
     #[DataProvider('provideUrlsWithoutVersion')]
-    public function throwsExceptionForUrlsWithoutVersion(string $url): void
+    public function testThrowsExceptionForUrlsWithoutVersion(string $url): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The Albert URL must include an API version (e.g., /v1, /v2).');

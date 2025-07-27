@@ -14,7 +14,6 @@ namespace Symfony\AI\Platform\Tests;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Large;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\OpenAI\Embeddings;
@@ -65,9 +64,8 @@ use Symfony\Component\Uid\Uuid;
 #[UsesClass(Model::class)]
 final class ContractTest extends TestCase
 {
-    #[Test]
     #[DataProvider('providePayloadTestCases')]
-    public function createRequestPayload(Model $model, array|string|object $input, array|string $expected): void
+    public function testCreateRequestPayload(Model $model, array|string|object $input, array|string $expected): void
     {
         $contract = Contract::create();
 
@@ -236,8 +234,7 @@ final class ContractTest extends TestCase
         ];
     }
 
-    #[Test]
-    public function extendedContractHandlesWhisper(): void
+    public function testExtendedContractHandlesWhisper(): void
     {
         $contract = Contract::create(new AudioNormalizer());
 

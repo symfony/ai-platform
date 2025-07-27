@@ -14,7 +14,6 @@ namespace Symfony\AI\Platform\Tests\Contract\Normalizer;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Fixtures\Tool\ToolException;
 use Symfony\AI\Fixtures\Tool\ToolNoParams;
@@ -28,9 +27,8 @@ use Symfony\AI\Platform\Tool\Tool;
 #[Small]
 class ToolNormalizerTest extends TestCase
 {
-    #[Test]
     #[DataProvider('provideTools')]
-    public function normalize(Tool $tool, array $expected): void
+    public function testNormalize(Tool $tool, array $expected): void
     {
         $this->assertSame($expected, (new ToolNormalizer())->normalize($tool));
     }

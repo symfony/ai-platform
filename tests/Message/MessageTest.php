@@ -13,7 +13,6 @@ namespace Symfony\AI\Platform\Tests\Message;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Message\AssistantMessage;
@@ -39,16 +38,14 @@ use Symfony\AI\Platform\Result\ToolCall;
 #[Small]
 final class MessageTest extends TestCase
 {
-    #[Test]
-    public function createSystemMessageWithString(): void
+    public function testCreateSystemMessageWithString(): void
     {
         $message = Message::forSystem('My amazing system prompt.');
 
         $this->assertSame('My amazing system prompt.', $message->content);
     }
 
-    #[Test]
-    public function createSystemMessageWithStringable(): void
+    public function testCreateSystemMessageWithStringable(): void
     {
         $message = Message::forSystem(new class implements \Stringable {
             public function __toString(): string
@@ -60,16 +57,14 @@ final class MessageTest extends TestCase
         $this->assertSame('My amazing system prompt.', $message->content);
     }
 
-    #[Test]
-    public function createAssistantMessage(): void
+    public function testCreateAssistantMessage(): void
     {
         $message = Message::ofAssistant('It is time to sleep.');
 
         $this->assertSame('It is time to sleep.', $message->content);
     }
 
-    #[Test]
-    public function createAssistantMessageWithToolCalls(): void
+    public function testCreateAssistantMessageWithToolCalls(): void
     {
         $toolCalls = [
             new ToolCall('call_123456', 'my_tool', ['foo' => 'bar']),
@@ -81,8 +76,7 @@ final class MessageTest extends TestCase
         $this->assertTrue($message->hasToolCalls());
     }
 
-    #[Test]
-    public function createUserMessageWithString(): void
+    public function testCreateUserMessageWithString(): void
     {
         $message = Message::ofUser('Hi, my name is John.');
 
@@ -91,8 +85,7 @@ final class MessageTest extends TestCase
         $this->assertSame('Hi, my name is John.', $message->content[0]->text);
     }
 
-    #[Test]
-    public function createUserMessageWithStringable(): void
+    public function testCreateUserMessageWithStringable(): void
     {
         $message = Message::ofUser(new class implements \Stringable {
             public function __toString(): string
@@ -106,8 +99,7 @@ final class MessageTest extends TestCase
         $this->assertSame('Hi, my name is John.', $message->content[0]->text);
     }
 
-    #[Test]
-    public function createUserMessageContentInterfaceImplementingStringable(): void
+    public function testCreateUserMessageContentInterfaceImplementingStringable(): void
     {
         $message = Message::ofUser(new class implements ContentInterface, \Stringable {
             public function __toString(): string
@@ -120,8 +112,7 @@ final class MessageTest extends TestCase
         $this->assertInstanceOf(ContentInterface::class, $message->content[0]);
     }
 
-    #[Test]
-    public function createUserMessageWithTextContent(): void
+    public function testCreateUserMessageWithTextContent(): void
     {
         $text = new Text('Hi, my name is John.');
         $message = Message::ofUser($text);
@@ -129,8 +120,7 @@ final class MessageTest extends TestCase
         $this->assertSame([$text], $message->content);
     }
 
-    #[Test]
-    public function createUserMessageWithImages(): void
+    public function testCreateUserMessageWithImages(): void
     {
         $message = Message::ofUser(
             new Text('Hi, my name is John.'),
@@ -142,8 +132,7 @@ final class MessageTest extends TestCase
         $this->assertCount(4, $message->content);
     }
 
-    #[Test]
-    public function createToolCallMessage(): void
+    public function testCreateToolCallMessage(): void
     {
         $toolCall = new ToolCall('call_123456', 'my_tool', ['foo' => 'bar']);
         $message = Message::ofToolCall($toolCall, 'Foo bar.');

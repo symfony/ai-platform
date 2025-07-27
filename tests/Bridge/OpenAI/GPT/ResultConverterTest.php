@@ -13,7 +13,6 @@ namespace Symfony\AI\Platform\Tests\Bridge\OpenAI\GPT;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\OpenAI\GPT\ResultConverter;
@@ -37,8 +36,7 @@ use Symfony\Contracts\HttpClient\ResponseInterface;
 #[UsesClass(ToolCallResult::class)]
 class ResultConverterTest extends TestCase
 {
-    #[Test]
-    public function convertTextResult(): void
+    public function testConvertTextResult(): void
     {
         $converter = new ResultConverter();
         $httpResponse = self::createMock(ResponseInterface::class);
@@ -60,8 +58,7 @@ class ResultConverterTest extends TestCase
         $this->assertSame('Hello world', $result->getContent());
     }
 
-    #[Test]
-    public function convertToolCallResult(): void
+    public function testConvertToolCallResult(): void
     {
         $converter = new ResultConverter();
         $httpResponse = self::createMock(ResponseInterface::class);
@@ -97,8 +94,7 @@ class ResultConverterTest extends TestCase
         $this->assertSame(['arg1' => 'value1'], $toolCalls[0]->arguments);
     }
 
-    #[Test]
-    public function convertMultipleChoices(): void
+    public function testConvertMultipleChoices(): void
     {
         $converter = new ResultConverter();
         $httpResponse = self::createMock(ResponseInterface::class);
@@ -130,8 +126,7 @@ class ResultConverterTest extends TestCase
         $this->assertSame('Choice 2', $choices[1]->getContent());
     }
 
-    #[Test]
-    public function contentFilterException(): void
+    public function testContentFilterException(): void
     {
         $converter = new ResultConverter();
         $httpResponse = self::createMock(ResponseInterface::class);
@@ -162,8 +157,7 @@ class ResultConverterTest extends TestCase
         $converter->convert(new RawHttpResult($httpResponse));
     }
 
-    #[Test]
-    public function throwsExceptionWhenNoChoices(): void
+    public function testThrowsExceptionWhenNoChoices(): void
     {
         $converter = new ResultConverter();
         $httpResponse = self::createMock(ResponseInterface::class);
@@ -175,8 +169,7 @@ class ResultConverterTest extends TestCase
         $converter->convert(new RawHttpResult($httpResponse));
     }
 
-    #[Test]
-    public function throwsExceptionForUnsupportedFinishReason(): void
+    public function testThrowsExceptionForUnsupportedFinishReason(): void
     {
         $converter = new ResultConverter();
         $httpResponse = self::createMock(ResponseInterface::class);

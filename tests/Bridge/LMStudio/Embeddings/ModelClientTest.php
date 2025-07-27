@@ -13,7 +13,6 @@ namespace Symfony\AI\Platform\Tests\Bridge\LMStudio\Embeddings;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\LMStudio\Embeddings;
@@ -26,16 +25,14 @@ use Symfony\Component\HttpClient\Response\MockResponse;
 #[Small]
 class ModelClientTest extends TestCase
 {
-    #[Test]
-    public function itIsSupportingTheCorrectModel(): void
+    public function testItIsSupportingTheCorrectModel(): void
     {
         $client = new ModelClient(new MockHttpClient(), 'http://localhost:1234');
 
         $this->assertTrue($client->supports(new Embeddings('test-model')));
     }
 
-    #[Test]
-    public function itIsExecutingTheCorrectRequest(): void
+    public function testItIsExecutingTheCorrectRequest(): void
     {
         $resultCallback = static function (string $method, string $url, array $options): MockResponse {
             self::assertSame('POST', $method);
@@ -53,8 +50,7 @@ class ModelClientTest extends TestCase
         $client->request($model, 'Hello, world!');
     }
 
-    #[Test]
-    public function itMergesOptionsWithPayload(): void
+    public function testItMergesOptionsWithPayload(): void
     {
         $resultCallback = static function (string $method, string $url, array $options): MockResponse {
             self::assertSame('POST', $method);
@@ -75,8 +71,7 @@ class ModelClientTest extends TestCase
         $client->request($model, 'Hello, world!', ['custom_option' => 'value']);
     }
 
-    #[Test]
-    public function itHandlesArrayInput(): void
+    public function testItHandlesArrayInput(): void
     {
         $resultCallback = static function (string $method, string $url, array $options): MockResponse {
             self::assertSame('POST', $method);

@@ -14,7 +14,6 @@ namespace Symfony\AI\Platform\Tests\Bridge\Gemini\Contract;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\Gemini\Contract\UserMessageNormalizer;
@@ -38,8 +37,7 @@ use Symfony\AI\Platform\Message\UserMessage;
 #[UsesClass(Audio::class)]
 final class UserMessageNormalizerTest extends TestCase
 {
-    #[Test]
-    public function supportsNormalization(): void
+    public function testSupportsNormalization(): void
     {
         $normalizer = new UserMessageNormalizer();
 
@@ -49,16 +47,14 @@ final class UserMessageNormalizerTest extends TestCase
         $this->assertFalse($normalizer->supportsNormalization('not a user message'));
     }
 
-    #[Test]
-    public function getSupportedTypes(): void
+    public function testGetSupportedTypes(): void
     {
         $normalizer = new UserMessageNormalizer();
 
         $this->assertSame([UserMessage::class => true], $normalizer->getSupportedTypes(null));
     }
 
-    #[Test]
-    public function normalizeTextContent(): void
+    public function testNormalizeTextContent(): void
     {
         $normalizer = new UserMessageNormalizer();
         $message = new UserMessage(new Text('Write a story about a magic backpack.'));
@@ -69,8 +65,7 @@ final class UserMessageNormalizerTest extends TestCase
     }
 
     #[DataProvider('binaryContentProvider')]
-    #[Test]
-    public function normalizeBinaryContent(File $content, string $expectedMimeType, string $expectedPrefix): void
+    public function testNormalizeBinaryContent(File $content, string $expectedMimeType, string $expectedPrefix): void
     {
         $normalizer = new UserMessageNormalizer();
         $message = new UserMessage(new Text('Tell me about this instrument'), $content);

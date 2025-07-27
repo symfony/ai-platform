@@ -13,7 +13,6 @@ namespace Symfony\AI\Platform\Tests\Result;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Result\ObjectResult;
 
@@ -21,15 +20,13 @@ use Symfony\AI\Platform\Result\ObjectResult;
 #[Small]
 final class ObjectResultTest extends TestCase
 {
-    #[Test]
-    public function getContentWithArray(): void
+    public function testGetContentWithArray(): void
     {
         $result = new ObjectResult($expected = ['foo' => 'bar', 'baz' => ['qux']]);
         $this->assertSame($expected, $result->getContent());
     }
 
-    #[Test]
-    public function getContentWithObject(): void
+    public function testGetContentWithObject(): void
     {
         $result = new ObjectResult($expected = (object) ['foo' => 'bar', 'baz' => ['qux']]);
         $this->assertSame($expected, $result->getContent());

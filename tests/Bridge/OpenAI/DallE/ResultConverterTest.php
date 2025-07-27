@@ -13,7 +13,6 @@ namespace Symfony\AI\Platform\Tests\Bridge\OpenAI\DallE;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\OpenAI\DallE\Base64Image;
@@ -30,8 +29,7 @@ use Symfony\Contracts\HttpClient\ResponseInterface as HttpResponse;
 #[Small]
 final class ResultConverterTest extends TestCase
 {
-    #[Test]
-    public function itIsConvertingTheResponse(): void
+    public function testItIsConvertingTheResponse(): void
     {
         $httpResponse = $this->createStub(HttpResponse::class);
         $httpResponse->method('toArray')->willReturn([
@@ -48,8 +46,7 @@ final class ResultConverterTest extends TestCase
         $this->assertSame('https://example.com/image.jpg', $result->getContent()[0]->url);
     }
 
-    #[Test]
-    public function itIsConvertingTheResponseWithRevisedPrompt(): void
+    public function testItIsConvertingTheResponseWithRevisedPrompt(): void
     {
         $emptyPixel = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
 

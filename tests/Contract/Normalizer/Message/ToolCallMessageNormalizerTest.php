@@ -12,7 +12,6 @@
 namespace Symfony\AI\Platform\Tests\Contract\Normalizer\Message;
 
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Contract\Normalizer\Message\ToolCallMessageNormalizer;
@@ -32,8 +31,7 @@ final class ToolCallMessageNormalizerTest extends TestCase
         $this->normalizer = new ToolCallMessageNormalizer();
     }
 
-    #[Test]
-    public function supportsNormalization(): void
+    public function testSupportsNormalization(): void
     {
         $toolCallMessage = new ToolCallMessage(new ToolCall('id', 'function'), 'content');
 
@@ -41,14 +39,12 @@ final class ToolCallMessageNormalizerTest extends TestCase
         $this->assertFalse($this->normalizer->supportsNormalization(new \stdClass()));
     }
 
-    #[Test]
-    public function getSupportedTypes(): void
+    public function testGetSupportedTypes(): void
     {
         $this->assertSame([ToolCallMessage::class => true], $this->normalizer->getSupportedTypes(null));
     }
 
-    #[Test]
-    public function normalize(): void
+    public function testNormalize(): void
     {
         $toolCall = new ToolCall('tool_call_123', 'get_weather', ['location' => 'Paris']);
         $message = new ToolCallMessage($toolCall, 'Weather data for Paris');

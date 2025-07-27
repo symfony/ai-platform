@@ -13,7 +13,6 @@ namespace Symfony\AI\Platform\Tests\Bridge\OpenAI\Whisper;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\OpenAI\Whisper;
 use Symfony\AI\Platform\Bridge\OpenAI\Whisper\ModelClient;
@@ -25,8 +24,7 @@ use Symfony\Component\HttpClient\Response\MockResponse;
 #[Small]
 final class ModelClientTest extends TestCase
 {
-    #[Test]
-    public function itSupportsWhisperModel(): void
+    public function testItSupportsWhisperModel(): void
     {
         $client = new ModelClient(new MockHttpClient(), 'test-key');
         $model = new Whisper();
@@ -34,8 +32,7 @@ final class ModelClientTest extends TestCase
         $this->assertTrue($client->supports($model));
     }
 
-    #[Test]
-    public function itUsesTranscriptionEndpointByDefault(): void
+    public function testItUsesTranscriptionEndpointByDefault(): void
     {
         $httpClient = new MockHttpClient([
             function ($method, $url): MockResponse {
@@ -55,8 +52,7 @@ final class ModelClientTest extends TestCase
         $this->assertSame(1, $httpClient->getRequestsCount());
     }
 
-    #[Test]
-    public function itUsesTranscriptionEndpointWhenTaskIsSpecified(): void
+    public function testItUsesTranscriptionEndpointWhenTaskIsSpecified(): void
     {
         $httpClient = new MockHttpClient([
             function ($method, $url): MockResponse {
@@ -77,8 +73,7 @@ final class ModelClientTest extends TestCase
         $this->assertSame(1, $httpClient->getRequestsCount());
     }
 
-    #[Test]
-    public function itUsesTranslationEndpointWhenTaskIsSpecified(): void
+    public function testItUsesTranslationEndpointWhenTaskIsSpecified(): void
     {
         $httpClient = new MockHttpClient([
             function ($method, $url): MockResponse {

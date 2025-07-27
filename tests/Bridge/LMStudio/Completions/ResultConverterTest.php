@@ -13,7 +13,6 @@ namespace Symfony\AI\Platform\Tests\Bridge\LMStudio\Completions;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\LMStudio\Completions;
@@ -26,8 +25,7 @@ use Symfony\AI\Platform\Bridge\OpenAI\GPT\ResultConverter as OpenAIResultConvert
 #[Small]
 class ResultConverterTest extends TestCase
 {
-    #[Test]
-    public function itSupportsCompletionsModel(): void
+    public function testItSupportsCompletionsModel(): void
     {
         $converter = new ResultConverter();
 

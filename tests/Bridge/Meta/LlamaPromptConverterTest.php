@@ -14,7 +14,6 @@ namespace Symfony\AI\Platform\Tests\Bridge\Meta;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\Meta\LlamaPromptConverter;
@@ -37,8 +36,7 @@ use Symfony\AI\Platform\Message\UserMessage;
 #[UsesClass(UserMessage::class)]
 final class LlamaPromptConverterTest extends TestCase
 {
-    #[Test]
-    public function convertMessages(): void
+    public function testConvertMessages(): void
     {
         $messageBag = new MessageBag();
         foreach (self::provideMessages() as $message) {
@@ -75,9 +73,8 @@ final class LlamaPromptConverterTest extends TestCase
         );
     }
 
-    #[Test]
     #[DataProvider('provideMessages')]
-    public function convertMessage(string $expected, UserMessage|SystemMessage|AssistantMessage $message): void
+    public function testConvertMessage(string $expected, UserMessage|SystemMessage|AssistantMessage $message): void
     {
         $this->assertSame(
             $expected,

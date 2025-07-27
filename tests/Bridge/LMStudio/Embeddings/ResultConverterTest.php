@@ -13,7 +13,6 @@ namespace Symfony\AI\Platform\Tests\Bridge\LMStudio\Embeddings;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\LMStudio\Embeddings;
@@ -31,8 +30,7 @@ use Symfony\Contracts\HttpClient\ResponseInterface;
 #[UsesClass(Embeddings::class)]
 class ResultConverterTest extends TestCase
 {
-    #[Test]
-    public function itConvertsAResponseToAVectorResult(): void
+    public function testItConvertsAResponseToAVectorResult(): void
     {
         $result = $this->createStub(ResponseInterface::class);
         $result
@@ -69,8 +67,7 @@ class ResultConverterTest extends TestCase
         $this->assertSame([0.0, 0.0, 0.2], $convertedContent[1]->getData());
     }
 
-    #[Test]
-    public function itThrowsExceptionWhenResponseDoesNotContainData(): void
+    public function testItThrowsExceptionWhenResponseDoesNotContainData(): void
     {
         $result = $this->createStub(ResponseInterface::class);
         $result
@@ -83,8 +80,7 @@ class ResultConverterTest extends TestCase
         (new ResultConverter())->convert(new RawHttpResult($result));
     }
 
-    #[Test]
-    public function itSupportsEmbeddingsModel(): void
+    public function testItSupportsEmbeddingsModel(): void
     {
         $converter = new ResultConverter();
 

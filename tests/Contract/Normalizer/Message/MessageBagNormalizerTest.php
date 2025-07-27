@@ -12,7 +12,6 @@
 namespace Symfony\AI\Platform\Tests\Contract\Normalizer\Message;
 
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\OpenAI\GPT;
@@ -42,8 +41,7 @@ final class MessageBagNormalizerTest extends TestCase
         $this->normalizer = new MessageBagNormalizer();
     }
 
-    #[Test]
-    public function supportsNormalization(): void
+    public function testSupportsNormalization(): void
     {
         $messageBag = $this->createMock(MessageBagInterface::class);
 
@@ -51,14 +49,12 @@ final class MessageBagNormalizerTest extends TestCase
         $this->assertFalse($this->normalizer->supportsNormalization(new \stdClass()));
     }
 
-    #[Test]
-    public function getSupportedTypes(): void
+    public function testGetSupportedTypes(): void
     {
         $this->assertSame([MessageBagInterface::class => true], $this->normalizer->getSupportedTypes(null));
     }
 
-    #[Test]
-    public function normalizeWithoutModel(): void
+    public function testNormalizeWithoutModel(): void
     {
         $messages = [
             new SystemMessage('You are a helpful assistant'),
@@ -88,8 +84,7 @@ final class MessageBagNormalizerTest extends TestCase
         $this->assertSame($expected, $this->normalizer->normalize($messageBag));
     }
 
-    #[Test]
-    public function normalizeWithModel(): void
+    public function testNormalizeWithModel(): void
     {
         $messages = [
             new SystemMessage('You are a helpful assistant'),

@@ -13,7 +13,6 @@ namespace Symfony\AI\Platform\Tests\Bridge\Anthropic;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\Anthropic\ResultConverter;
@@ -29,8 +28,7 @@ use Symfony\Component\HttpClient\Response\JsonMockResponse;
 #[UsesClass(ToolCallResult::class)]
 final class ResultConverterTest extends TestCase
 {
-    #[Test]
-    public function convertThrowsExceptionWhenContentIsToolUseAndLacksText(): void
+    public function testConvertThrowsExceptionWhenContentIsToolUseAndLacksText(): void
     {
         $httpClient = new MockHttpClient(new JsonMockResponse([
             'content' => [

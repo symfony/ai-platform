@@ -13,7 +13,6 @@ namespace Symfony\AI\Platform\Tests\Result\Exception;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Result\Exception\RawResultAlreadySetException;
 
@@ -21,8 +20,7 @@ use Symfony\AI\Platform\Result\Exception\RawResultAlreadySetException;
 #[Small]
 final class RawResultAlreadySetTest extends TestCase
 {
-    #[Test]
-    public function itHasCorrectExceptionMessage(): void
+    public function testItHasCorrectExceptionMessage(): void
     {
         $exception = new RawResultAlreadySetException();
 

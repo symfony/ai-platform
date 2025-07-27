@@ -13,7 +13,6 @@ namespace Symfony\AI\Platform\Tests\Contract\JsonSchema;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Fixtures\StructuredOutput\User;
 use Symfony\AI\Fixtures\StructuredOutput\UserWithConstructor;
@@ -24,8 +23,7 @@ use Symfony\AI\Platform\Contract\JsonSchema\DescriptionParser;
 #[CoversClass(DescriptionParser::class)]
 final class DescriptionParserTest extends TestCase
 {
-    #[Test]
-    public function fromPropertyWithoutDocBlock(): void
+    public function testFromPropertyWithoutDocBlock(): void
     {
         $property = new \ReflectionProperty(User::class, 'id');
 
@@ -34,8 +32,7 @@ final class DescriptionParserTest extends TestCase
         $this->assertSame('', $actual);
     }
 
-    #[Test]
-    public function fromPropertyWithDocBlock(): void
+    public function testFromPropertyWithDocBlock(): void
     {
         $property = new \ReflectionProperty(User::class, 'name');
 
@@ -44,8 +41,7 @@ final class DescriptionParserTest extends TestCase
         $this->assertSame('The name of the user in lowercase', $actual);
     }
 
-    #[Test]
-    public function fromPropertyWithConstructorDocBlock(): void
+    public function testFromPropertyWithConstructorDocBlock(): void
     {
         $property = new \ReflectionProperty(UserWithConstructor::class, 'name');
 
@@ -54,8 +50,7 @@ final class DescriptionParserTest extends TestCase
         $this->assertSame('The name of the user in lowercase', $actual);
     }
 
-    #[Test]
-    public function fromParameterWithoutDocBlock(): void
+    public function testFromParameterWithoutDocBlock(): void
     {
         $parameter = new \ReflectionParameter([ToolWithoutDocs::class, 'bar'], 'text');
 
@@ -64,8 +59,7 @@ final class DescriptionParserTest extends TestCase
         $this->assertSame('', $actual);
     }
 
-    #[Test]
-    public function fromParameterWithDocBlock(): void
+    public function testFromParameterWithDocBlock(): void
     {
         $parameter = new \ReflectionParameter([ToolRequiredParams::class, 'bar'], 'text');
 
@@ -74,9 +68,8 @@ final class DescriptionParserTest extends TestCase
         $this->assertSame('The text given to the tool', $actual);
     }
 
-    #[Test]
     #[DataProvider('provideMethodDescriptionCases')]
-    public function fromParameterWithDocs(string $comment, string $expected): void
+    public function testFromParameterWithDocs(string $comment, string $expected): void
     {
         $method = self::createMock(\ReflectionMethod::class);
         $method->method('getDocComment')->willReturn($comment);

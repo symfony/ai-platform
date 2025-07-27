@@ -12,7 +12,6 @@
 namespace Symfony\AI\Platform\Tests\Vector;
 
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Exception\RuntimeException;
 use Symfony\AI\Platform\Vector\NullVector;
@@ -21,22 +20,19 @@ use Symfony\AI\Platform\Vector\VectorInterface;
 #[CoversClass(NullVector::class)]
 final class NullVectorTest extends TestCase
 {
-    #[Test]
-    public function implementsInterface(): void
+    public function testImplementsInterface(): void
     {
         $this->assertInstanceOf(VectorInterface::class, new NullVector());
     }
 
-    #[Test]
-    public function getDataThrowsOnAccess(): void
+    public function testGetDataThrowsOnAccess(): void
     {
         self::expectException(RuntimeException::class);
 
         (new NullVector())->getData();
     }
 
-    #[Test]
-    public function getDimensionsThrowsOnAccess(): void
+    public function testGetDimensionsThrowsOnAccess(): void
     {
         self::expectException(RuntimeException::class);
 

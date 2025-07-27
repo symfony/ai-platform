@@ -14,7 +14,6 @@ namespace Symfony\AI\Platform\Tests\Bridge\Gemini\Contract;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Fixtures\Tool\ToolNoParams;
@@ -33,8 +32,7 @@ use Symfony\AI\Platform\Tool\Tool;
 #[UsesClass(Tool::class)]
 final class ToolNormalizerTest extends TestCase
 {
-    #[Test]
-    public function supportsNormalization(): void
+    public function testSupportsNormalization(): void
     {
         $normalizer = new ToolNormalizer();
 
@@ -44,8 +42,7 @@ final class ToolNormalizerTest extends TestCase
         $this->assertFalse($normalizer->supportsNormalization('not a tool'));
     }
 
-    #[Test]
-    public function getSupportedTypes(): void
+    public function testGetSupportedTypes(): void
     {
         $normalizer = new ToolNormalizer();
 
@@ -56,9 +53,8 @@ final class ToolNormalizerTest extends TestCase
         $this->assertSame($expected, $normalizer->getSupportedTypes(null));
     }
 
-    #[Test]
     #[DataProvider('normalizeDataProvider')]
-    public function normalize(Tool $tool, array $expected): void
+    public function testNormalize(Tool $tool, array $expected): void
     {
         $normalizer = new ToolNormalizer();
 

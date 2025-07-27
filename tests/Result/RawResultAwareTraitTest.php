@@ -13,7 +13,6 @@ namespace Symfony\AI\Platform\Tests\Result;
 
 use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Result\Exception\RawResultAlreadySetException;
@@ -26,8 +25,7 @@ use Symfony\Contracts\HttpClient\ResponseInterface as SymfonyHttpResponse;
 #[UsesClass(RawResultAlreadySetException::class)]
 final class RawResultAwareTraitTest extends TestCase
 {
-    #[Test]
-    public function itCanBeEnrichedWithARawResponse(): void
+    public function testItCanBeEnrichedWithARawResponse(): void
     {
         $result = $this->createTestClass();
         $rawResponse = self::createMock(SymfonyHttpResponse::class);
@@ -36,8 +34,7 @@ final class RawResultAwareTraitTest extends TestCase
         $this->assertSame($rawResponse, $result->getRawResult()?->getObject());
     }
 
-    #[Test]
-    public function itThrowsAnExceptionWhenSettingARawResponseTwice(): void
+    public function testItThrowsAnExceptionWhenSettingARawResponseTwice(): void
     {
         self::expectException(RawResultAlreadySetException::class);
 

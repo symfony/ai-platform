@@ -14,7 +14,6 @@ namespace Symfony\AI\Platform\Tests\Bridge\Gemini\Contract;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Medium;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\Gemini\Contract\AssistantMessageNormalizer;
@@ -42,8 +41,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 #[UsesClass(AssistantMessage::class)]
 final class MessageBagNormalizerTest extends TestCase
 {
-    #[Test]
-    public function supportsNormalization(): void
+    public function testSupportsNormalization(): void
     {
         $normalizer = new MessageBagNormalizer();
 
@@ -53,8 +51,7 @@ final class MessageBagNormalizerTest extends TestCase
         $this->assertFalse($normalizer->supportsNormalization('not a message bag'));
     }
 
-    #[Test]
-    public function getSupportedTypes(): void
+    public function testGetSupportedTypes(): void
     {
         $normalizer = new MessageBagNormalizer();
 
@@ -65,9 +62,8 @@ final class MessageBagNormalizerTest extends TestCase
         $this->assertSame($expected, $normalizer->getSupportedTypes(null));
     }
 
-    #[Test]
     #[DataProvider('provideMessageBagData')]
-    public function normalize(MessageBag $bag, array $expected): void
+    public function testNormalize(MessageBag $bag, array $expected): void
     {
         $normalizer = new MessageBagNormalizer();
 
