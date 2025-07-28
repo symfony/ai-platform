@@ -14,7 +14,7 @@ namespace Symfony\AI\Platform\Tests\Contract\Normalizer\Message;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Symfony\AI\Platform\Bridge\OpenAI\GPT;
+use Symfony\AI\Platform\Bridge\OpenAi\GPT;
 use Symfony\AI\Platform\Contract;
 use Symfony\AI\Platform\Contract\Normalizer\Message\MessageBagNormalizer;
 use Symfony\AI\Platform\Message\Content\Text;

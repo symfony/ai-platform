@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\AI\Platform\Tests\Bridge\OpenAI\DallE;
+namespace Symfony\AI\Platform\Tests\Bridge\OpenAi\DallE;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
-use Symfony\AI\Platform\Bridge\OpenAI\DallE\UrlImage;
+use Symfony\AI\Platform\Bridge\OpenAi\DallE\UrlImage;
 
 #[CoversClass(UrlImage::class)]
 #[Small]

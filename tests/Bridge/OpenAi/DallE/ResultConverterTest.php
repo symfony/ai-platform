@@ -9,16 +9,16 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\AI\Platform\Tests\Bridge\OpenAI\DallE;
+namespace Symfony\AI\Platform\Tests\Bridge\OpenAi\DallE;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Symfony\AI\Platform\Bridge\OpenAI\DallE\Base64Image;
-use Symfony\AI\Platform\Bridge\OpenAI\DallE\ImageResult;
-use Symfony\AI\Platform\Bridge\OpenAI\DallE\ResultConverter;
-use Symfony\AI\Platform\Bridge\OpenAI\DallE\UrlImage;
+use Symfony\AI\Platform\Bridge\OpenAi\DallE\Base64Image;
+use Symfony\AI\Platform\Bridge\OpenAi\DallE\ImageResult;
+use Symfony\AI\Platform\Bridge\OpenAi\DallE\ResultConverter;
+use Symfony\AI\Platform\Bridge\OpenAi\DallE\UrlImage;
 use Symfony\AI\Platform\Result\RawHttpResult;
 use Symfony\Contracts\HttpClient\ResponseInterface as HttpResponse;
 

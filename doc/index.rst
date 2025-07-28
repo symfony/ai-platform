@@ -28,9 +28,9 @@ with a provider being OpenAI, Azure, Google, Replicate, and others.
 
 For example, to use the OpenAI provider, you would typically do something like this::
 
-    use Symfony\AI\Platform\Bridge\OpenAI\Embeddings;
-    use Symfony\AI\Platform\Bridge\OpenAI\GPT;
-    use Symfony\AI\Platform\Bridge\OpenAI\PlatformFactory;
+    use Symfony\AI\Platform\Bridge\OpenAi\Embeddings;
+    use Symfony\AI\Platform\Bridge\OpenAi\GPT;
+    use Symfony\AI\Platform\Bridge\OpenAi\PlatformFactory;
 
     // Platform
     $platform = PlatformFactory::create(env('OPENAI_API_KEY'));
@@ -59,7 +59,7 @@ Models
 The component provides a model base class ``Symfony\AI\Platform\Model`` which is a combination of a model name, a set of
 capabilities, and additional options. Usually, bridges to specific providers extend this base class to provide a quick
 start for vendor-specific models and their capabilities, see ``Symfony\AI\Platform\Bridge\Anthropic\Claude`` or
-``Symfony\AI\Platform\Bridge\OpenAI\GPT``.
+``Symfony\AI\Platform\Bridge\OpenAi\GPT``.
 
 **Capabilities** are a list of strings defined by ``Symfony\AI\Platform\Capability``, which can be used to check if a model
 supports a specific feature, like ``Capability::INPUT_AUDIO`` or ``Capability::OUTPUT_IMAGE``.
@@ -242,7 +242,7 @@ Creating embeddings of word, sentences, or paragraphs is a typical use case arou
 
 The standalone usage results in an ``Vector`` instance::
 
-    use Symfony\AI\Platform\Bridge\OpenAI\Embeddings;
+    use Symfony\AI\Platform\Bridge\OpenAi\Embeddings;
 
     // Initialize Platform
 

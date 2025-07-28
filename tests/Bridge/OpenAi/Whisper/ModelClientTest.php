@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\AI\Platform\Tests\Bridge\OpenAI\Whisper;
+namespace Symfony\AI\Platform\Tests\Bridge\OpenAi\Whisper;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
-use Symfony\AI\Platform\Bridge\OpenAI\Whisper;
-use Symfony\AI\Platform\Bridge\OpenAI\Whisper\ModelClient;
-use Symfony\AI\Platform\Bridge\OpenAI\Whisper\Task;
+use Symfony\AI\Platform\Bridge\OpenAi\Whisper;
+use Symfony\AI\Platform\Bridge\OpenAi\Whisper\ModelClient;
+use Symfony\AI\Platform\Bridge\OpenAi\Whisper\Task;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
 

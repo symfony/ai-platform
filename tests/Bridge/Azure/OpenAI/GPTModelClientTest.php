@@ -9,15 +9,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\AI\Platform\Tests\Bridge\Azure\OpenAI;
+namespace Symfony\AI\Platform\Tests\Bridge\Azure\OpenAi;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Symfony\AI\Platform\Bridge\Azure\OpenAI\GPTModelClient;
-use Symfony\AI\Platform\Bridge\OpenAI\GPT;
+use Symfony\AI\Platform\Bridge\Azure\OpenAi\GPTModelClient;
+use Symfony\AI\Platform\Bridge\OpenAi\GPT;
 use Symfony\AI\Platform\Exception\InvalidArgumentException;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;

@@ -17,11 +17,11 @@ use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\LMStudio\Completions;
 use Symfony\AI\Platform\Bridge\LMStudio\Completions\ResultConverter;
-use Symfony\AI\Platform\Bridge\OpenAI\GPT\ResultConverter as OpenAIResultConverter;
+use Symfony\AI\Platform\Bridge\OpenAi\GPT\ResultConverter as OpenAiResultConverter;
 
 #[CoversClass(ResultConverter::class)]
 #[UsesClass(Completions::class)]
-#[UsesClass(OpenAIResultConverter::class)]
+#[UsesClass(OpenAiResultConverter::class)]
 #[Small]
 class ResultConverterTest extends TestCase
 {
