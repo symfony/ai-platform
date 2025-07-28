@@ -17,7 +17,7 @@ use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\LMStudio\Completions;
 use Symfony\AI\Platform\Bridge\LMStudio\Completions\ResultConverter;
-use Symfony\AI\Platform\Bridge\OpenAi\GPT\ResultConverter as OpenAiResultConverter;
+use Symfony\AI\Platform\Bridge\OpenAi\Gpt\ResultConverter as OpenAiResultConverter;
 
 #[CoversClass(ResultConverter::class)]
 #[UsesClass(Completions::class)]

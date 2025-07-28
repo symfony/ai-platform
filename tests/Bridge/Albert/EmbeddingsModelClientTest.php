@@ -17,7 +17,7 @@ use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\Albert\EmbeddingsModelClient;
 use Symfony\AI\Platform\Bridge\OpenAi\Embeddings;
-use Symfony\AI\Platform\Bridge\OpenAi\GPT;
+use Symfony\AI\Platform\Bridge\OpenAi\Gpt;
 use Symfony\AI\Platform\Exception\InvalidArgumentException;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\JsonMockResponse;
@@ -70,7 +70,7 @@ final class EmbeddingsModelClientTest extends TestCase
             'https://albert.example.com/'
         );
 
-        $gptModel = new GPT('gpt-3.5-turbo');
+        $gptModel = new Gpt('gpt-3.5-turbo');
         $this->assertFalse($client->supports($gptModel));
     }
 

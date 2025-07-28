@@ -16,24 +16,24 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Symfony\AI\Platform\Bridge\Albert\GPTModelClient;
+use Symfony\AI\Platform\Bridge\Albert\GptModelClient;
 use Symfony\AI\Platform\Bridge\OpenAi\Embeddings;
-use Symfony\AI\Platform\Bridge\OpenAi\GPT;
+use Symfony\AI\Platform\Bridge\OpenAi\Gpt;
 use Symfony\AI\Platform\Exception\InvalidArgumentException;
 use Symfony\Component\HttpClient\EventSourceHttpClient;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\JsonMockResponse;
 
-#[CoversClass(GPTModelClient::class)]
+#[CoversClass(GptModelClient::class)]
 #[Small]
-final class GPTModelClientTest extends TestCase
+final class GptModelClientTest extends TestCase
 {
     public function testConstructorThrowsExceptionForEmptyApiKey()
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The API key must not be empty.');
 
-        new GPTModelClient(
+        new GptModelClient(
             new MockHttpClient(),
             '',
             'https://albert.example.com/'
@@ -45,7 +45,7 @@ final class GPTModelClientTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The base URL must not be empty.');
 
-        new GPTModelClient(
+        new GptModelClient(
             new MockHttpClient(),
             'test-api-key',
             ''
@@ -58,7 +58,7 @@ final class GPTModelClientTest extends TestCase
 
         $mockHttpClient = new MockHttpClient();
 
-        $client = new GPTModelClient(
+        $client = new GptModelClient(
             $mockHttpClient,
             'test-api-key',
             'https://albert.example.com/'
@@ -69,7 +69,7 @@ final class GPTModelClientTest extends TestCase
         $mockResponse = new JsonMockResponse(['choices' => []]);
         $mockHttpClient->setResponseFactory([$mockResponse]);
 
-        $model = new GPT('gpt-3.5-turbo');
+        $model = new Gpt('gpt-3.5-turbo');
         $client->request($model, ['messages' => []]);
     }
 
@@ -80,7 +80,7 @@ final class GPTModelClientTest extends TestCase
         $mockHttpClient = new MockHttpClient();
         $eventSourceClient = new EventSourceHttpClient($mockHttpClient);
 
-        $client = new GPTModelClient(
+        $client = new GptModelClient(
             $eventSourceClient,
             'test-api-key',
             'https://albert.example.com/'
@@ -90,25 +90,25 @@ final class GPTModelClientTest extends TestCase
         $mockResponse = new JsonMockResponse(['choices' => []]);
         $mockHttpClient->setResponseFactory([$mockResponse]);
 
-        $model = new GPT('gpt-3.5-turbo');
+        $model = new Gpt('gpt-3.5-turbo');
         $client->request($model, ['messages' => []]);
     }
 
-    public function testSupportsGPTModel()
+    public function testSupportsGptModel()
     {
-        $client = new GPTModelClient(
+        $client = new GptModelClient(
             new MockHttpClient(),
             'test-api-key',
             'https://albert.example.com/'
         );
 
-        $gptModel = new GPT('gpt-3.5-turbo');
+        $gptModel = new Gpt('gpt-3.5-turbo');
         $this->assertTrue($client->supports($gptModel));
     }
 
-    public function testDoesNotSupportNonGPTModel()
+    public function testDoesNotSupportNonGptModel()
     {
-        $client = new GPTModelClient(
+        $client = new GptModelClient(
             new MockHttpClient(),
             'test-api-key',
             'https://albert.example.com/'
@@ -128,13 +128,13 @@ final class GPTModelClientTest extends TestCase
             return new JsonMockResponse(['choices' => []]);
         });
 
-        $client = new GPTModelClient(
+        $client = new GptModelClient(
             $httpClient,
             'test-api-key',
             'https://albert.example.com/v1'
         );
 
-        $model = new GPT('gpt-3.5-turbo');
+        $model = new Gpt('gpt-3.5-turbo');
         $result = $client->request($model, $payload, $options);
 
         $this->assertNotNull($capturedRequest);
@@ -195,13 +195,13 @@ final class GPTModelClientTest extends TestCase
             return new JsonMockResponse(['choices' => []]);
         });
 
-        $client = new GPTModelClient(
+        $client = new GptModelClient(
             $httpClient,
             'test-api-key',
             'https://albert.example.com/v1'
         );
 
-        $model = new GPT('gpt-3.5-turbo');
+        $model = new Gpt('gpt-3.5-turbo');
         $client->request($model, ['messages' => []]);
 
         $this->assertSame('https://albert.example.com/v1/chat/completions', $capturedUrl);
@@ -216,13 +216,13 @@ final class GPTModelClientTest extends TestCase
             return new JsonMockResponse(['choices' => []]);
         });
 
-        $client = new GPTModelClient(
+        $client = new GptModelClient(
             $httpClient,
             'test-api-key',
             'https://albert.example.com/v1'
         );
 
-        $model = new GPT('gpt-3.5-turbo');
+        $model = new Gpt('gpt-3.5-turbo');
         $client->request($model, ['messages' => []]);
 
         $this->assertSame('https://albert.example.com/v1/chat/completions', $capturedUrl);

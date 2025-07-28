@@ -9,13 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\AI\Platform\Tests\Bridge\OpenAi\GPT;
+namespace Symfony\AI\Platform\Tests\Bridge\OpenAi\Gpt;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Symfony\AI\Platform\Bridge\OpenAi\GPT\ResultConverter;
+use Symfony\AI\Platform\Bridge\OpenAi\Gpt\ResultConverter;
 use Symfony\AI\Platform\Exception\ContentFilterException;
 use Symfony\AI\Platform\Exception\RuntimeException;
 use Symfony\AI\Platform\Result\Choice;

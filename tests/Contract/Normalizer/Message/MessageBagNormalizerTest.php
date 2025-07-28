@@ -14,7 +14,7 @@ namespace Symfony\AI\Platform\Tests\Contract\Normalizer\Message;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Symfony\AI\Platform\Bridge\OpenAi\GPT;
+use Symfony\AI\Platform\Bridge\OpenAi\Gpt;
 use Symfony\AI\Platform\Contract;
 use Symfony\AI\Platform\Contract\Normalizer\Message\MessageBagNormalizer;
 use Symfony\AI\Platform\Message\Content\Text;
@@ -30,7 +30,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 #[UsesClass(SystemMessage::class)]
 #[UsesClass(UserMessage::class)]
 #[UsesClass(Text::class)]
-#[UsesClass(GPT::class)]
+#[UsesClass(Gpt::class)]
 #[UsesClass(Model::class)]
 final class MessageBagNormalizerTest extends TestCase
 {
@@ -96,7 +96,7 @@ final class MessageBagNormalizerTest extends TestCase
         $innerNormalizer = $this->createMock(NormalizerInterface::class);
         $innerNormalizer->expects($this->once())
             ->method('normalize')
-            ->with($messages, null, [Contract::CONTEXT_MODEL => new GPT()])
+            ->with($messages, null, [Contract::CONTEXT_MODEL => new Gpt()])
             ->willReturn([
                 ['role' => 'system', 'content' => 'You are a helpful assistant'],
                 ['role' => 'user', 'content' => 'Hello'],
@@ -113,7 +113,7 @@ final class MessageBagNormalizerTest extends TestCase
         ];
 
         $this->assertSame($expected, $this->normalizer->normalize($messageBag, context: [
-            Contract::CONTEXT_MODEL => new GPT(),
+            Contract::CONTEXT_MODEL => new Gpt(),
         ]));
     }
 }

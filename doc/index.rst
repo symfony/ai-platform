@@ -29,7 +29,7 @@ with a provider being OpenAI, Azure, Google, Replicate, and others.
 For example, to use the OpenAI provider, you would typically do something like this::
 
     use Symfony\AI\Platform\Bridge\OpenAi\Embeddings;
-    use Symfony\AI\Platform\Bridge\OpenAi\GPT;
+    use Symfony\AI\Platform\Bridge\OpenAi\Gpt;
     use Symfony\AI\Platform\Bridge\OpenAi\PlatformFactory;
 
     // Platform
@@ -39,7 +39,7 @@ For example, to use the OpenAI provider, you would typically do something like t
     $embeddings = new Embeddings();
 
     // Language Model in version gpt-4o-mini
-    $model = new GPT(GPT::GPT_4O_MINI);
+    $model = new Gpt(Gpt::GPT_4O_MINI);
 
 And with a ``Symfony\AI\Platform\PlatformInterface`` instance, and a ``Symfony\AI\Platform\Model`` instance, you can now
 use the platform to interact with the AI model::
@@ -59,7 +59,7 @@ Models
 The component provides a model base class ``Symfony\AI\Platform\Model`` which is a combination of a model name, a set of
 capabilities, and additional options. Usually, bridges to specific providers extend this base class to provide a quick
 start for vendor-specific models and their capabilities, see ``Symfony\AI\Platform\Bridge\Anthropic\Claude`` or
-``Symfony\AI\Platform\Bridge\OpenAi\GPT``.
+``Symfony\AI\Platform\Bridge\OpenAi\Gpt``.
 
 **Capabilities** are a list of strings defined by ``Symfony\AI\Platform\Capability``, which can be used to check if a model
 supports a specific feature, like ``Capability::INPUT_AUDIO`` or ``Capability::OUTPUT_IMAGE``.

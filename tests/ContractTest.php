@@ -17,7 +17,7 @@ use PHPUnit\Framework\Attributes\Large;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\OpenAi\Embeddings;
-use Symfony\AI\Platform\Bridge\OpenAi\GPT;
+use Symfony\AI\Platform\Bridge\OpenAi\Gpt;
 use Symfony\AI\Platform\Bridge\OpenAi\Whisper;
 use Symfony\AI\Platform\Bridge\OpenAi\Whisper\AudioNormalizer;
 use Symfony\AI\Platform\Contract;
@@ -82,8 +82,8 @@ final class ContractTest extends TestCase
      */
     public static function providePayloadTestCases(): iterable
     {
-        yield 'MessageBag with GPT' => [
-            'model' => new GPT(),
+        yield 'MessageBag with Gpt' => [
+            'model' => new Gpt(),
             'input' => new MessageBag(
                 Message::forSystem('System message'),
                 Message::ofUser('User message'),
@@ -100,8 +100,8 @@ final class ContractTest extends TestCase
         ];
 
         $audio = Audio::fromFile(\dirname(__DIR__, 3).'/fixtures/audio.mp3');
-        yield 'Audio within MessageBag with GPT' => [
-            'model' => new GPT(),
+        yield 'Audio within MessageBag with Gpt' => [
+            'model' => new Gpt(),
             'input' => new MessageBag(Message::ofUser('What is this recording about?', $audio)),
             'expected' => [
                 'messages' => [
@@ -124,8 +124,8 @@ final class ContractTest extends TestCase
         ];
 
         $image = Image::fromFile(\dirname(__DIR__, 3).'/fixtures/image.jpg');
-        yield 'Image within MessageBag with GPT' => [
-            'model' => new GPT(),
+        yield 'Image within MessageBag with Gpt' => [
+            'model' => new Gpt(),
             'input' => new MessageBag(
                 Message::forSystem('You are an image analyzer bot that helps identify the content of images.'),
                 Message::ofUser('Describe the image as a comedian would do it.', $image),
@@ -148,8 +148,8 @@ final class ContractTest extends TestCase
             ],
         ];
 
-        yield 'ImageUrl within MessageBag with GPT' => [
-            'model' => new GPT(),
+        yield 'ImageUrl within MessageBag with Gpt' => [
+            'model' => new Gpt(),
             'input' => new MessageBag(
                 Message::forSystem('You are an image analyzer bot that helps identify the content of images.'),
                 Message::ofUser('Describe the image as a comedian would do it.', new ImageUrl('https://example.com/image.jpg')),
@@ -178,8 +178,8 @@ final class ContractTest extends TestCase
             'expected' => 'This is a test input.',
         ];
 
-        yield 'Longer Conversation with GPT' => [
-            'model' => new GPT(),
+        yield 'Longer Conversation with Gpt' => [
+            'model' => new Gpt(),
             'input' => new MessageBag(
                 Message::forSystem('My amazing system prompt.'),
                 Message::ofAssistant('It is time to sleep.'),
@@ -222,8 +222,8 @@ final class ContractTest extends TestCase
             }
         };
 
-        yield 'MessageBag with custom message from GPT' => [
-            'model' => new GPT(),
+        yield 'MessageBag with custom message from Gpt' => [
+            'model' => new Gpt(),
             'input' => new MessageBag($customSerializableMessage),
             'expected' => [
                 'messages' => [
