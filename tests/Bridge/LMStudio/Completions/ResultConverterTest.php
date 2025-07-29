@@ -25,7 +25,7 @@ use Symfony\AI\Platform\Bridge\OpenAI\GPT\ResultConverter as OpenAIResultConvert
 #[Small]
 class ResultConverterTest extends TestCase
 {
-    public function testItSupportsCompletionsModel(): void
+    public function testItSupportsCompletionsModel()
     {
         $converter = new ResultConverter();
 

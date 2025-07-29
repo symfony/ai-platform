@@ -36,7 +36,7 @@ use Symfony\Contracts\HttpClient\ResponseInterface;
 #[UsesClass(ToolCallResult::class)]
 class ResultConverterTest extends TestCase
 {
-    public function testConvertTextResult(): void
+    public function testConvertTextResult()
     {
         $converter = new ResultConverter();
         $httpResponse = self::createMock(ResponseInterface::class);
@@ -58,7 +58,7 @@ class ResultConverterTest extends TestCase
         $this->assertSame('Hello world', $result->getContent());
     }
 
-    public function testConvertToolCallResult(): void
+    public function testConvertToolCallResult()
     {
         $converter = new ResultConverter();
         $httpResponse = self::createMock(ResponseInterface::class);
@@ -94,7 +94,7 @@ class ResultConverterTest extends TestCase
         $this->assertSame(['arg1' => 'value1'], $toolCalls[0]->arguments);
     }
 
-    public function testConvertMultipleChoices(): void
+    public function testConvertMultipleChoices()
     {
         $converter = new ResultConverter();
         $httpResponse = self::createMock(ResponseInterface::class);
@@ -126,7 +126,7 @@ class ResultConverterTest extends TestCase
         $this->assertSame('Choice 2', $choices[1]->getContent());
     }
 
-    public function testContentFilterException(): void
+    public function testContentFilterException()
     {
         $converter = new ResultConverter();
         $httpResponse = self::createMock(ResponseInterface::class);
@@ -157,7 +157,7 @@ class ResultConverterTest extends TestCase
         $converter->convert(new RawHttpResult($httpResponse));
     }
 
-    public function testThrowsExceptionWhenNoChoices(): void
+    public function testThrowsExceptionWhenNoChoices()
     {
         $converter = new ResultConverter();
         $httpResponse = self::createMock(ResponseInterface::class);
@@ -169,7 +169,7 @@ class ResultConverterTest extends TestCase
         $converter->convert(new RawHttpResult($httpResponse));
     }
 
-    public function testThrowsExceptionForUnsupportedFinishReason(): void
+    public function testThrowsExceptionForUnsupportedFinishReason()
     {
         $converter = new ResultConverter();
         $httpResponse = self::createMock(ResponseInterface::class);

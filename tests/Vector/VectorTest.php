@@ -19,7 +19,7 @@ use Symfony\AI\Platform\Vector\VectorInterface;
 #[CoversClass(Vector::class)]
 final class VectorTest extends TestCase
 {
-    public function testImplementsInterface(): void
+    public function testImplementsInterface()
     {
         $this->assertInstanceOf(
             VectorInterface::class,
@@ -27,7 +27,7 @@ final class VectorTest extends TestCase
         );
     }
 
-    public function testWithDimensionNull(): void
+    public function testWithDimensionNull()
     {
         $vector = new Vector($vectors = [1.0, 2.0, 3.0], null);
 

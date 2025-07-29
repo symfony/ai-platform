@@ -20,7 +20,7 @@ use Symfony\AI\Platform\Result\ToolCall;
 #[Small]
 final class ToolCallTest extends TestCase
 {
-    public function testToolCall(): void
+    public function testToolCall()
     {
         $toolCall = new ToolCall('id', 'name', ['foo' => 'bar']);
         $this->assertSame('id', $toolCall->id);
@@ -28,7 +28,7 @@ final class ToolCallTest extends TestCase
         $this->assertSame(['foo' => 'bar'], $toolCall->arguments);
     }
 
-    public function testToolCallJsonSerialize(): void
+    public function testToolCallJsonSerialize()
     {
         $toolCall = new ToolCall('id', 'name', ['foo' => 'bar']);
         $this->assertSame([

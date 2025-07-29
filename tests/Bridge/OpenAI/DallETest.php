@@ -20,7 +20,7 @@ use Symfony\AI\Platform\Bridge\OpenAI\DallE;
 #[Small]
 final class DallETest extends TestCase
 {
-    public function testItCreatesDallEWithDefaultSettings(): void
+    public function testItCreatesDallEWithDefaultSettings()
     {
         $dallE = new DallE();
 
@@ -28,7 +28,7 @@ final class DallETest extends TestCase
         $this->assertSame([], $dallE->getOptions());
     }
 
-    public function testItCreatesDallEWithCustomSettings(): void
+    public function testItCreatesDallEWithCustomSettings()
     {
         $dallE = new DallE(DallE::DALL_E_3, ['response_format' => 'base64', 'n' => 2]);
 

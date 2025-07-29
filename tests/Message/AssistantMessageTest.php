@@ -30,12 +30,12 @@ final class AssistantMessageTest extends TestCase
 {
     use UuidAssertionTrait;
 
-    public function testTheRoleOfTheMessageIsAsExpected(): void
+    public function testTheRoleOfTheMessageIsAsExpected()
     {
         $this->assertSame(Role::Assistant, (new AssistantMessage())->getRole());
     }
 
-    public function testConstructionWithoutToolCallIsPossible(): void
+    public function testConstructionWithoutToolCallIsPossible()
     {
         $message = new AssistantMessage('foo');
 
@@ -43,7 +43,7 @@ final class AssistantMessageTest extends TestCase
         $this->assertNull($message->toolCalls);
     }
 
-    public function testConstructionWithoutContentIsPossible(): void
+    public function testConstructionWithoutContentIsPossible()
     {
         $toolCall = new ToolCall('foo', 'foo');
         $message = new AssistantMessage(toolCalls: [$toolCall]);
@@ -53,7 +53,7 @@ final class AssistantMessageTest extends TestCase
         $this->assertTrue($message->hasToolCalls());
     }
 
-    public function testMessageHasUid(): void
+    public function testMessageHasUid()
     {
         $message = new AssistantMessage('foo');
 
@@ -62,7 +62,7 @@ final class AssistantMessageTest extends TestCase
         $this->assertSame($message->id, $message->getId());
     }
 
-    public function testDifferentMessagesHaveDifferentUids(): void
+    public function testDifferentMessagesHaveDifferentUids()
     {
         $message1 = new AssistantMessage('foo');
         $message2 = new AssistantMessage('bar');
@@ -72,7 +72,7 @@ final class AssistantMessageTest extends TestCase
         self::assertIsUuidV7($message2->getId()->toRfc4122());
     }
 
-    public function testSameMessagesHaveDifferentUids(): void
+    public function testSameMessagesHaveDifferentUids()
     {
         $message1 = new AssistantMessage('foo');
         $message2 = new AssistantMessage('foo');
@@ -82,7 +82,7 @@ final class AssistantMessageTest extends TestCase
         self::assertIsUuidV7($message2->getId()->toRfc4122());
     }
 
-    public function testMessageIdImplementsRequiredInterfaces(): void
+    public function testMessageIdImplementsRequiredInterfaces()
     {
         $message = new AssistantMessage('test');
 

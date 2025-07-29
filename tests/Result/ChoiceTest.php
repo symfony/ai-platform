@@ -23,7 +23,7 @@ use Symfony\AI\Platform\Result\ToolCall;
 #[Small]
 final class ChoiceTest extends TestCase
 {
-    public function testChoiceEmpty(): void
+    public function testChoiceEmpty()
     {
         $choice = new Choice();
         $this->assertFalse($choice->hasContent());
@@ -32,7 +32,7 @@ final class ChoiceTest extends TestCase
         $this->assertCount(0, $choice->getToolCalls());
     }
 
-    public function testChoiceWithContent(): void
+    public function testChoiceWithContent()
     {
         $choice = new Choice('content');
         $this->assertTrue($choice->hasContent());
@@ -41,7 +41,7 @@ final class ChoiceTest extends TestCase
         $this->assertCount(0, $choice->getToolCalls());
     }
 
-    public function testChoiceWithToolCall(): void
+    public function testChoiceWithToolCall()
     {
         $choice = new Choice(null, [new ToolCall('name', 'arguments')]);
         $this->assertFalse($choice->hasContent());
@@ -50,7 +50,7 @@ final class ChoiceTest extends TestCase
         $this->assertCount(1, $choice->getToolCalls());
     }
 
-    public function testChoiceWithContentAndToolCall(): void
+    public function testChoiceWithContentAndToolCall()
     {
         $choice = new Choice('content', [new ToolCall('name', 'arguments')]);
         $this->assertTrue($choice->hasContent());

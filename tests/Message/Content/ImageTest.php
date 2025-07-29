@@ -18,21 +18,21 @@ use Symfony\AI\Platform\Message\Content\Image;
 #[CoversClass(Image::class)]
 final class ImageTest extends TestCase
 {
-    public function testConstructWithValidDataUrl(): void
+    public function testConstructWithValidDataUrl()
     {
         $image = Image::fromDataUrl('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABKklEQVR42mNk+A8AAwMhIv9n+X');
 
         $this->assertStringStartsWith('data:image/png;base64', $image->asDataUrl());
     }
 
-    public function testWithValidFile(): void
+    public function testWithValidFile()
     {
         $image = Image::fromFile(\dirname(__DIR__, 5).'/fixtures/image.jpg');
 
         $this->assertStringStartsWith('data:image/jpeg;base64,', $image->asDataUrl());
     }
 
-    public function testFromBinaryWithInvalidFile(): void
+    public function testFromBinaryWithInvalidFile()
     {
         self::expectExceptionMessage('The file "foo.jpg" does not exist or is not readable.');
 

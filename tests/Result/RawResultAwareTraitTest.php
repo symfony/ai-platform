@@ -25,7 +25,7 @@ use Symfony\Contracts\HttpClient\ResponseInterface as SymfonyHttpResponse;
 #[UsesClass(RawResultAlreadySetException::class)]
 final class RawResultAwareTraitTest extends TestCase
 {
-    public function testItCanBeEnrichedWithARawResponse(): void
+    public function testItCanBeEnrichedWithARawResponse()
     {
         $result = $this->createTestClass();
         $rawResponse = self::createMock(SymfonyHttpResponse::class);
@@ -34,7 +34,7 @@ final class RawResultAwareTraitTest extends TestCase
         $this->assertSame($rawResponse, $result->getRawResult()?->getObject());
     }
 
-    public function testItThrowsAnExceptionWhenSettingARawResponseTwice(): void
+    public function testItThrowsAnExceptionWhenSettingARawResponseTwice()
     {
         self::expectException(RawResultAlreadySetException::class);
 

@@ -28,7 +28,7 @@ use Symfony\Component\HttpClient\Response\JsonMockResponse;
 #[Small]
 final class GPTModelClientTest extends TestCase
 {
-    public function testConstructorThrowsExceptionForEmptyApiKey(): void
+    public function testConstructorThrowsExceptionForEmptyApiKey()
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The API key must not be empty.');
@@ -40,7 +40,7 @@ final class GPTModelClientTest extends TestCase
         );
     }
 
-    public function testConstructorThrowsExceptionForEmptyBaseUrl(): void
+    public function testConstructorThrowsExceptionForEmptyBaseUrl()
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The base URL must not be empty.');
@@ -52,7 +52,7 @@ final class GPTModelClientTest extends TestCase
         );
     }
 
-    public function testConstructorWrapsHttpClientInEventSourceHttpClient(): void
+    public function testConstructorWrapsHttpClientInEventSourceHttpClient()
     {
         self::expectNotToPerformAssertions();
 
@@ -73,7 +73,7 @@ final class GPTModelClientTest extends TestCase
         $client->request($model, ['messages' => []]);
     }
 
-    public function testConstructorAcceptsEventSourceHttpClient(): void
+    public function testConstructorAcceptsEventSourceHttpClient()
     {
         self::expectNotToPerformAssertions();
 
@@ -94,7 +94,7 @@ final class GPTModelClientTest extends TestCase
         $client->request($model, ['messages' => []]);
     }
 
-    public function testSupportsGPTModel(): void
+    public function testSupportsGPTModel()
     {
         $client = new GPTModelClient(
             new MockHttpClient(),
@@ -106,7 +106,7 @@ final class GPTModelClientTest extends TestCase
         $this->assertTrue($client->supports($gptModel));
     }
 
-    public function testDoesNotSupportNonGPTModel(): void
+    public function testDoesNotSupportNonGPTModel()
     {
         $client = new GPTModelClient(
             new MockHttpClient(),
@@ -119,7 +119,7 @@ final class GPTModelClientTest extends TestCase
     }
 
     #[DataProvider('providePayloadToJson')]
-    public function testRequestSendsCorrectHttpRequest(array|string $payload, array $options, array|string $expectedJson): void
+    public function testRequestSendsCorrectHttpRequest(array|string $payload, array $options, array|string $expectedJson)
     {
         $capturedRequest = null;
         $httpClient = new MockHttpClient(function ($method, $url, $options) use (&$capturedRequest) {
@@ -186,7 +186,7 @@ final class GPTModelClientTest extends TestCase
         ];
     }
 
-    public function testRequestHandlesBaseUrlWithoutTrailingSlash(): void
+    public function testRequestHandlesBaseUrlWithoutTrailingSlash()
     {
         $capturedUrl = null;
         $httpClient = new MockHttpClient(function ($method, $url) use (&$capturedUrl) {
@@ -207,7 +207,7 @@ final class GPTModelClientTest extends TestCase
         $this->assertSame('https://albert.example.com/v1/chat/completions', $capturedUrl);
     }
 
-    public function testRequestHandlesBaseUrlWithTrailingSlash(): void
+    public function testRequestHandlesBaseUrlWithTrailingSlash()
     {
         $capturedUrl = null;
         $httpClient = new MockHttpClient(function ($method, $url) use (&$capturedUrl) {

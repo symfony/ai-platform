@@ -29,7 +29,7 @@ use Symfony\Contracts\HttpClient\ResponseInterface;
 #[UsesClass(Embeddings::class)]
 final class ModelClientTest extends TestCase
 {
-    public function testItMakesARequestWithCorrectPayload(): void
+    public function testItMakesARequestWithCorrectPayload()
     {
         $result = $this->createStub(ResponseInterface::class);
         $result

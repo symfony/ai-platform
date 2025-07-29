@@ -27,7 +27,7 @@ final class SystemMessageTest extends TestCase
 {
     use UuidAssertionTrait;
 
-    public function testConstructionIsPossible(): void
+    public function testConstructionIsPossible()
     {
         $message = new SystemMessage('foo');
 
@@ -35,7 +35,7 @@ final class SystemMessageTest extends TestCase
         $this->assertSame('foo', $message->content);
     }
 
-    public function testMessageHasUid(): void
+    public function testMessageHasUid()
     {
         $message = new SystemMessage('foo');
 
@@ -44,7 +44,7 @@ final class SystemMessageTest extends TestCase
         $this->assertSame($message->id, $message->getId());
     }
 
-    public function testDifferentMessagesHaveDifferentUids(): void
+    public function testDifferentMessagesHaveDifferentUids()
     {
         $message1 = new SystemMessage('foo');
         $message2 = new SystemMessage('bar');
@@ -54,7 +54,7 @@ final class SystemMessageTest extends TestCase
         self::assertIsUuidV7($message2->getId()->toRfc4122());
     }
 
-    public function testSameMessagesHaveDifferentUids(): void
+    public function testSameMessagesHaveDifferentUids()
     {
         $message1 = new SystemMessage('foo');
         $message2 = new SystemMessage('foo');
@@ -64,7 +64,7 @@ final class SystemMessageTest extends TestCase
         self::assertIsUuidV7($message2->getId()->toRfc4122());
     }
 
-    public function testMessageIdImplementsRequiredInterfaces(): void
+    public function testMessageIdImplementsRequiredInterfaces()
     {
         $message = new SystemMessage('test');
 

@@ -31,19 +31,19 @@ final class AudioNormalizerTest extends TestCase
         $this->normalizer = new AudioNormalizer();
     }
 
-    public function testSupportsNormalization(): void
+    public function testSupportsNormalization()
     {
         $this->assertTrue($this->normalizer->supportsNormalization(Audio::fromFile(\dirname(__DIR__, 7).'/fixtures/audio.mp3')));
         $this->assertFalse($this->normalizer->supportsNormalization(new \stdClass()));
     }
 
-    public function testGetSupportedTypes(): void
+    public function testGetSupportedTypes()
     {
         $this->assertSame([Audio::class => true], $this->normalizer->getSupportedTypes(null));
     }
 
     #[DataProvider('provideAudioData')]
-    public function testNormalize(string $data, string $format, array $expected): void
+    public function testNormalize(string $data, string $format, array $expected)
     {
         $audio = new Audio(base64_decode($data), $format);
 

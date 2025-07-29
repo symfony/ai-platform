@@ -28,7 +28,7 @@ use Symfony\Component\HttpClient\Response\JsonMockResponse;
 #[UsesClass(ToolCallResult::class)]
 final class ResultConverterTest extends TestCase
 {
-    public function testConvertThrowsExceptionWhenContentIsToolUseAndLacksText(): void
+    public function testConvertThrowsExceptionWhenContentIsToolUseAndLacksText()
     {
         $httpClient = new MockHttpClient(new JsonMockResponse([
             'content' => [

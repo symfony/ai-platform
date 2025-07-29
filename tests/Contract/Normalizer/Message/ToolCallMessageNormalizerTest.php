@@ -31,7 +31,7 @@ final class ToolCallMessageNormalizerTest extends TestCase
         $this->normalizer = new ToolCallMessageNormalizer();
     }
 
-    public function testSupportsNormalization(): void
+    public function testSupportsNormalization()
     {
         $toolCallMessage = new ToolCallMessage(new ToolCall('id', 'function'), 'content');
 
@@ -39,12 +39,12 @@ final class ToolCallMessageNormalizerTest extends TestCase
         $this->assertFalse($this->normalizer->supportsNormalization(new \stdClass()));
     }
 
-    public function testGetSupportedTypes(): void
+    public function testGetSupportedTypes()
     {
         $this->assertSame([ToolCallMessage::class => true], $this->normalizer->getSupportedTypes(null));
     }
 
-    public function testNormalize(): void
+    public function testNormalize()
     {
         $toolCall = new ToolCall('tool_call_123', 'get_weather', ['location' => 'Paris']);
         $message = new ToolCallMessage($toolCall, 'Weather data for Paris');

@@ -20,7 +20,7 @@ use Symfony\AI\Platform\Message\Content\ImageUrl;
 #[Small]
 final class ImageUrlTest extends TestCase
 {
-    public function testConstructWithValidUrl(): void
+    public function testConstructWithValidUrl()
     {
         $image = new ImageUrl('https://foo.com/test.png');
 

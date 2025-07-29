@@ -28,18 +28,18 @@ final class SystemMessageNormalizerTest extends TestCase
         $this->normalizer = new SystemMessageNormalizer();
     }
 
-    public function testSupportsNormalization(): void
+    public function testSupportsNormalization()
     {
         $this->assertTrue($this->normalizer->supportsNormalization(new SystemMessage('content')));
         $this->assertFalse($this->normalizer->supportsNormalization(new \stdClass()));
     }
 
-    public function testGetSupportedTypes(): void
+    public function testGetSupportedTypes()
     {
         $this->assertSame([SystemMessage::class => true], $this->normalizer->getSupportedTypes(null));
     }
 
-    public function testNormalize(): void
+    public function testNormalize()
     {
         $message = new SystemMessage('You are a helpful assistant');
 

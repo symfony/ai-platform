@@ -23,7 +23,7 @@ use Symfony\AI\Platform\Contract\JsonSchema\DescriptionParser;
 #[CoversClass(DescriptionParser::class)]
 final class DescriptionParserTest extends TestCase
 {
-    public function testFromPropertyWithoutDocBlock(): void
+    public function testFromPropertyWithoutDocBlock()
     {
         $property = new \ReflectionProperty(User::class, 'id');
 
@@ -32,7 +32,7 @@ final class DescriptionParserTest extends TestCase
         $this->assertSame('', $actual);
     }
 
-    public function testFromPropertyWithDocBlock(): void
+    public function testFromPropertyWithDocBlock()
     {
         $property = new \ReflectionProperty(User::class, 'name');
 
@@ -41,7 +41,7 @@ final class DescriptionParserTest extends TestCase
         $this->assertSame('The name of the user in lowercase', $actual);
     }
 
-    public function testFromPropertyWithConstructorDocBlock(): void
+    public function testFromPropertyWithConstructorDocBlock()
     {
         $property = new \ReflectionProperty(UserWithConstructor::class, 'name');
 
@@ -50,7 +50,7 @@ final class DescriptionParserTest extends TestCase
         $this->assertSame('The name of the user in lowercase', $actual);
     }
 
-    public function testFromParameterWithoutDocBlock(): void
+    public function testFromParameterWithoutDocBlock()
     {
         $parameter = new \ReflectionParameter([ToolWithoutDocs::class, 'bar'], 'text');
 
@@ -59,7 +59,7 @@ final class DescriptionParserTest extends TestCase
         $this->assertSame('', $actual);
     }
 
-    public function testFromParameterWithDocBlock(): void
+    public function testFromParameterWithDocBlock()
     {
         $parameter = new \ReflectionParameter([ToolRequiredParams::class, 'bar'], 'text');
 
@@ -69,7 +69,7 @@ final class DescriptionParserTest extends TestCase
     }
 
     #[DataProvider('provideMethodDescriptionCases')]
-    public function testFromParameterWithDocs(string $comment, string $expected): void
+    public function testFromParameterWithDocs(string $comment, string $expected)
     {
         $method = self::createMock(\ReflectionMethod::class);
         $method->method('getDocComment')->willReturn($comment);

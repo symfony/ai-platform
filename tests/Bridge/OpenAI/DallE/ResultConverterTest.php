@@ -29,7 +29,7 @@ use Symfony\Contracts\HttpClient\ResponseInterface as HttpResponse;
 #[Small]
 final class ResultConverterTest extends TestCase
 {
-    public function testItIsConvertingTheResponse(): void
+    public function testItIsConvertingTheResponse()
     {
         $httpResponse = $this->createStub(HttpResponse::class);
         $httpResponse->method('toArray')->willReturn([
@@ -46,7 +46,7 @@ final class ResultConverterTest extends TestCase
         $this->assertSame('https://example.com/image.jpg', $result->getContent()[0]->url);
     }
 
-    public function testItIsConvertingTheResponseWithRevisedPrompt(): void
+    public function testItIsConvertingTheResponseWithRevisedPrompt()
     {
         $emptyPixel = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
 

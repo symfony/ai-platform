@@ -9,6 +9,8 @@ parameters:
         - tests/
     ignoreErrors:
         -
+            message: "#^Method .*::test.*\\(\\) has no return type specified\\.$#"
+        -
             message: '#supportsNormalization\(\) has parameter \$context with no value type specified in iterable type array#'
             path: src/*
             reportUnmatched: false # only needed for older Symfony versions

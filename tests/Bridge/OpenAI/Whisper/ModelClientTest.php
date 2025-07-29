@@ -24,7 +24,7 @@ use Symfony\Component\HttpClient\Response\MockResponse;
 #[Small]
 final class ModelClientTest extends TestCase
 {
-    public function testItSupportsWhisperModel(): void
+    public function testItSupportsWhisperModel()
     {
         $client = new ModelClient(new MockHttpClient(), 'test-key');
         $model = new Whisper();
@@ -32,7 +32,7 @@ final class ModelClientTest extends TestCase
         $this->assertTrue($client->supports($model));
     }
 
-    public function testItUsesTranscriptionEndpointByDefault(): void
+    public function testItUsesTranscriptionEndpointByDefault()
     {
         $httpClient = new MockHttpClient([
             function ($method, $url): MockResponse {
@@ -52,7 +52,7 @@ final class ModelClientTest extends TestCase
         $this->assertSame(1, $httpClient->getRequestsCount());
     }
 
-    public function testItUsesTranscriptionEndpointWhenTaskIsSpecified(): void
+    public function testItUsesTranscriptionEndpointWhenTaskIsSpecified()
     {
         $httpClient = new MockHttpClient([
             function ($method, $url): MockResponse {
@@ -73,7 +73,7 @@ final class ModelClientTest extends TestCase
         $this->assertSame(1, $httpClient->getRequestsCount());
     }
 
-    public function testItUsesTranslationEndpointWhenTaskIsSpecified(): void
+    public function testItUsesTranslationEndpointWhenTaskIsSpecified()
     {
         $httpClient = new MockHttpClient([
             function ($method, $url): MockResponse {

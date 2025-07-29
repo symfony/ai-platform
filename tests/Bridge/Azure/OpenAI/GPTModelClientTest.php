@@ -34,7 +34,7 @@ final class GPTModelClientTest extends TestCase
     #[TestWith(['https://test.azure.com', 'The base URL must not contain the protocol.'])]
     #[TestWith(['http://test.azure.com/openai', 'The base URL must not contain the protocol.'])]
     #[TestWith(['https://test.azure.com:443', 'The base URL must not contain the protocol.'])]
-    public function testItThrowsExceptionWhenBaseUrlContainsProtocol(string $invalidUrl, string $expectedMessage): void
+    public function testItThrowsExceptionWhenBaseUrlContainsProtocol(string $invalidUrl, string $expectedMessage)
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage($expectedMessage);
@@ -42,7 +42,7 @@ final class GPTModelClientTest extends TestCase
         new GPTModelClient(new MockHttpClient(), $invalidUrl, 'deployment', 'api-version', 'api-key');
     }
 
-    public function testItThrowsExceptionWhenDeploymentIsEmpty(): void
+    public function testItThrowsExceptionWhenDeploymentIsEmpty()
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The deployment must not be empty.');
@@ -50,7 +50,7 @@ final class GPTModelClientTest extends TestCase
         new GPTModelClient(new MockHttpClient(), 'test.azure.com', '', 'api-version', 'api-key');
     }
 
-    public function testItThrowsExceptionWhenApiVersionIsEmpty(): void
+    public function testItThrowsExceptionWhenApiVersionIsEmpty()
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The API version must not be empty.');
@@ -58,7 +58,7 @@ final class GPTModelClientTest extends TestCase
         new GPTModelClient(new MockHttpClient(), 'test.azure.com', 'deployment', '', 'api-key');
     }
 
-    public function testItThrowsExceptionWhenApiKeyIsEmpty(): void
+    public function testItThrowsExceptionWhenApiKeyIsEmpty()
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The API key must not be empty.');
@@ -66,21 +66,21 @@ final class GPTModelClientTest extends TestCase
         new GPTModelClient(new MockHttpClient(), 'test.azure.com', 'deployment', 'api-version', '');
     }
 
-    public function testItAcceptsValidParameters(): void
+    public function testItAcceptsValidParameters()
     {
         $client = new GPTModelClient(new MockHttpClient(), 'test.azure.com', 'gpt-35-turbo', '2023-12-01-preview', 'valid-api-key');
 
         $this->assertInstanceOf(GPTModelClient::class, $client);
     }
 
-    public function testItIsSupportingTheCorrectModel(): void
+    public function testItIsSupportingTheCorrectModel()
     {
         $client = new GPTModelClient(new MockHttpClient(), 'test.azure.com', 'deployment', '2023-12-01', 'api-key');
 
         $this->assertTrue($client->supports(new GPT()));
     }
 
-    public function testItIsExecutingTheCorrectRequest(): void
+    public function testItIsExecutingTheCorrectRequest()
     {
         $resultCallback = static function (string $method, string $url, array $options): MockResponse {
             self::assertSame('POST', $method);

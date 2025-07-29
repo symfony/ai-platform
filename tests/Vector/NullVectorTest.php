@@ -20,19 +20,19 @@ use Symfony\AI\Platform\Vector\VectorInterface;
 #[CoversClass(NullVector::class)]
 final class NullVectorTest extends TestCase
 {
-    public function testImplementsInterface(): void
+    public function testImplementsInterface()
     {
         $this->assertInstanceOf(VectorInterface::class, new NullVector());
     }
 
-    public function testGetDataThrowsOnAccess(): void
+    public function testGetDataThrowsOnAccess()
     {
         self::expectException(RuntimeException::class);
 
         (new NullVector())->getData();
     }
 
-    public function testGetDimensionsThrowsOnAccess(): void
+    public function testGetDimensionsThrowsOnAccess()
     {
         self::expectException(RuntimeException::class);
 

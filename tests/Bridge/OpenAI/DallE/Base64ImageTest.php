@@ -20,7 +20,7 @@ use Symfony\AI\Platform\Bridge\OpenAI\DallE\Base64Image;
 #[Small]
 final class Base64ImageTest extends TestCase
 {
-    public function testItCreatesBase64Image(): void
+    public function testItCreatesBase64Image()
     {
         $emptyPixel = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
         $base64Image = new Base64Image($emptyPixel);
@@ -28,7 +28,7 @@ final class Base64ImageTest extends TestCase
         $this->assertSame($emptyPixel, $base64Image->encodedImage);
     }
 
-    public function testItThrowsExceptionWhenBase64ImageIsEmpty(): void
+    public function testItThrowsExceptionWhenBase64ImageIsEmpty()
     {
         self::expectException(\InvalidArgumentException::class);
         self::expectExceptionMessage('The base64 encoded image generated must be given.');

@@ -33,18 +33,18 @@ final class UserMessageNormalizerTest extends TestCase
         $this->normalizer = new UserMessageNormalizer();
     }
 
-    public function testSupportsNormalization(): void
+    public function testSupportsNormalization()
     {
         $this->assertTrue($this->normalizer->supportsNormalization(new UserMessage(new Text('content'))));
         $this->assertFalse($this->normalizer->supportsNormalization(new \stdClass()));
     }
 
-    public function testGetSupportedTypes(): void
+    public function testGetSupportedTypes()
     {
         $this->assertSame([UserMessage::class => true], $this->normalizer->getSupportedTypes(null));
     }
 
-    public function testNormalizeWithSingleTextContent(): void
+    public function testNormalizeWithSingleTextContent()
     {
         $textContent = new Text('Hello, how can you help me?');
         $message = new UserMessage($textContent);
@@ -57,7 +57,7 @@ final class UserMessageNormalizerTest extends TestCase
         $this->assertSame($expected, $this->normalizer->normalize($message));
     }
 
-    public function testNormalizeWithMixedContent(): void
+    public function testNormalizeWithMixedContent()
     {
         $textContent = new Text('Please describe this image:');
         $imageContent = new ImageUrl('https://example.com/image.jpg');

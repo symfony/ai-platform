@@ -28,18 +28,18 @@ final class ImageUrlNormalizerTest extends TestCase
         $this->normalizer = new ImageUrlNormalizer();
     }
 
-    public function testSupportsNormalization(): void
+    public function testSupportsNormalization()
     {
         $this->assertTrue($this->normalizer->supportsNormalization(new ImageUrl('https://example.com/image.jpg')));
         $this->assertFalse($this->normalizer->supportsNormalization(new \stdClass()));
     }
 
-    public function testGetSupportedTypes(): void
+    public function testGetSupportedTypes()
     {
         $this->assertSame([ImageUrl::class => true], $this->normalizer->getSupportedTypes(null));
     }
 
-    public function testNormalize(): void
+    public function testNormalize()
     {
         $imageUrl = new ImageUrl('https://example.com/image.jpg');
 

@@ -20,14 +20,14 @@ use Symfony\AI\Platform\Bridge\OpenAI\DallE\UrlImage;
 #[Small]
 final class UrlImageTest extends TestCase
 {
-    public function testItCreatesUrlImage(): void
+    public function testItCreatesUrlImage()
     {
         $urlImage = new UrlImage('https://example.com/image.jpg');
 
         $this->assertSame('https://example.com/image.jpg', $urlImage->url);
     }
 
-    public function testItThrowsExceptionWhenUrlIsEmpty(): void
+    public function testItThrowsExceptionWhenUrlIsEmpty()
     {
         self::expectException(\InvalidArgumentException::class);
         self::expectExceptionMessage('The image url must be given.');

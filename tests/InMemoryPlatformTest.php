@@ -17,7 +17,7 @@ use Symfony\AI\Platform\Model;
 #[CoversClass(InMemoryPlatform::class)]
 class InMemoryPlatformTest extends TestCase
 {
-    public function testPlatformInvokeWithFixedResult(): void
+    public function testPlatformInvokeWithFixedResult()
     {
         $platform = new InMemoryPlatform('Mocked result');
         $result = $platform->invoke(new Model('test'), 'input');
@@ -27,7 +27,7 @@ class InMemoryPlatformTest extends TestCase
         $this->assertSame(['text' => 'Mocked result'], $result->getRawResult()->getData());
     }
 
-    public function testPlatformInvokeWithCallableResult(): void
+    public function testPlatformInvokeWithCallableResult()
     {
         $platform = new InMemoryPlatform(function (Model $model, $input) {
             return strtoupper((string) $input);

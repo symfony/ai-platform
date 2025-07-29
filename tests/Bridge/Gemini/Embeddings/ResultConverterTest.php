@@ -29,7 +29,7 @@ use Symfony\Contracts\HttpClient\ResponseInterface;
 #[UsesClass(Embeddings::class)]
 final class ResultConverterTest extends TestCase
 {
-    public function testItConvertsAResponseToAVectorResult(): void
+    public function testItConvertsAResponseToAVectorResult()
     {
         $result = $this->createStub(ResponseInterface::class);
         $result

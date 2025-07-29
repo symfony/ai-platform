@@ -25,7 +25,7 @@ use Symfony\AI\Platform\Bridge\OpenAI\DallE\UrlImage;
 #[Small]
 final class ImageResultTest extends TestCase
 {
-    public function testItCreatesImagesResult(): void
+    public function testItCreatesImagesResult()
     {
         $base64Image = new Base64Image('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==');
         $generatedImagesResult = new ImageResult(null, $base64Image);
@@ -35,7 +35,7 @@ final class ImageResultTest extends TestCase
         $this->assertSame($base64Image, $generatedImagesResult->getContent()[0]);
     }
 
-    public function testItCreatesImagesResultWithRevisedPrompt(): void
+    public function testItCreatesImagesResultWithRevisedPrompt()
     {
         $base64Image = new Base64Image('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==');
         $generatedImagesResult = new ImageResult('revised prompt', $base64Image);
@@ -45,7 +45,7 @@ final class ImageResultTest extends TestCase
         $this->assertSame($base64Image, $generatedImagesResult->getContent()[0]);
     }
 
-    public function testItIsCreatableWithMultipleImages(): void
+    public function testItIsCreatableWithMultipleImages()
     {
         $image1 = new UrlImage('https://example');
         $image2 = new UrlImage('https://example2');

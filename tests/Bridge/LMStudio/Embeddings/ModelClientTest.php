@@ -25,14 +25,14 @@ use Symfony\Component\HttpClient\Response\MockResponse;
 #[Small]
 class ModelClientTest extends TestCase
 {
-    public function testItIsSupportingTheCorrectModel(): void
+    public function testItIsSupportingTheCorrectModel()
     {
         $client = new ModelClient(new MockHttpClient(), 'http://localhost:1234');
 
         $this->assertTrue($client->supports(new Embeddings('test-model')));
     }
 
-    public function testItIsExecutingTheCorrectRequest(): void
+    public function testItIsExecutingTheCorrectRequest()
     {
         $resultCallback = static function (string $method, string $url, array $options): MockResponse {
             self::assertSame('POST', $method);
@@ -50,7 +50,7 @@ class ModelClientTest extends TestCase
         $client->request($model, 'Hello, world!');
     }
 
-    public function testItMergesOptionsWithPayload(): void
+    public function testItMergesOptionsWithPayload()
     {
         $resultCallback = static function (string $method, string $url, array $options): MockResponse {
             self::assertSame('POST', $method);
@@ -71,7 +71,7 @@ class ModelClientTest extends TestCase
         $client->request($model, 'Hello, world!', ['custom_option' => 'value']);
     }
 
-    public function testItHandlesArrayInput(): void
+    public function testItHandlesArrayInput()
     {
         $resultCallback = static function (string $method, string $url, array $options): MockResponse {
             self::assertSame('POST', $method);

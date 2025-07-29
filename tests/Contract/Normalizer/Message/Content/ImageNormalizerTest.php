@@ -30,18 +30,18 @@ final class ImageNormalizerTest extends TestCase
         $this->normalizer = new ImageNormalizer();
     }
 
-    public function testSupportsNormalization(): void
+    public function testSupportsNormalization()
     {
         $this->assertTrue($this->normalizer->supportsNormalization(Image::fromFile(\dirname(__DIR__, 7).'/fixtures/image.jpg')));
         $this->assertFalse($this->normalizer->supportsNormalization(new \stdClass()));
     }
 
-    public function testGetSupportedTypes(): void
+    public function testGetSupportedTypes()
     {
         $this->assertSame([Image::class => true], $this->normalizer->getSupportedTypes(null));
     }
 
-    public function testNormalize(): void
+    public function testNormalize()
     {
         $image = Image::fromDataUrl('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABKklEQVR42mNk+A8AAwMhIv9n+Q==');
 

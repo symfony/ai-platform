@@ -20,7 +20,7 @@ use Symfony\AI\Platform\Result\StreamResult;
 #[Small]
 final class StreamResultTest extends TestCase
 {
-    public function testGetContent(): void
+    public function testGetContent()
     {
         $generator = (function () {
             yield 'data1';

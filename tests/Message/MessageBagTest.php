@@ -37,7 +37,7 @@ use Symfony\AI\Platform\Result\ToolCall;
 #[Small]
 final class MessageBagTest extends TestCase
 {
-    public function testGetSystemMessage(): void
+    public function testGetSystemMessage()
     {
         $messageBag = new MessageBag(
             Message::forSystem('My amazing system prompt.'),
@@ -51,7 +51,7 @@ final class MessageBagTest extends TestCase
         $this->assertSame('My amazing system prompt.', $systemMessage->content);
     }
 
-    public function testGetSystemMessageWithoutSystemMessage(): void
+    public function testGetSystemMessageWithoutSystemMessage()
     {
         $messageBag = new MessageBag(
             Message::ofAssistant('It is time to sleep.'),
@@ -62,7 +62,7 @@ final class MessageBagTest extends TestCase
         $this->assertNull($messageBag->getSystemMessage());
     }
 
-    public function testWith(): void
+    public function testWith()
     {
         $messageBag = new MessageBag(
             Message::forSystem('My amazing system prompt.'),
@@ -82,7 +82,7 @@ final class MessageBagTest extends TestCase
         $this->assertSame('It is time to wake up.', $newMessageFromBag->content);
     }
 
-    public function testMerge(): void
+    public function testMerge()
     {
         $messageBag = new MessageBag(
             Message::forSystem('My amazing system prompt.'),
@@ -102,7 +102,7 @@ final class MessageBagTest extends TestCase
         $this->assertSame('It is time to wake up.', $messageFromBag->content);
     }
 
-    public function testWithoutSystemMessage(): void
+    public function testWithoutSystemMessage()
     {
         $messageBag = new MessageBag(
             Message::forSystem('My amazing system prompt.'),
@@ -127,7 +127,7 @@ final class MessageBagTest extends TestCase
         $this->assertSame('Hello, world!', $userMessage->content[0]->text);
     }
 
-    public function testPrepend(): void
+    public function testPrepend()
     {
         $messageBag = new MessageBag(
             Message::ofAssistant('It is time to sleep.'),
@@ -146,7 +146,7 @@ final class MessageBagTest extends TestCase
         $this->assertSame('My amazing system prompt.', $newMessageBagMessage->content);
     }
 
-    public function testContainsImageReturnsFalseWithoutImage(): void
+    public function testContainsImageReturnsFalseWithoutImage()
     {
         $messageBag = new MessageBag(
             Message::ofAssistant('It is time to sleep.'),
@@ -156,7 +156,7 @@ final class MessageBagTest extends TestCase
         $this->assertFalse($messageBag->containsImage());
     }
 
-    public function testContainsImageReturnsTrueWithImage(): void
+    public function testContainsImageReturnsTrueWithImage()
     {
         $messageBag = new MessageBag(
             Message::ofAssistant('It is time to sleep.'),

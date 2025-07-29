@@ -20,7 +20,7 @@ use Symfony\AI\Platform\Message\Content\Text;
 #[Small]
 final class TextTest extends TestCase
 {
-    public function testConstructionIsPossible(): void
+    public function testConstructionIsPossible()
     {
         $obj = new Text('foo');
 

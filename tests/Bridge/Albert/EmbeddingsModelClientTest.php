@@ -26,7 +26,7 @@ use Symfony\Component\HttpClient\Response\JsonMockResponse;
 #[Small]
 final class EmbeddingsModelClientTest extends TestCase
 {
-    public function testConstructorThrowsExceptionForEmptyApiKey(): void
+    public function testConstructorThrowsExceptionForEmptyApiKey()
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The API key must not be empty.');
@@ -38,7 +38,7 @@ final class EmbeddingsModelClientTest extends TestCase
         );
     }
 
-    public function testConstructorThrowsExceptionForEmptyBaseUrl(): void
+    public function testConstructorThrowsExceptionForEmptyBaseUrl()
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The base URL must not be empty.');
@@ -50,7 +50,7 @@ final class EmbeddingsModelClientTest extends TestCase
         );
     }
 
-    public function testSupportsEmbeddingsModel(): void
+    public function testSupportsEmbeddingsModel()
     {
         $client = new EmbeddingsModelClient(
             new MockHttpClient(),
@@ -62,7 +62,7 @@ final class EmbeddingsModelClientTest extends TestCase
         $this->assertTrue($client->supports($embeddingsModel));
     }
 
-    public function testDoesNotSupportNonEmbeddingsModel(): void
+    public function testDoesNotSupportNonEmbeddingsModel()
     {
         $client = new EmbeddingsModelClient(
             new MockHttpClient(),
@@ -75,7 +75,7 @@ final class EmbeddingsModelClientTest extends TestCase
     }
 
     #[DataProvider('providePayloadToJson')]
-    public function testRequestSendsCorrectHttpRequest(array|string $payload, array $options, array|string $expectedJson): void
+    public function testRequestSendsCorrectHttpRequest(array|string $payload, array $options, array|string $expectedJson)
     {
         $capturedRequest = null;
         $httpClient = new MockHttpClient(function ($method, $url, $options) use (&$capturedRequest) {
@@ -136,7 +136,7 @@ final class EmbeddingsModelClientTest extends TestCase
         ];
     }
 
-    public function testRequestHandlesBaseUrlWithoutTrailingSlash(): void
+    public function testRequestHandlesBaseUrlWithoutTrailingSlash()
     {
         $capturedUrl = null;
         $httpClient = new MockHttpClient(function ($method, $url) use (&$capturedUrl) {
@@ -157,7 +157,7 @@ final class EmbeddingsModelClientTest extends TestCase
         $this->assertSame('https://albert.example.com/v1/embeddings', $capturedUrl);
     }
 
-    public function testRequestHandlesBaseUrlWithTrailingSlash(): void
+    public function testRequestHandlesBaseUrlWithTrailingSlash()
     {
         $capturedUrl = null;
         $httpClient = new MockHttpClient(function ($method, $url) use (&$capturedUrl) {

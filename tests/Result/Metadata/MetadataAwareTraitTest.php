@@ -23,7 +23,7 @@ use Symfony\AI\Platform\Result\Metadata\MetadataAwareTrait;
 #[UsesClass(Metadata::class)]
 final class MetadataAwareTraitTest extends TestCase
 {
-    public function testItCanHandleMetadata(): void
+    public function testItCanHandleMetadata()
     {
         $result = $this->createTestClass();
         $metadata = $result->getMetadata();

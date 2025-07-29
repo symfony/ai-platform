@@ -45,7 +45,7 @@ use Symfony\AI\Platform\Result\ToolCall;
 final class ContractTest extends TestCase
 {
     #[DataProvider('provideMessageBag')]
-    public function testConvert(MessageBag $bag, array $expected): void
+    public function testConvert(MessageBag $bag, array $expected)
     {
         $contract = Contract::create(
             new AssistantMessageNormalizer(),

@@ -33,7 +33,7 @@ use Symfony\Contracts\HttpClient\ResponseInterface as SymfonyHttpResponse;
 #[Small]
 final class ResultPromiseTest extends TestCase
 {
-    public function testItUnwrapsTheResultWhenGettingContent(): void
+    public function testItUnwrapsTheResultWhenGettingContent()
     {
         $httpResponse = $this->createStub(SymfonyHttpResponse::class);
         $rawHttpResult = new RawHttpResult($httpResponse);
@@ -50,7 +50,7 @@ final class ResultPromiseTest extends TestCase
         $this->assertSame('test content', $resultPromise->getResult()->getContent());
     }
 
-    public function testItConvertsTheResponseOnlyOnce(): void
+    public function testItConvertsTheResponseOnlyOnce()
     {
         $httpResponse = $this->createStub(SymfonyHttpResponse::class);
         $rawHttpResult = new RawHttpResult($httpResponse);
@@ -70,7 +70,7 @@ final class ResultPromiseTest extends TestCase
         $resultPromise->getResult();
     }
 
-    public function testItGetsRawResponseDirectly(): void
+    public function testItGetsRawResponseDirectly()
     {
         $httpResponse = $this->createStub(SymfonyHttpResponse::class);
         $resultConverter = $this->createStub(ResultConverterInterface::class);
@@ -80,7 +80,7 @@ final class ResultPromiseTest extends TestCase
         $this->assertSame($httpResponse, $resultPromise->getRawResult()->getObject());
     }
 
-    public function testItSetsRawResponseOnUnwrappedResponseWhenNeeded(): void
+    public function testItSetsRawResponseOnUnwrappedResponseWhenNeeded()
     {
         $httpResponse = $this->createStub(SymfonyHttpResponse::class);
 
@@ -96,7 +96,7 @@ final class ResultPromiseTest extends TestCase
         $this->assertSame($httpResponse, $unwrappedResponse->getRawResult()->getObject());
     }
 
-    public function testItDoesNotSetRawResponseOnUnwrappedResponseWhenAlreadySet(): void
+    public function testItDoesNotSetRawResponseOnUnwrappedResponseWhenAlreadySet()
     {
         $originHttpResponse = $this->createStub(SymfonyHttpResponse::class);
         $anotherHttpResponse = $this->createStub(SymfonyHttpResponse::class);
@@ -113,7 +113,7 @@ final class ResultPromiseTest extends TestCase
         $this->assertSame($anotherHttpResponse, $unwrappedResult->getRawResult()->getObject());
     }
 
-    public function testItPassesOptionsToConverter(): void
+    public function testItPassesOptionsToConverter()
     {
         $httpResponse = $this->createStub(SymfonyHttpResponse::class);
         $rawHttpResponse = new RawHttpResult($httpResponse);

@@ -32,7 +32,7 @@ use Symfony\AI\Platform\Tool\Tool;
 #[UsesClass(Tool::class)]
 final class ToolNormalizerTest extends TestCase
 {
-    public function testSupportsNormalization(): void
+    public function testSupportsNormalization()
     {
         $normalizer = new ToolNormalizer();
 
@@ -42,7 +42,7 @@ final class ToolNormalizerTest extends TestCase
         $this->assertFalse($normalizer->supportsNormalization('not a tool'));
     }
 
-    public function testGetSupportedTypes(): void
+    public function testGetSupportedTypes()
     {
         $normalizer = new ToolNormalizer();
 
@@ -54,7 +54,7 @@ final class ToolNormalizerTest extends TestCase
     }
 
     #[DataProvider('normalizeDataProvider')]
-    public function testNormalize(Tool $tool, array $expected): void
+    public function testNormalize(Tool $tool, array $expected)
     {
         $normalizer = new ToolNormalizer();
 

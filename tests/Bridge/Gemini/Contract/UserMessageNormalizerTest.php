@@ -37,7 +37,7 @@ use Symfony\AI\Platform\Message\UserMessage;
 #[UsesClass(Audio::class)]
 final class UserMessageNormalizerTest extends TestCase
 {
-    public function testSupportsNormalization(): void
+    public function testSupportsNormalization()
     {
         $normalizer = new UserMessageNormalizer();
 
@@ -47,14 +47,14 @@ final class UserMessageNormalizerTest extends TestCase
         $this->assertFalse($normalizer->supportsNormalization('not a user message'));
     }
 
-    public function testGetSupportedTypes(): void
+    public function testGetSupportedTypes()
     {
         $normalizer = new UserMessageNormalizer();
 
         $this->assertSame([UserMessage::class => true], $normalizer->getSupportedTypes(null));
     }
 
-    public function testNormalizeTextContent(): void
+    public function testNormalizeTextContent()
     {
         $normalizer = new UserMessageNormalizer();
         $message = new UserMessage(new Text('Write a story about a magic backpack.'));
@@ -65,7 +65,7 @@ final class UserMessageNormalizerTest extends TestCase
     }
 
     #[DataProvider('binaryContentProvider')]
-    public function testNormalizeBinaryContent(File $content, string $expectedMimeType, string $expectedPrefix): void
+    public function testNormalizeBinaryContent(File $content, string $expectedMimeType, string $expectedPrefix)
     {
         $normalizer = new UserMessageNormalizer();
         $message = new UserMessage(new Text('Tell me about this instrument'), $content);

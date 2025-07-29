@@ -65,7 +65,7 @@ use Symfony\Component\Uid\Uuid;
 final class ContractTest extends TestCase
 {
     #[DataProvider('providePayloadTestCases')]
-    public function testCreateRequestPayload(Model $model, array|string|object $input, array|string $expected): void
+    public function testCreateRequestPayload(Model $model, array|string|object $input, array|string $expected)
     {
         $contract = Contract::create();
 
@@ -234,7 +234,7 @@ final class ContractTest extends TestCase
         ];
     }
 
-    public function testExtendedContractHandlesWhisper(): void
+    public function testExtendedContractHandlesWhisper()
     {
         $contract = Contract::create(new AudioNormalizer());
 

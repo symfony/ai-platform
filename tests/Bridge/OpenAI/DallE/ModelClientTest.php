@@ -28,7 +28,7 @@ use Symfony\Contracts\HttpClient\ResponseInterface as HttpResponse;
 #[Small]
 final class ModelClientTest extends TestCase
 {
-    public function testItThrowsExceptionWhenApiKeyIsEmpty(): void
+    public function testItThrowsExceptionWhenApiKeyIsEmpty()
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The API key must not be empty.');
@@ -42,7 +42,7 @@ final class ModelClientTest extends TestCase
     #[TestWith(['skapikey'])]
     #[TestWith(['sk api-key'])]
     #[TestWith(['sk'])]
-    public function testItThrowsExceptionWhenApiKeyDoesNotStartWithSk(string $invalidApiKey): void
+    public function testItThrowsExceptionWhenApiKeyDoesNotStartWithSk(string $invalidApiKey)
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The API key must start with "sk-".');
@@ -50,21 +50,21 @@ final class ModelClientTest extends TestCase
         new ModelClient(new MockHttpClient(), $invalidApiKey);
     }
 
-    public function testItAcceptsValidApiKey(): void
+    public function testItAcceptsValidApiKey()
     {
         $modelClient = new ModelClient(new MockHttpClient(), 'sk-valid-api-key');
 
         $this->assertInstanceOf(ModelClient::class, $modelClient);
     }
 
-    public function testItIsSupportingTheCorrectModel(): void
+    public function testItIsSupportingTheCorrectModel()
     {
         $modelClient = new ModelClient(new MockHttpClient(), 'sk-api-key');
 
         $this->assertTrue($modelClient->supports(new DallE()));
     }
 
-    public function testItIsExecutingTheCorrectRequest(): void
+    public function testItIsExecutingTheCorrectRequest()
     {
         $resultCallback = static function (string $method, string $url, array $options): HttpResponse {
             self::assertSame('POST', $method);

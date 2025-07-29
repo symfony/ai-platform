@@ -36,7 +36,7 @@ use Symfony\AI\Platform\Message\UserMessage;
 #[UsesClass(UserMessage::class)]
 final class LlamaPromptConverterTest extends TestCase
 {
-    public function testConvertMessages(): void
+    public function testConvertMessages()
     {
         $messageBag = new MessageBag();
         foreach (self::provideMessages() as $message) {
@@ -74,7 +74,7 @@ final class LlamaPromptConverterTest extends TestCase
     }
 
     #[DataProvider('provideMessages')]
-    public function testConvertMessage(string $expected, UserMessage|SystemMessage|AssistantMessage $message): void
+    public function testConvertMessage(string $expected, UserMessage|SystemMessage|AssistantMessage $message)
     {
         $this->assertSame(
             $expected,

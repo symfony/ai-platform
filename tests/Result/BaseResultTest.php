@@ -31,7 +31,7 @@ use Symfony\AI\Platform\Result\RawResultInterface;
 #[Small]
 final class BaseResultTest extends TestCase
 {
-    public function testItCanHandleMetadata(): void
+    public function testItCanHandleMetadata()
     {
         $result = $this->createResult();
         $metadata = $result->getMetadata();
@@ -44,7 +44,7 @@ final class BaseResultTest extends TestCase
         $this->assertCount(1, $metadata);
     }
 
-    public function testItCanBeEnrichedWithARawResponse(): void
+    public function testItCanBeEnrichedWithARawResponse()
     {
         $result = $this->createResult();
         $rawResult = $this->createRawResult();
@@ -53,7 +53,7 @@ final class BaseResultTest extends TestCase
         $this->assertSame($rawResult, $result->getRawResult());
     }
 
-    public function testItThrowsAnExceptionWhenSettingARawResponseTwice(): void
+    public function testItThrowsAnExceptionWhenSettingARawResponseTwice()
     {
         self::expectException(RawResultAlreadySetException::class);
 

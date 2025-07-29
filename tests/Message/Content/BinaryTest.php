@@ -22,7 +22,7 @@ use Symfony\AI\Platform\Message\Content\File;
 #[Small]
 final class BinaryTest extends TestCase
 {
-    public function testCreateFromDataUrl(): void
+    public function testCreateFromDataUrl()
     {
         $dataUrl = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=';
 
@@ -33,7 +33,7 @@ final class BinaryTest extends TestCase
         $this->assertSame('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=', $binary->asBase64());
     }
 
-    public function testThrowsExceptionForInvalidDataUrl(): void
+    public function testThrowsExceptionForInvalidDataUrl()
     {
         self::expectException(InvalidArgumentException::class);
         self::expectExceptionMessage('Invalid audio data URL format.');
@@ -41,7 +41,7 @@ final class BinaryTest extends TestCase
         File::fromDataUrl('invalid-data-url');
     }
 
-    public function testCreateFromFile(): void
+    public function testCreateFromFile()
     {
         $content = 'test file content';
         $filename = sys_get_temp_dir().'/binary-test-file.txt';
@@ -58,7 +58,7 @@ final class BinaryTest extends TestCase
     }
 
     #[DataProvider('provideExistingFiles')]
-    public function testCreateFromExistingFiles(string $filePath, string $expectedFormat): void
+    public function testCreateFromExistingFiles(string $filePath, string $expectedFormat)
     {
         $binary = File::fromFile($filePath);
 
@@ -75,14 +75,14 @@ final class BinaryTest extends TestCase
         yield 'jpg' => [\dirname(__DIR__, 5).'/fixtures/image.jpg', 'image/jpeg'];
     }
 
-    public function testThrowsExceptionForNonExistentFile(): void
+    public function testThrowsExceptionForNonExistentFile()
     {
         self::expectException(\InvalidArgumentException::class);
 
         File::fromFile('/non/existent/file.jpg');
     }
 
-    public function testConvertToDataUrl(): void
+    public function testConvertToDataUrl()
     {
         $data = 'Hello World';
         $format = 'text/plain';
@@ -93,7 +93,7 @@ final class BinaryTest extends TestCase
         $this->assertSame('data:text/plain;base64,'.base64_encode($data), $dataUrl);
     }
 
-    public function testRoundTripConversion(): void
+    public function testRoundTripConversion()
     {
         $originalDataUrl = 'data:application/pdf;base64,JVBERi0xLjQKJcfsj6IKNSAwIG9iago8PC9MZW5ndGggNiAwIFIvRmls';
 

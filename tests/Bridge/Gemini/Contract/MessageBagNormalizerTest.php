@@ -41,7 +41,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 #[UsesClass(AssistantMessage::class)]
 final class MessageBagNormalizerTest extends TestCase
 {
-    public function testSupportsNormalization(): void
+    public function testSupportsNormalization()
     {
         $normalizer = new MessageBagNormalizer();
 
@@ -51,7 +51,7 @@ final class MessageBagNormalizerTest extends TestCase
         $this->assertFalse($normalizer->supportsNormalization('not a message bag'));
     }
 
-    public function testGetSupportedTypes(): void
+    public function testGetSupportedTypes()
     {
         $normalizer = new MessageBagNormalizer();
 
@@ -63,7 +63,7 @@ final class MessageBagNormalizerTest extends TestCase
     }
 
     #[DataProvider('provideMessageBagData')]
-    public function testNormalize(MessageBag $bag, array $expected): void
+    public function testNormalize(MessageBag $bag, array $expected)
     {
         $normalizer = new MessageBagNormalizer();
 

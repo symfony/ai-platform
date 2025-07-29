@@ -42,7 +42,7 @@ final class FactoryTest extends TestCase
         unset($this->factory);
     }
 
-    public function testBuildParametersDefinitionRequired(): void
+    public function testBuildParametersDefinitionRequired()
     {
         $actual = $this->factory->buildParameters(ToolRequiredParams::class, 'bar');
         $expected = [
@@ -64,7 +64,7 @@ final class FactoryTest extends TestCase
         $this->assertSame($expected, $actual);
     }
 
-    public function testBuildParametersDefinitionRequiredWithAdditionalToolParameterAttribute(): void
+    public function testBuildParametersDefinitionRequiredWithAdditionalToolParameterAttribute()
     {
         $actual = $this->factory->buildParameters(ToolWithToolParameterAttribute::class, '__invoke');
         $expected = [
@@ -141,7 +141,7 @@ final class FactoryTest extends TestCase
         $this->assertSame($expected, $actual);
     }
 
-    public function testBuildParametersDefinitionOptional(): void
+    public function testBuildParametersDefinitionOptional()
     {
         $actual = $this->factory->buildParameters(ToolOptionalParam::class, 'bar');
         $expected = [
@@ -163,14 +163,14 @@ final class FactoryTest extends TestCase
         $this->assertSame($expected, $actual);
     }
 
-    public function testBuildParametersDefinitionNone(): void
+    public function testBuildParametersDefinitionNone()
     {
         $actual = $this->factory->buildParameters(ToolNoParams::class, '__invoke');
 
         $this->assertNull($actual);
     }
 
-    public function testBuildPropertiesForUserClass(): void
+    public function testBuildPropertiesForUserClass()
     {
         $expected = [
             'type' => 'object',
@@ -196,7 +196,7 @@ final class FactoryTest extends TestCase
         $this->assertSame($expected, $actual);
     }
 
-    public function testBuildPropertiesForMathReasoningClass(): void
+    public function testBuildPropertiesForMathReasoningClass()
     {
         $expected = [
             'type' => 'object',
@@ -224,7 +224,7 @@ final class FactoryTest extends TestCase
         $this->assertSame($expected, $actual);
     }
 
-    public function testBuildPropertiesForStepClass(): void
+    public function testBuildPropertiesForStepClass()
     {
         $expected = [
             'type' => 'object',

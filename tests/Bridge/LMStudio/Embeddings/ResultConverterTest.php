@@ -30,7 +30,7 @@ use Symfony\Contracts\HttpClient\ResponseInterface;
 #[UsesClass(Embeddings::class)]
 class ResultConverterTest extends TestCase
 {
-    public function testItConvertsAResponseToAVectorResult(): void
+    public function testItConvertsAResponseToAVectorResult()
     {
         $result = $this->createStub(ResponseInterface::class);
         $result
@@ -67,7 +67,7 @@ class ResultConverterTest extends TestCase
         $this->assertSame([0.0, 0.0, 0.2], $convertedContent[1]->getData());
     }
 
-    public function testItThrowsExceptionWhenResponseDoesNotContainData(): void
+    public function testItThrowsExceptionWhenResponseDoesNotContainData()
     {
         $result = $this->createStub(ResponseInterface::class);
         $result
@@ -80,7 +80,7 @@ class ResultConverterTest extends TestCase
         (new ResultConverter())->convert(new RawHttpResult($result));
     }
 
-    public function testItSupportsEmbeddingsModel(): void
+    public function testItSupportsEmbeddingsModel()
     {
         $converter = new ResultConverter();
 

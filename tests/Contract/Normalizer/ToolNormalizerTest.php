@@ -28,7 +28,7 @@ use Symfony\AI\Platform\Tool\Tool;
 class ToolNormalizerTest extends TestCase
 {
     #[DataProvider('provideTools')]
-    public function testNormalize(Tool $tool, array $expected): void
+    public function testNormalize(Tool $tool, array $expected)
     {
         $this->assertSame($expected, (new ToolNormalizer())->normalize($tool));
     }

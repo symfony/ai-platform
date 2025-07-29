@@ -20,13 +20,13 @@ use Symfony\AI\Platform\Result\ObjectResult;
 #[Small]
 final class ObjectResultTest extends TestCase
 {
-    public function testGetContentWithArray(): void
+    public function testGetContentWithArray()
     {
         $result = new ObjectResult($expected = ['foo' => 'bar', 'baz' => ['qux']]);
         $this->assertSame($expected, $result->getContent());
     }
 
-    public function testGetContentWithObject(): void
+    public function testGetContentWithObject()
     {
         $result = new ObjectResult($expected = (object) ['foo' => 'bar', 'baz' => ['qux']]);
         $this->assertSame($expected, $result->getContent());

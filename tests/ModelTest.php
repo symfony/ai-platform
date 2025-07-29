@@ -23,21 +23,21 @@ use Symfony\AI\Platform\Model;
 #[UsesClass(Capability::class)]
 final class ModelTest extends TestCase
 {
-    public function testReturnsName(): void
+    public function testReturnsName()
     {
         $model = new Model('gpt-4');
 
         $this->assertSame('gpt-4', $model->getName());
     }
 
-    public function testReturnsCapabilities(): void
+    public function testReturnsCapabilities()
     {
         $model = new Model('gpt-4', [Capability::INPUT_TEXT, Capability::OUTPUT_TEXT]);
 
         $this->assertSame([Capability::INPUT_TEXT, Capability::OUTPUT_TEXT], $model->getCapabilities());
     }
 
-    public function testChecksSupportForCapability(): void
+    public function testChecksSupportForCapability()
     {
         $model = new Model('gpt-4', [Capability::INPUT_TEXT, Capability::OUTPUT_TEXT]);
 
@@ -46,14 +46,14 @@ final class ModelTest extends TestCase
         $this->assertFalse($model->supports(Capability::INPUT_IMAGE));
     }
 
-    public function testReturnsEmptyCapabilitiesByDefault(): void
+    public function testReturnsEmptyCapabilitiesByDefault()
     {
         $model = new Model('gpt-4');
 
         $this->assertSame([], $model->getCapabilities());
     }
 
-    public function testReturnsOptions(): void
+    public function testReturnsOptions()
     {
         $options = [
             'temperature' => 0.7,
@@ -64,7 +64,7 @@ final class ModelTest extends TestCase
         $this->assertSame($options, $model->getOptions());
     }
 
-    public function testReturnsEmptyOptionsByDefault(): void
+    public function testReturnsEmptyOptionsByDefault()
     {
         $model = new Model('gpt-4');
 

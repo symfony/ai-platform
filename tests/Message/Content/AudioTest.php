@@ -20,7 +20,7 @@ use Symfony\AI\Platform\Message\Content\Audio;
 #[Small]
 final class AudioTest extends TestCase
 {
-    public function testConstructWithValidData(): void
+    public function testConstructWithValidData()
     {
         $audio = new Audio('somedata', 'audio/mpeg');
 
@@ -28,7 +28,7 @@ final class AudioTest extends TestCase
         $this->assertSame('audio/mpeg', $audio->getFormat());
     }
 
-    public function testFromDataUrlWithValidUrl(): void
+    public function testFromDataUrlWithValidUrl()
     {
         $dataUrl = 'data:audio/mpeg;base64,SUQzBAAAAAAAfVREUkMAAAAMAAADMg==';
         $audio = Audio::fromDataUrl($dataUrl);
@@ -37,7 +37,7 @@ final class AudioTest extends TestCase
         $this->assertSame('audio/mpeg', $audio->getFormat());
     }
 
-    public function testFromDataUrlWithInvalidUrl(): void
+    public function testFromDataUrlWithInvalidUrl()
     {
         self::expectException(\InvalidArgumentException::class);
         self::expectExceptionMessage('Invalid audio data URL format.');
@@ -45,7 +45,7 @@ final class AudioTest extends TestCase
         Audio::fromDataUrl('invalid-url');
     }
 
-    public function testFromFileWithValidPath(): void
+    public function testFromFileWithValidPath()
     {
         $audio = Audio::fromFile(\dirname(__DIR__, 5).'/fixtures/audio.mp3');
 
@@ -53,7 +53,7 @@ final class AudioTest extends TestCase
         $this->assertNotEmpty($audio->asBinary());
     }
 
-    public function testFromFileWithInvalidPath(): void
+    public function testFromFileWithInvalidPath()
     {
         self::expectException(\InvalidArgumentException::class);
         self::expectExceptionMessage('The file "foo.mp3" does not exist or is not readable.');

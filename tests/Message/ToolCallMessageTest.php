@@ -29,7 +29,7 @@ final class ToolCallMessageTest extends TestCase
 {
     use UuidAssertionTrait;
 
-    public function testConstructionIsPossible(): void
+    public function testConstructionIsPossible()
     {
         $toolCall = new ToolCall('foo', 'bar');
         $obj = new ToolCallMessage($toolCall, 'bar');
@@ -38,7 +38,7 @@ final class ToolCallMessageTest extends TestCase
         $this->assertSame('bar', $obj->content);
     }
 
-    public function testMessageHasUid(): void
+    public function testMessageHasUid()
     {
         $toolCall = new ToolCall('foo', 'bar');
         $message = new ToolCallMessage($toolCall, 'bar');
@@ -48,7 +48,7 @@ final class ToolCallMessageTest extends TestCase
         $this->assertSame($message->id, $message->getId());
     }
 
-    public function testDifferentMessagesHaveDifferentUids(): void
+    public function testDifferentMessagesHaveDifferentUids()
     {
         $toolCall = new ToolCall('foo', 'bar');
         $message1 = new ToolCallMessage($toolCall, 'bar');
@@ -59,7 +59,7 @@ final class ToolCallMessageTest extends TestCase
         self::assertIsUuidV7($message2->getId()->toRfc4122());
     }
 
-    public function testSameMessagesHaveDifferentUids(): void
+    public function testSameMessagesHaveDifferentUids()
     {
         $toolCall = new ToolCall('foo', 'bar');
         $message1 = new ToolCallMessage($toolCall, 'bar');
@@ -70,7 +70,7 @@ final class ToolCallMessageTest extends TestCase
         self::assertIsUuidV7($message2->getId()->toRfc4122());
     }
 
-    public function testMessageIdImplementsRequiredInterfaces(): void
+    public function testMessageIdImplementsRequiredInterfaces()
     {
         $toolCall = new ToolCall('foo', 'bar');
         $message = new ToolCallMessage($toolCall, 'test');

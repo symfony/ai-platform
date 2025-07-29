@@ -31,7 +31,7 @@ use Symfony\AI\Platform\Result\ToolCall;
 #[UsesClass(ToolCall::class)]
 final class AssistantMessageNormalizerTest extends TestCase
 {
-    public function testSupportsNormalization(): void
+    public function testSupportsNormalization()
     {
         $normalizer = new AssistantMessageNormalizer();
 
@@ -41,7 +41,7 @@ final class AssistantMessageNormalizerTest extends TestCase
         $this->assertFalse($normalizer->supportsNormalization('not an assistant message'));
     }
 
-    public function testGetSupportedTypes(): void
+    public function testGetSupportedTypes()
     {
         $normalizer = new AssistantMessageNormalizer();
 
@@ -49,7 +49,7 @@ final class AssistantMessageNormalizerTest extends TestCase
     }
 
     #[DataProvider('normalizeDataProvider')]
-    public function testNormalize(AssistantMessage $message, array $expectedOutput): void
+    public function testNormalize(AssistantMessage $message, array $expectedOutput)
     {
         $normalizer = new AssistantMessageNormalizer();
 

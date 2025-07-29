@@ -20,7 +20,7 @@ use Symfony\AI\Platform\Message\Role;
 #[Small]
 final class RoleTest extends TestCase
 {
-    public function testValues(): void
+    public function testValues()
     {
         $this->assertSame('system', Role::System->value);
         $this->assertSame('assistant', Role::Assistant->value);
@@ -28,22 +28,22 @@ final class RoleTest extends TestCase
         $this->assertSame('tool', Role::ToolCall->value);
     }
 
-    public function testEquals(): void
+    public function testEquals()
     {
         $this->assertTrue(Role::System->equals(Role::System));
     }
 
-    public function testNotEquals(): void
+    public function testNotEquals()
     {
         $this->assertTrue(Role::System->notEquals(Role::Assistant));
     }
 
-    public function testNotEqualsOneOf(): void
+    public function testNotEqualsOneOf()
     {
         $this->assertTrue(Role::System->notEqualsOneOf([Role::Assistant, Role::User]));
     }
 
-    public function testEqualsOneOf(): void
+    public function testEqualsOneOf()
     {
         $this->assertTrue(Role::System->equalsOneOf([Role::System, Role::User]));
     }

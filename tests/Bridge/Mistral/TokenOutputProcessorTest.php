@@ -34,7 +34,7 @@ use Symfony\Contracts\HttpClient\ResponseInterface;
 #[Small]
 final class TokenOutputProcessorTest extends TestCase
 {
-    public function testItHandlesStreamResponsesWithoutProcessing(): void
+    public function testItHandlesStreamResponsesWithoutProcessing()
     {
         $processor = new TokenOutputProcessor();
         $streamResult = new StreamResult((static function () { yield 'test'; })());
@@ -46,7 +46,7 @@ final class TokenOutputProcessorTest extends TestCase
         $this->assertCount(0, $metadata);
     }
 
-    public function testItDoesNothingWithoutRawResponse(): void
+    public function testItDoesNothingWithoutRawResponse()
     {
         $processor = new TokenOutputProcessor();
         $textResult = new TextResult('test');
@@ -58,7 +58,7 @@ final class TokenOutputProcessorTest extends TestCase
         $this->assertCount(0, $metadata);
     }
 
-    public function testItAddsRemainingTokensToMetadata(): void
+    public function testItAddsRemainingTokensToMetadata()
     {
         $processor = new TokenOutputProcessor();
         $textResult = new TextResult('test');
@@ -75,7 +75,7 @@ final class TokenOutputProcessorTest extends TestCase
         $this->assertSame(1000000, $metadata->get('remaining_tokens_month'));
     }
 
-    public function testItAddsUsageTokensToMetadata(): void
+    public function testItAddsUsageTokensToMetadata()
     {
         $processor = new TokenOutputProcessor();
         $textResult = new TextResult('test');
@@ -103,7 +103,7 @@ final class TokenOutputProcessorTest extends TestCase
         $this->assertSame(30, $metadata->get('total_tokens'));
     }
 
-    public function testItHandlesMissingUsageFields(): void
+    public function testItHandlesMissingUsageFields()
     {
         $processor = new TokenOutputProcessor();
         $textResult = new TextResult('test');

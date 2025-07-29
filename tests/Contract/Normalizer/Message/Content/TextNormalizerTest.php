@@ -28,18 +28,18 @@ final class TextNormalizerTest extends TestCase
         $this->normalizer = new TextNormalizer();
     }
 
-    public function testSupportsNormalization(): void
+    public function testSupportsNormalization()
     {
         $this->assertTrue($this->normalizer->supportsNormalization(new Text('Hello, world!')));
         $this->assertFalse($this->normalizer->supportsNormalization(new \stdClass()));
     }
 
-    public function testGetSupportedTypes(): void
+    public function testGetSupportedTypes()
     {
         $this->assertSame([Text::class => true], $this->normalizer->getSupportedTypes(null));
     }
 
-    public function testNormalize(): void
+    public function testNormalize()
     {
         $text = new Text('Hello, world!');
 

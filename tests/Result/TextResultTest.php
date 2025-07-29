@@ -20,7 +20,7 @@ use Symfony\AI\Platform\Result\TextResult;
 #[Small]
 final class TextResultTest extends TestCase
 {
-    public function testGetContent(): void
+    public function testGetContent()
     {
         $result = new TextResult($expected = 'foo');
         $this->assertSame($expected, $result->getContent());

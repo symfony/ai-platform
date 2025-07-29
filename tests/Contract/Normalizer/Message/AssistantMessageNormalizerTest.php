@@ -31,18 +31,18 @@ final class AssistantMessageNormalizerTest extends TestCase
         $this->normalizer = new AssistantMessageNormalizer();
     }
 
-    public function testSupportsNormalization(): void
+    public function testSupportsNormalization()
     {
         $this->assertTrue($this->normalizer->supportsNormalization(new AssistantMessage('content')));
         $this->assertFalse($this->normalizer->supportsNormalization(new \stdClass()));
     }
 
-    public function testGetSupportedTypes(): void
+    public function testGetSupportedTypes()
     {
         $this->assertSame([AssistantMessage::class => true], $this->normalizer->getSupportedTypes(null));
     }
 
-    public function testNormalizeWithContent(): void
+    public function testNormalizeWithContent()
     {
         $message = new AssistantMessage('I am an assistant');
 
@@ -54,7 +54,7 @@ final class AssistantMessageNormalizerTest extends TestCase
         $this->assertSame($expected, $this->normalizer->normalize($message));
     }
 
-    public function testNormalizeWithToolCalls(): void
+    public function testNormalizeWithToolCalls()
     {
         $toolCalls = [
             new ToolCall('id1', 'function1', ['param' => 'value']),
@@ -84,7 +84,7 @@ final class AssistantMessageNormalizerTest extends TestCase
         $this->assertSame($expected, $this->normalizer->normalize($message));
     }
 
-    public function testNormalizeWithNullContent(): void
+    public function testNormalizeWithNullContent()
     {
         $toolCalls = [new ToolCall('id1', 'function1', ['param' => 'value'])];
         $message = new AssistantMessage(null, $toolCalls);

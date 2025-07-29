@@ -30,7 +30,7 @@ final class WhisperModelClientTest extends TestCase
     #[TestWith(['https://test.azure.com', 'The base URL must not contain the protocol.'])]
     #[TestWith(['http://test.azure.com:8080', 'The base URL must not contain the protocol.'])]
     #[TestWith(['https://test.azure.com:443', 'The base URL must not contain the protocol.'])]
-    public function testItThrowsExceptionWhenBaseUrlContainsProtocol(string $invalidUrl, string $expectedMessage): void
+    public function testItThrowsExceptionWhenBaseUrlContainsProtocol(string $invalidUrl, string $expectedMessage)
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage($expectedMessage);
@@ -38,7 +38,7 @@ final class WhisperModelClientTest extends TestCase
         new WhisperModelClient(new MockHttpClient(), $invalidUrl, 'deployment', 'api-version', 'api-key');
     }
 
-    public function testItThrowsExceptionWhenDeploymentIsEmpty(): void
+    public function testItThrowsExceptionWhenDeploymentIsEmpty()
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The deployment must not be empty.');
@@ -46,7 +46,7 @@ final class WhisperModelClientTest extends TestCase
         new WhisperModelClient(new MockHttpClient(), 'test.azure.com', '', 'api-version', 'api-key');
     }
 
-    public function testItThrowsExceptionWhenApiVersionIsEmpty(): void
+    public function testItThrowsExceptionWhenApiVersionIsEmpty()
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The API version must not be empty.');
@@ -54,7 +54,7 @@ final class WhisperModelClientTest extends TestCase
         new WhisperModelClient(new MockHttpClient(), 'test.azure.com', 'deployment', '', 'api-key');
     }
 
-    public function testItThrowsExceptionWhenApiKeyIsEmpty(): void
+    public function testItThrowsExceptionWhenApiKeyIsEmpty()
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The API key must not be empty.');
@@ -62,14 +62,14 @@ final class WhisperModelClientTest extends TestCase
         new WhisperModelClient(new MockHttpClient(), 'test.azure.com', 'deployment', 'api-version', '');
     }
 
-    public function testItAcceptsValidParameters(): void
+    public function testItAcceptsValidParameters()
     {
         $client = new WhisperModelClient(new MockHttpClient(), 'test.azure.com', 'valid-deployment', '2023-12-01', 'valid-api-key');
 
         $this->assertInstanceOf(WhisperModelClient::class, $client);
     }
 
-    public function testItSupportsWhisperModel(): void
+    public function testItSupportsWhisperModel()
     {
         $client = new WhisperModelClient(
             new MockHttpClient(),
@@ -83,7 +83,7 @@ final class WhisperModelClientTest extends TestCase
         $this->assertTrue($client->supports($model));
     }
 
-    public function testItUsesTranscriptionEndpointByDefault(): void
+    public function testItUsesTranscriptionEndpointByDefault()
     {
         $httpClient = new MockHttpClient([
             function ($method, $url): MockResponse {
@@ -103,7 +103,7 @@ final class WhisperModelClientTest extends TestCase
         $this->assertSame(1, $httpClient->getRequestsCount());
     }
 
-    public function testItUsesTranscriptionEndpointWhenTaskIsSpecified(): void
+    public function testItUsesTranscriptionEndpointWhenTaskIsSpecified()
     {
         $httpClient = new MockHttpClient([
             function ($method, $url): MockResponse {
@@ -124,7 +124,7 @@ final class WhisperModelClientTest extends TestCase
         $this->assertSame(1, $httpClient->getRequestsCount());
     }
 
-    public function testItUsesTranslationEndpointWhenTaskIsSpecified(): void
+    public function testItUsesTranslationEndpointWhenTaskIsSpecified()
     {
         $httpClient = new MockHttpClient([
             function ($method, $url): MockResponse {

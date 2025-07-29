@@ -41,7 +41,7 @@ final class MessageBagNormalizerTest extends TestCase
         $this->normalizer = new MessageBagNormalizer();
     }
 
-    public function testSupportsNormalization(): void
+    public function testSupportsNormalization()
     {
         $messageBag = $this->createMock(MessageBagInterface::class);
 
@@ -49,12 +49,12 @@ final class MessageBagNormalizerTest extends TestCase
         $this->assertFalse($this->normalizer->supportsNormalization(new \stdClass()));
     }
 
-    public function testGetSupportedTypes(): void
+    public function testGetSupportedTypes()
     {
         $this->assertSame([MessageBagInterface::class => true], $this->normalizer->getSupportedTypes(null));
     }
 
-    public function testNormalizeWithoutModel(): void
+    public function testNormalizeWithoutModel()
     {
         $messages = [
             new SystemMessage('You are a helpful assistant'),
@@ -84,7 +84,7 @@ final class MessageBagNormalizerTest extends TestCase
         $this->assertSame($expected, $this->normalizer->normalize($messageBag));
     }
 
-    public function testNormalizeWithModel(): void
+    public function testNormalizeWithModel()
     {
         $messages = [
             new SystemMessage('You are a helpful assistant'),

@@ -24,7 +24,7 @@ use Symfony\AI\Platform\Result\ToolCallResult;
 #[Small]
 final class TollCallResultTest extends TestCase
 {
-    public function testThrowsIfNoToolCall(): void
+    public function testThrowsIfNoToolCall()
     {
         self::expectException(InvalidArgumentException::class);
         self::expectExceptionMessage('Response must have at least one tool call.');
@@ -32,7 +32,7 @@ final class TollCallResultTest extends TestCase
         new ToolCallResult();
     }
 
-    public function testGetContent(): void
+    public function testGetContent()
     {
         $result = new ToolCallResult($toolCall = new ToolCall('ID', 'name', ['foo' => 'bar']));
         $this->assertSame([$toolCall], $result->getContent());

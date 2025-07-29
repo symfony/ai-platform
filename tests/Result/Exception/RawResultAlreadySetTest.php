@@ -20,7 +20,7 @@ use Symfony\AI\Platform\Result\Exception\RawResultAlreadySetException;
 #[Small]
 final class RawResultAlreadySetTest extends TestCase
 {
-    public function testItHasCorrectExceptionMessage(): void
+    public function testItHasCorrectExceptionMessage()
     {
         $exception = new RawResultAlreadySetException();
 

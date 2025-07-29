@@ -33,7 +33,7 @@ use Symfony\Component\HttpClient\MockHttpClient;
 final class ModelClientTest extends TestCase
 {
     #[DataProvider('urlTestCases')]
-    public function testGetUrlForDifferentInputsAndTasks(?string $task, string $expectedUrl): void
+    public function testGetUrlForDifferentInputsAndTasks(?string $task, string $expectedUrl)
     {
         $reflection = new \ReflectionClass(ModelClient::class);
         $getUrlMethod = $reflection->getMethod('getUrl');
@@ -75,7 +75,7 @@ final class ModelClientTest extends TestCase
     }
 
     #[DataProvider('payloadTestCases')]
-    public function testGetPayloadForDifferentInputsAndTasks(object|array|string $input, array $options, array $expectedKeys, array $expectedValues = []): void
+    public function testGetPayloadForDifferentInputsAndTasks(object|array|string $input, array $options, array $expectedKeys, array $expectedValues = [])
     {
         // Contract handling first
         $contract = Contract::create(
