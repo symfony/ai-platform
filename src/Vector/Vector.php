@@ -30,7 +30,7 @@ final class Vector implements VectorInterface
         }
 
         if ([] === $data) {
-            throw new InvalidArgumentException('Vector must have at least one dimension');
+            throw new InvalidArgumentException('Vector must have at least one dimension.');
         }
 
         if (\is_int($dimensions) && \count($data) !== $dimensions) {
