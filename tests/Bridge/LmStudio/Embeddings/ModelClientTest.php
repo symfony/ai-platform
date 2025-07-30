@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\AI\Platform\Tests\Bridge\LMStudio\Embeddings;
+namespace Symfony\AI\Platform\Tests\Bridge\LmStudio\Embeddings;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Symfony\AI\Platform\Bridge\LMStudio\Embeddings;
-use Symfony\AI\Platform\Bridge\LMStudio\Embeddings\ModelClient;
+use Symfony\AI\Platform\Bridge\LmStudio\Embeddings;
+use Symfony\AI\Platform\Bridge\LmStudio\Embeddings\ModelClient;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
 

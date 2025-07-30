@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\AI\Platform\Tests\Bridge\LMStudio\Embeddings;
+namespace Symfony\AI\Platform\Tests\Bridge\LmStudio\Embeddings;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Symfony\AI\Platform\Bridge\LMStudio\Embeddings;
-use Symfony\AI\Platform\Bridge\LMStudio\Embeddings\ResultConverter;
+use Symfony\AI\Platform\Bridge\LmStudio\Embeddings;
+use Symfony\AI\Platform\Bridge\LmStudio\Embeddings\ResultConverter;
 use Symfony\AI\Platform\Exception\RuntimeException;
 use Symfony\AI\Platform\Result\RawHttpResult;
 use Symfony\AI\Platform\Result\VectorResult;

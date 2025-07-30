@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\AI\Platform\Tests\Bridge\LMStudio\Completions;
+namespace Symfony\AI\Platform\Tests\Bridge\LmStudio\Completions;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Symfony\AI\Platform\Bridge\LMStudio\Completions;
-use Symfony\AI\Platform\Bridge\LMStudio\Completions\ModelClient;
+use Symfony\AI\Platform\Bridge\LmStudio\Completions;
+use Symfony\AI\Platform\Bridge\LmStudio\Completions\ModelClient;
 use Symfony\Component\HttpClient\EventSourceHttpClient;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
