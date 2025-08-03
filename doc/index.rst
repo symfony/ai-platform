@@ -289,7 +289,7 @@ For unit or integration testing, you can use the `InMemoryPlatform`, which imple
 It supports returning either:
 
 - A fixed string result
-- A callable that dynamically returns a response based on the model, input, and options::
+- A callable that dynamically returns a simple string or any ``ResultInterface`` based on the model, input, and options::
 
     use Symfony\AI\Platform\InMemoryPlatform;
     use Symfony\AI\Platform\Model;
@@ -300,8 +300,41 @@ It supports returning either:
 
     echo $result->asText(); // "Fake result"
 
+**Dynamic Text Results**::
 
-Internally, it uses `InMemoryRawResult` to simulate the behavior of real API responses and support `ResultPromise`.
+    $platform = new InMemoryPlatform(
+        fn($model, $input, $options) => "Echo: {$input}"
+    );
+
+    $result = $platform->invoke(new Model('test'), 'Hello AI');
+    echo $result->asText(); // "Echo: Hello AI"
+
+**Vector Results**::
+
+    use Symfony\AI\Platform\Result\VectorResult;
+
+    $platform = new InMemoryPlatform(
+        fn() => new VectorResult(new Vector([0.1, 0.2, 0.3, 0.4]))
+    );
+
+    $result = $platform->invoke(new Model('test'), 'vectorize this text');
+    $vectors = $result->asVectors(); // Returns Vector object with [0.1, 0.2, 0.3, 0.4]
+
+**Binary Results**::
+
+    use Symfony\AI\Platform\Result\BinaryResult;
+
+    $platform = new InMemoryPlatform(
+        fn() => new BinaryResult('fake-pdf-content', 'application/pdf')
+    );
+
+    $result = $platform->invoke(new Model('test'), 'generate PDF document');
+    $binary = $result->asBinary(); // Returns Binary object with content and MIME type
+
+
+**Raw Results**
+
+The platform automatically uses the ``getRawResult()`` from any ``ResultInterface`` returned by closures. For string results, it creates an ``InMemoryRawResult`` to simulate real API response metadata.
 
 This allows fast and isolated testing of AI-powered features without relying on live providers or HTTP requests.
 

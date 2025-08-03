@@ -13,6 +13,8 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\InMemoryPlatform;
 use Symfony\AI\Platform\Model;
+use Symfony\AI\Platform\Result\VectorResult;
+use Symfony\AI\Platform\Vector\Vector;
 
 #[CoversClass(InMemoryPlatform::class)]
 class InMemoryPlatformTest extends TestCase
@@ -36,5 +38,16 @@ class InMemoryPlatformTest extends TestCase
         $result = $platform->invoke(new Model('test'), 'dynamic text');
 
         $this->assertSame('DYNAMIC TEXT', $result->asText());
+    }
+
+    public function testPlatformInvokeWithVectorResultResponse()
+    {
+        $platform = new InMemoryPlatform(
+            fn () => new VectorResult(new Vector([0.1, 0.1, 0.5]))
+        );
+
+        $result = $platform->invoke(new Model('test'), 'dynamic text');
+
+        $this->assertEquals([0.1, 0.1, 0.5], $result->asVectors()[0]->getData());
     }
 }

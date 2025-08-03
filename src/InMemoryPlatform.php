@@ -12,6 +12,7 @@
 namespace Symfony\AI\Platform;
 
 use Symfony\AI\Platform\Result\InMemoryRawResult;
+use Symfony\AI\Platform\Result\ResultInterface;
 use Symfony\AI\Platform\Result\ResultPromise;
 use Symfony\AI\Platform\Result\TextResult;
 
@@ -26,7 +27,7 @@ class InMemoryPlatform implements PlatformInterface
 {
     /**
      * The mock result can be a string or a callable that returns a string.
-     * If it's a closure, it receives the model, input, and  optionally options as parameters like a real platform call.
+     * If it's a closure, it receives the model, input, and optionally options as parameters like a real platform call.
      */
     public function __construct(private readonly \Closure|string $mockResult)
     {
@@ -34,19 +35,28 @@ class InMemoryPlatform implements PlatformInterface
 
     public function invoke(Model $model, array|string|object $input, array $options = []): ResultPromise
     {
-        $resultText = $this->mockResult instanceof \Closure
-            ? ($this->mockResult)($model, $input, $options)
-            : $this->mockResult;
+        $result = \is_string($this->mockResult) ? $this->mockResult : ($this->mockResult)($model, $input, $options);
 
-        $textResult = new TextResult($resultText);
+        if ($result instanceof ResultInterface) {
+            return $this->createPromise($result, $options);
+        }
 
-        return new ResultPromise(
-            static fn () => $textResult,
-            rawResult: new InMemoryRawResult(
-                ['text' => $resultText],
-                (object) ['text' => $resultText],
-            ),
-            options: $options
+        return $this->createPromise(new TextResult($result), $options);
+    }
+
+    /**
+     * Creates a ResultPromise from a ResultInterface.
+     *
+     * @param ResultInterface      $result  The result to wrap in a promise
+     * @param array<string, mixed> $options Additional options for the promise
+     */
+    private function createPromise(ResultInterface $result, array $options): ResultPromise
+    {
+        $rawResult = $result->getRawResult() ?? new InMemoryRawResult(
+            ['text' => $result->getContent()],
+            (object) ['text' => $result->getContent()],
         );
+
+        return new ResultPromise(static fn () => $result, $rawResult, $options);
     }
 }
