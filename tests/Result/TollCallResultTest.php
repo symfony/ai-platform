@@ -26,8 +26,8 @@ final class TollCallResultTest extends TestCase
 {
     public function testThrowsIfNoToolCall()
     {
-        self::expectException(InvalidArgumentException::class);
-        self::expectExceptionMessage('Response must have at least one tool call.');
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Response must have at least one tool call.');
 
         new ToolCallResult();
     }

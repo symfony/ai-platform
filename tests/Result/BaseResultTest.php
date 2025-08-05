@@ -55,7 +55,7 @@ final class BaseResultTest extends TestCase
 
     public function testItThrowsAnExceptionWhenSettingARawResponseTwice()
     {
-        self::expectException(RawResultAlreadySetException::class);
+        $this->expectException(RawResultAlreadySetException::class);
 
         $result = $this->createResult();
         $rawResult = $this->createRawResult();

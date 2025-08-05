@@ -28,7 +28,7 @@ final class ToolParameterTest extends TestCase
 
     public function testInvalidEnumContainsNonString()
     {
-        self::expectException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $enum = ['value1', 2];
         new With(enum: $enum);
     }
@@ -42,7 +42,7 @@ final class ToolParameterTest extends TestCase
 
     public function testInvalidConstEmptyString()
     {
-        self::expectException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $const = '   ';
         new With(const: $const);
     }
@@ -56,7 +56,7 @@ final class ToolParameterTest extends TestCase
 
     public function testInvalidPatternEmptyString()
     {
-        self::expectException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $pattern = '   ';
         new With(pattern: $pattern);
     }
@@ -70,7 +70,7 @@ final class ToolParameterTest extends TestCase
 
     public function testInvalidMinLengthNegative()
     {
-        self::expectException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         new With(minLength: -1);
     }
 
@@ -85,7 +85,7 @@ final class ToolParameterTest extends TestCase
 
     public function testInvalidMaxLengthLessThanMinLength()
     {
-        self::expectException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         new With(minLength: 10, maxLength: 5);
     }
 
@@ -98,7 +98,7 @@ final class ToolParameterTest extends TestCase
 
     public function testInvalidMinimumNegative()
     {
-        self::expectException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         new With(minimum: -1);
     }
 
@@ -111,7 +111,7 @@ final class ToolParameterTest extends TestCase
 
     public function testInvalidMultipleOfNegative()
     {
-        self::expectException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         new With(multipleOf: -5);
     }
 
@@ -126,7 +126,7 @@ final class ToolParameterTest extends TestCase
 
     public function testInvalidExclusiveMaximumLessThanExclusiveMinimum()
     {
-        self::expectException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         new With(exclusiveMinimum: 10, exclusiveMaximum: 5);
     }
 
@@ -141,7 +141,7 @@ final class ToolParameterTest extends TestCase
 
     public function testInvalidMaxItemsLessThanMinItems()
     {
-        self::expectException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         new With(minItems: 5, maxItems: 1);
     }
 
@@ -153,7 +153,7 @@ final class ToolParameterTest extends TestCase
 
     public function testInvalidUniqueItemsFalse()
     {
-        self::expectException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         new With(uniqueItems: false);
     }
 
@@ -168,7 +168,7 @@ final class ToolParameterTest extends TestCase
 
     public function testInvalidMaxContainsLessThanMinContains()
     {
-        self::expectException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         new With(minContains: 3, maxContains: 1);
     }
 
@@ -189,7 +189,7 @@ final class ToolParameterTest extends TestCase
 
     public function testInvalidMaxPropertiesLessThanMinProperties()
     {
-        self::expectException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         new With(minProperties: 5, maxProperties: 1);
     }
 
@@ -228,7 +228,7 @@ final class ToolParameterTest extends TestCase
 
     public function testInvalidCombination()
     {
-        self::expectException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         new With(minLength: -1, maxLength: -2);
     }
 }

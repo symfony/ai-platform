@@ -35,8 +35,8 @@ final class ChoiceResultTest extends TestCase
 
     public function testChoiceResultWithNoChoices()
     {
-        self::expectException(InvalidArgumentException::class);
-        self::expectExceptionMessage('A choice result must contain at least two results.');
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('A choice result must contain at least two results.');
 
         new ChoiceResult();
     }

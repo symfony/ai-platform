@@ -149,8 +149,8 @@ class ResultConverterTest extends TestCase
                 ];
             });
 
-        self::expectException(ContentFilterException::class);
-        self::expectExceptionMessage('Content was filtered');
+        $this->expectException(ContentFilterException::class);
+        $this->expectExceptionMessage('Content was filtered');
 
         $converter->convert(new RawHttpResult($httpResponse));
     }
@@ -161,8 +161,8 @@ class ResultConverterTest extends TestCase
         $httpResponse = self::createMock(ResponseInterface::class);
         $httpResponse->method('toArray')->willReturn([]);
 
-        self::expectException(RuntimeException::class);
-        self::expectExceptionMessage('Response does not contain choices');
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Response does not contain choices');
 
         $converter->convert(new RawHttpResult($httpResponse));
     }
@@ -183,8 +183,8 @@ class ResultConverterTest extends TestCase
             ],
         ]);
 
-        self::expectException(RuntimeException::class);
-        self::expectExceptionMessage('Unsupported finish reason "unsupported_reason"');
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Unsupported finish reason "unsupported_reason"');
 
         $converter->convert(new RawHttpResult($httpResponse));
     }

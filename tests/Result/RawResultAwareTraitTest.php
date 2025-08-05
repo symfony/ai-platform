@@ -36,7 +36,7 @@ final class RawResultAwareTraitTest extends TestCase
 
     public function testItThrowsAnExceptionWhenSettingARawResponseTwice()
     {
-        self::expectException(RawResultAlreadySetException::class);
+        $this->expectException(RawResultAlreadySetException::class);
 
         $result = $this->createTestClass();
         $rawResponse = self::createMock(SymfonyHttpResponse::class);
