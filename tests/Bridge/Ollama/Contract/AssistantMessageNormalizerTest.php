@@ -72,6 +72,7 @@ final class AssistantMessageNormalizerTest extends TestCase
             new AssistantMessage('Hello'),
             [
                 'role' => Role::Assistant,
+                'content' => 'Hello',
                 'tool_calls' => [],
             ],
         ];
@@ -80,6 +81,7 @@ final class AssistantMessageNormalizerTest extends TestCase
             new AssistantMessage(toolCalls: [new ToolCall('id1', 'function1', ['param' => 'value'])]),
             [
                 'role' => Role::Assistant,
+                'content' => '',
                 'tool_calls' => [
                     [
                         'type' => 'function',
@@ -96,6 +98,7 @@ final class AssistantMessageNormalizerTest extends TestCase
             new AssistantMessage(toolCalls: [new ToolCall('id1', 'function1', [])]),
             [
                 'role' => Role::Assistant,
+                'content' => '',
                 'tool_calls' => [
                     [
                         'type' => 'function',
@@ -115,6 +118,37 @@ final class AssistantMessageNormalizerTest extends TestCase
             ]),
             [
                 'role' => Role::Assistant,
+                'content' => '',
+                'tool_calls' => [
+                    [
+                        'type' => 'function',
+                        'function' => [
+                            'name' => 'function1',
+                            'arguments' => ['param1' => 'value1'],
+                        ],
+                    ],
+                    [
+                        'type' => 'function',
+                        'function' => [
+                            'name' => 'function2',
+                            'arguments' => ['param2' => 'value2'],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        yield 'assistant message with tool calls and content' => [
+            new AssistantMessage(
+                content: 'Hello',
+                toolCalls: [
+                    new ToolCall('id1', 'function1', ['param1' => 'value1']),
+                    new ToolCall('id2', 'function2', ['param2' => 'value2']),
+                ]
+            ),
+            [
+                'role' => Role::Assistant,
+                'content' => 'Hello',
                 'tool_calls' => [
                     [
                         'type' => 'function',
