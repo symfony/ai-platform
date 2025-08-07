@@ -346,6 +346,8 @@ This allows fast and isolated testing of AI-powered features without relying on 
 
 * `Parallel GPT Calls`_
 * `Parallel Embeddings Calls`_
+* `Cerebras Chat`_
+* `Cerebras Streaming`_
 
 .. note::
 
@@ -392,3 +394,5 @@ This allows fast and isolated testing of AI-powered features without relying on 
 .. _`Parallel Embeddings Calls`: https://github.com/symfony/ai/blob/main/examples/misc/parallel-embeddings.php
 .. _`LM Studio`: https://lmstudio.ai/
 .. _`LM Studio Catalog`: https://lmstudio.ai/models
+.. _`Cerebras Chat`: https://github.com/symfony/ai/blob/main/examples/cerebras/chat.php
+.. _`Cerebras Streaming`: https://github.com/symfony/ai/blob/main/examples/cerebras/stream.php
