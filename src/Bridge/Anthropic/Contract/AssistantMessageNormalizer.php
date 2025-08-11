@@ -41,7 +41,7 @@ final class AssistantMessageNormalizer extends ModelContractNormalizer implement
      *
      * @return array{
      *     role: 'assistant',
-     *     content: list<array{
+     *     content: string|list<array{
      *         type: 'tool_use',
      *         id: string,
      *         name: string,
@@ -53,14 +53,14 @@ final class AssistantMessageNormalizer extends ModelContractNormalizer implement
     {
         return [
             'role' => 'assistant',
-            'content' => array_map(static function (ToolCall $toolCall) {
+            'content' => $data->hasToolCalls() ? array_map(static function (ToolCall $toolCall) {
                 return [
                     'type' => 'tool_use',
                     'id' => $toolCall->id,
                     'name' => $toolCall->name,
                     'input' => [] !== $toolCall->arguments ? $toolCall->arguments : new \stdClass(),
                 ];
-            }, $data->toolCalls),
+            }, $data->toolCalls) : $data->content,
         ];
     }
 }
