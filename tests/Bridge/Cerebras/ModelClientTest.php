@@ -56,7 +56,7 @@ class ModelClientTest extends TestCase
     {
         $client = new ModelClient(new MockHttpClient(), 'csk-1234567890abcdef');
 
-        self::assertTrue($client->supports(new Model(Model::GPT_OSS_120B)));
+        $this->assertTrue($client->supports(new Model(Model::GPT_OSS_120B)));
     }
 
     public function testItSuccessfullyInvokesTheModel()
@@ -86,10 +86,10 @@ class ModelClientTest extends TestCase
         $data = $result->getData();
         $info = $result->getObject()->getInfo();
 
-        self::assertNotEmpty($data);
-        self::assertNotEmpty($info);
-        self::assertSame('POST', $info['http_method']);
-        self::assertSame('https://api.cerebras.ai/v1/chat/completions', $info['url']);
-        self::assertSame($expectedResponse, $data);
+        $this->assertNotEmpty($data);
+        $this->assertNotEmpty($info);
+        $this->assertSame('POST', $info['http_method']);
+        $this->assertSame('https://api.cerebras.ai/v1/chat/completions', $info['url']);
+        $this->assertSame($expectedResponse, $data);
     }
 }

@@ -64,16 +64,6 @@ final class BaseResultTest extends TestCase
         $result->setRawResult($rawResult);
     }
 
-    private function createResult(): BaseResult
-    {
-        return new class extends BaseResult {
-            public function getContent(): string
-            {
-                return 'test';
-            }
-        };
-    }
-
     public function createRawResult(): RawResultInterface
     {
         return new class implements RawResultInterface {
@@ -85,6 +75,16 @@ final class BaseResultTest extends TestCase
             public function getObject(): object
             {
                 return new \stdClass();
+            }
+        };
+    }
+
+    private function createResult(): BaseResult
+    {
+        return new class extends BaseResult {
+            public function getContent(): string
+            {
+                return 'test';
             }
         };
     }
