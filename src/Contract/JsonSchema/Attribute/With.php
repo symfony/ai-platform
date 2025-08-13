@@ -48,7 +48,6 @@ final readonly class With
         public ?int $maxContains = null,
 
         // object
-        public ?bool $required = null,
         public ?int $minProperties = null,
         public ?int $maxProperties = null,
         public ?bool $dependentRequired = null,

@@ -172,12 +172,6 @@ final class ToolParameterTest extends TestCase
         new With(minContains: 3, maxContains: 1);
     }
 
-    public function testValidRequired()
-    {
-        $toolParameter = new With(required: true);
-        $this->assertTrue($toolParameter->required);
-    }
-
     public function testValidMinPropertiesAndMaxProperties()
     {
         $minProperties = 1;
@@ -217,7 +211,6 @@ final class ToolParameterTest extends TestCase
             uniqueItems: true,
             minContains: 1,
             maxContains: 5,
-            required: true,
             minProperties: 1,
             maxProperties: 5,
             dependentRequired: true

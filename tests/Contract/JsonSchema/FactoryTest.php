@@ -119,7 +119,6 @@ final class FactoryTest extends TestCase
                 'shippingAddress' => [
                     'type' => 'string',
                     'description' => 'The shipping address given to the tool',
-                    'required' => true,
                     'minProperties' => 1,
                     'maxProperties' => 10,
                     'dependentRequired' => true,
