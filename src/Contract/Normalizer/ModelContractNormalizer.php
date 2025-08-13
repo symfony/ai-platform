@@ -20,13 +20,6 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
  */
 abstract class ModelContractNormalizer implements NormalizerInterface
 {
-    /**
-     * @return class-string
-     */
-    abstract protected function supportedDataClass(): string;
-
-    abstract protected function supportsModel(Model $model): bool;
-
     public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
         if (!is_a($data, $this->supportedDataClass(), true)) {
@@ -46,4 +39,11 @@ abstract class ModelContractNormalizer implements NormalizerInterface
             $this->supportedDataClass() => true,
         ];
     }
+
+    /**
+     * @return class-string
+     */
+    abstract protected function supportedDataClass(): string;
+
+    abstract protected function supportsModel(Model $model): bool;
 }
