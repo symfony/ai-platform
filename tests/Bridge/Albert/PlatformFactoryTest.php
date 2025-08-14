@@ -55,6 +55,14 @@ final class PlatformFactoryTest extends TestCase
         PlatformFactory::create('test-key', 'http://albert.example.com');
     }
 
+    public function testPlatformThrowsExceptionForEmptyApiKey()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The API key must not be empty.');
+
+        PlatformFactory::create('', 'https://albert.example.com/v2');
+    }
+
     #[DataProvider('provideUrlsWithTrailingSlash')]
     public function testThrowsExceptionForUrlsWithTrailingSlash(string $url)
     {
