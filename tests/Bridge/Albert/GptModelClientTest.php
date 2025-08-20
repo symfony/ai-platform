@@ -18,7 +18,6 @@ use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\Albert\GptModelClient;
 use Symfony\AI\Platform\Bridge\OpenAi\Embeddings;
 use Symfony\AI\Platform\Bridge\OpenAi\Gpt;
-use Symfony\AI\Platform\Exception\InvalidArgumentException;
 use Symfony\Component\HttpClient\EventSourceHttpClient;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\JsonMockResponse;
@@ -27,30 +26,6 @@ use Symfony\Component\HttpClient\Response\JsonMockResponse;
 #[Small]
 final class GptModelClientTest extends TestCase
 {
-    public function testConstructorThrowsExceptionForEmptyApiKey()
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('The API key must not be empty.');
-
-        new GptModelClient(
-            new MockHttpClient(),
-            '',
-            'https://albert.example.com/'
-        );
-    }
-
-    public function testConstructorThrowsExceptionForEmptyBaseUrl()
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('The base URL must not be empty.');
-
-        new GptModelClient(
-            new MockHttpClient(),
-            'test-api-key',
-            ''
-        );
-    }
-
     public function testConstructorWrapsHttpClientInEventSourceHttpClient()
     {
         self::expectNotToPerformAssertions();
