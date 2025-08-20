@@ -26,7 +26,7 @@ final class Vector implements VectorInterface
         private ?int $dimensions = null,
     ) {
         if (null !== $dimensions && $dimensions !== \count($data)) {
-            throw new InvalidArgumentException('Vector must have '.$dimensions.' dimensions');
+            throw new InvalidArgumentException(\sprintf('Vector must have %d dimensions', $dimensions));
         }
 
         if ([] === $data) {
@@ -34,7 +34,7 @@ final class Vector implements VectorInterface
         }
 
         if (\is_int($dimensions) && \count($data) !== $dimensions) {
-            throw new InvalidArgumentException('Vector must have '.$dimensions.' dimensions');
+            throw new InvalidArgumentException(\sprintf('Vector must have %d dimensions', $dimensions));
         }
 
         if (null === $this->dimensions) {
