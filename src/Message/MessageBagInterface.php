@@ -11,6 +11,8 @@
 
 namespace Symfony\AI\Platform\Message;
 
+use Symfony\AI\Platform\Metadata\Metadata;
+
 /**
  * @author Oskar Stark <oskarstark@googlemail.com>
  */
@@ -36,4 +38,6 @@ interface MessageBagInterface extends \Countable
     public function containsAudio(): bool;
 
     public function containsImage(): bool;
+
+    public function getMetadata(): Metadata;
 }

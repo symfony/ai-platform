@@ -11,6 +11,8 @@
 
 namespace Symfony\AI\Platform\Message;
 
+use Symfony\AI\Platform\Metadata\MetadataAwareTrait;
+
 /**
  * @final
  *
@@ -18,6 +20,8 @@ namespace Symfony\AI\Platform\Message;
  */
 class MessageBag implements MessageBagInterface
 {
+    use MetadataAwareTrait;
+
     /**
      * @var list<MessageInterface>
      */

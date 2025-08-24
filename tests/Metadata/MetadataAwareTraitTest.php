@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\AI\Platform\Tests\Result\Metadata;
+namespace Symfony\AI\Platform\Tests\Metadata;
 
 use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Symfony\AI\Platform\Result\Metadata\Metadata;
-use Symfony\AI\Platform\Result\Metadata\MetadataAwareTrait;
+use Symfony\AI\Platform\Metadata\Metadata;
+use Symfony\AI\Platform\Metadata\MetadataAwareTrait;
 
 #[CoversTrait(MetadataAwareTrait::class)]
 #[Small]

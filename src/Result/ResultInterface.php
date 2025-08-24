@@ -11,8 +11,8 @@
 
 namespace Symfony\AI\Platform\Result;
 
+use Symfony\AI\Platform\Metadata\Metadata;
 use Symfony\AI\Platform\Result\Exception\RawResultAlreadySetException;
-use Symfony\AI\Platform\Result\Metadata\Metadata;
 
 /**
  * @author Christopher Hertel <mail@christopher-hertel.de>

@@ -11,7 +11,7 @@
 
 namespace Symfony\AI\Platform\Result;
 
-use Symfony\AI\Platform\Result\Metadata\MetadataAwareTrait;
+use Symfony\AI\Platform\Metadata\MetadataAwareTrait;
 
 /**
  * Base result of converted result classes.

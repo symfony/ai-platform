@@ -166,4 +166,17 @@ final class MessageBagTest extends TestCase
 
         $this->assertTrue($messageBag->containsImage());
     }
+
+    public function testItCanHandleMetadata()
+    {
+        $messageBag = new MessageBag();
+        $metadata = $messageBag->getMetadata();
+
+        $this->assertCount(0, $metadata);
+
+        $metadata->add('key', 'value');
+        $metadata = $messageBag->getMetadata();
+
+        $this->assertCount(1, $metadata);
+    }
 }

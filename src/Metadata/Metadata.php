@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\AI\Platform\Result\Metadata;
+namespace Symfony\AI\Platform\Metadata;
 
 /**
  * @implements \IteratorAggregate<string, mixed>
