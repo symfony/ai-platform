@@ -17,7 +17,7 @@ use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Agent\Output;
 use Symfony\AI\Platform\Bridge\Mistral\TokenOutputProcessor;
-use Symfony\AI\Platform\Message\MessageBagInterface;
+use Symfony\AI\Platform\Message\MessageBag;
 use Symfony\AI\Platform\Metadata\Metadata;
 use Symfony\AI\Platform\Model;
 use Symfony\AI\Platform\Result\Metadata\TokenUsage;
@@ -156,7 +156,7 @@ final class TokenOutputProcessorTest extends TestCase
         return new Output(
             $this->createStub(Model::class),
             $result,
-            $this->createStub(MessageBagInterface::class),
+            $this->createStub(MessageBag::class),
             [],
         );
     }

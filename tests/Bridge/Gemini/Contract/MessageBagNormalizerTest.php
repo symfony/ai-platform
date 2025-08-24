@@ -25,7 +25,6 @@ use Symfony\AI\Platform\Message\AssistantMessage;
 use Symfony\AI\Platform\Message\Content\Image;
 use Symfony\AI\Platform\Message\Message;
 use Symfony\AI\Platform\Message\MessageBag;
-use Symfony\AI\Platform\Message\MessageBagInterface;
 use Symfony\AI\Platform\Message\UserMessage;
 use Symfony\AI\Platform\Model;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -56,7 +55,7 @@ final class MessageBagNormalizerTest extends TestCase
         $normalizer = new MessageBagNormalizer();
 
         $expected = [
-            MessageBagInterface::class => true,
+            MessageBag::class => true,
         ];
 
         $this->assertSame($expected, $normalizer->getSupportedTypes(null));

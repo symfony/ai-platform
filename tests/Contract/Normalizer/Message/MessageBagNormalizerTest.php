@@ -19,7 +19,6 @@ use Symfony\AI\Platform\Contract;
 use Symfony\AI\Platform\Contract\Normalizer\Message\MessageBagNormalizer;
 use Symfony\AI\Platform\Message\Content\Text;
 use Symfony\AI\Platform\Message\MessageBag;
-use Symfony\AI\Platform\Message\MessageBagInterface;
 use Symfony\AI\Platform\Message\SystemMessage;
 use Symfony\AI\Platform\Message\UserMessage;
 use Symfony\AI\Platform\Model;
@@ -43,7 +42,7 @@ final class MessageBagNormalizerTest extends TestCase
 
     public function testSupportsNormalization()
     {
-        $messageBag = $this->createMock(MessageBagInterface::class);
+        $messageBag = $this->createMock(MessageBag::class);
 
         $this->assertTrue($this->normalizer->supportsNormalization($messageBag));
         $this->assertFalse($this->normalizer->supportsNormalization(new \stdClass()));
@@ -51,7 +50,7 @@ final class MessageBagNormalizerTest extends TestCase
 
     public function testGetSupportedTypes()
     {
-        $this->assertSame([MessageBagInterface::class => true], $this->normalizer->getSupportedTypes(null));
+        $this->assertSame([MessageBag::class => true], $this->normalizer->getSupportedTypes(null));
     }
 
     public function testNormalizeWithoutModel()
