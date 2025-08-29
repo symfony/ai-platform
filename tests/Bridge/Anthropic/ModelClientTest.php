@@ -61,7 +61,7 @@ class ModelClientTest extends TestCase
             return new JsonMockResponse('{"success": true}');
         });
 
-        $this->modelClient = new ModelClient($this->httpClient, 'test-api-key', '2023-06-01');
+        $this->modelClient = new ModelClient($this->httpClient, 'test-api-key');
 
         $options = ['beta_features' => ['feature-1', 'feature-2', 'feature-3']];
         $this->modelClient->request($this->model, ['message' => 'test'], $options);
@@ -77,7 +77,7 @@ class ModelClientTest extends TestCase
             return new JsonMockResponse('{"success": true}');
         });
 
-        $this->modelClient = new ModelClient($this->httpClient, 'test-api-key', '2023-06-01');
+        $this->modelClient = new ModelClient($this->httpClient, 'test-api-key');
 
         $options = ['beta_features' => []];
         $this->modelClient->request($this->model, ['message' => 'test'], $options);
@@ -93,7 +93,7 @@ class ModelClientTest extends TestCase
             return new JsonMockResponse('{"success": true}');
         });
 
-        $this->modelClient = new ModelClient($this->httpClient, 'test-api-key', '2023-06-01');
+        $this->modelClient = new ModelClient($this->httpClient, 'test-api-key');
 
         $options = ['some_other_option' => 'value'];
         $this->modelClient->request($this->model, ['message' => 'test'], $options);
