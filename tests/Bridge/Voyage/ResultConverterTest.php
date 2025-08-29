@@ -74,8 +74,9 @@ class ResultConverterTest extends TestCase
         $vectorResult = $converter->convert(new RawHttpResult($result));
 
         $this->assertInstanceOf(VectorResult::class, $vectorResult);
-        // The converter returns only the first vector
+        $this->assertCount(2, $vectorResult->getContent());
         $this->assertSame([0.1, 0.2, 0.3], $vectorResult->getContent()[0]->getData());
+        $this->assertSame([0.4, 0.5, 0.6], $vectorResult->getContent()[1]->getData());
     }
 
     public function testItThrowsExceptionWhenResponseDoesNotContainData()
