@@ -89,4 +89,9 @@ readonly class File implements ContentInterface
 
         return fopen($this->path, 'r');
     }
+
+    public function getFilename(): ?string
+    {
+        return null === $this->path ? null : basename($this->path);
+    }
 }
