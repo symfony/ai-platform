@@ -57,4 +57,35 @@ final class ModelClientTest extends TestCase
         );
         $this->assertSame($expectedResponse, $data);
     }
+
+    public function testItPassesServerToolsFromOptions()
+    {
+        $payload = [
+            'content' => [
+                ['parts' => ['text' => 'Server tool test']],
+            ],
+        ];
+        $httpClient = new MockHttpClient(
+            function ($method, $url, $options) {
+                self::assertJsonStringEqualsJsonString(
+                    <<<'JSON'
+                        {
+                          "tools": [
+                            {"google_search": {}}
+                          ],
+                          "content": [
+                            {"parts":{"text":"Server tool test"}}
+                          ]
+                        }
+                        JSON,
+                    $options['body'],
+                );
+
+                return new JsonMockResponse('{}');
+            }
+        );
+
+        $client = new ModelClient($httpClient, 'global', 'test');
+        $client->request(new Model(Model::GEMINI_2_0_FLASH), $payload, ['server_tools' => ['google_search' => true]]);
+    }
 }

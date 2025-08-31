@@ -28,11 +28,10 @@ The URL Context tool allows the model to fetch and analyze content from specifie
 
 ::
 
-    $model = new VertexAi\Gemini\Model('gemini-2.5-pro');
+    $model = new VertexAi\Gemini\Model('gemini-2.5-pro', ['server_tools' => ['url_context' => true]]);
 
-    $content = file_get_contents('https://www.euribor-rates.eu/en/current-euribor-rates/4/euribor-rate-12-months/');
     $messages = new MessageBag(
-        Message::ofUser("Based on the following page content, what was the 12-month Euribor rate a week ago?\n\n".$content)
+        Message::ofUser("Based on https://www.euribor-rates.eu/en/current-euribor-rates/4/euribor-rate-12-months/, what is the latest 12-month Euribor rate?"),
     );
 
     $result = $platform->invoke($model, $messages);
@@ -51,9 +50,9 @@ More info can be found at https://cloud.google.com/vertex-ai/generative-ai/docs/
 ::
 
     $model = new VertexAi\Gemini\Model('gemini-2.5-pro', [
-        'tools' => [[
-            'googleSearch' => new \stdClass()
-        ]]
+        'server_tools' => [
+            'google_search' => true,
+        ],
     ]);
 
     $messages = new MessageBag(
@@ -70,9 +69,9 @@ More info can be found at https://cloud.google.com/vertex-ai/generative-ai/docs/
 ::
 
     $model = new Gemini('gemini-2.5-pro-preview-03-25', [
-        'tools' => [[
-            'codeExecution' => new \stdClass()
-        ]]
+        'server_tools' => [
+            'code_execution' => true,
+        ],
     ]);
 
     $messages = new MessageBag(
@@ -88,10 +87,10 @@ Using Multiple Server Tools
 You can enable multiple tools in a single request::
 
     $model = new Gemini('gemini-2.5-pro-preview-03-25', [
-        'tools' => [[
-            'googleSearch' => new \stdClass(),
-            'codeExecution' => new \stdClass()
-        ]]
+        'server_tools' => [
+            'google_search' => true,
+            'code_execution' => true,
+        ],
     ]);
 
 Example
