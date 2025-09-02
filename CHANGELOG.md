@@ -61,5 +61,3 @@ CHANGELOG
  * Add tool calling support for Ollama platform
  * Allow beta feature flags to be passed into Anthropic model options
  * Add Ollama streaming output support
-
-
