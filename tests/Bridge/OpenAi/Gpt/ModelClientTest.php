@@ -113,4 +113,21 @@ final class ModelClientTest extends TestCase
         $modelClient = new ModelClient($httpClient, 'sk-api-key');
         $modelClient->request(new Gpt(), ['model' => 'gpt-4o', 'messages' => [['role' => 'user', 'content' => 'Hello']]], ['temperature' => 0.7]);
     }
+
+    #[TestWith(['EU', 'https://eu.api.openai.com/v1/chat/completions'])]
+    #[TestWith(['US', 'https://us.api.openai.com/v1/chat/completions'])]
+    #[TestWith([null, 'https://api.openai.com/v1/chat/completions'])]
+    public function testItUsesCorrectBaseUrl(?string $region, string $expectedUrl)
+    {
+        $resultCallback = static function (string $method, string $url, array $options) use ($expectedUrl): HttpResponse {
+            self::assertSame('POST', $method);
+            self::assertSame($expectedUrl, $url);
+            self::assertSame('Authorization: Bearer sk-api-key', $options['normalized_headers']['authorization'][0]);
+
+            return new MockResponse();
+        };
+        $httpClient = new MockHttpClient([$resultCallback]);
+        $modelClient = new ModelClient($httpClient, 'sk-api-key', $region);
+        $modelClient->request(new Gpt(), ['messages' => []], []);
+    }
 }

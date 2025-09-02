@@ -78,4 +78,21 @@ final class ModelClientTest extends TestCase
         $modelClient = new ModelClient($httpClient, 'sk-api-key');
         $modelClient->request(new DallE(), 'foo', ['n' => 1, 'response_format' => 'url']);
     }
+
+    #[TestWith(['EU', 'https://eu.api.openai.com/v1/images/generations'])]
+    #[TestWith(['US', 'https://us.api.openai.com/v1/images/generations'])]
+    #[TestWith([null, 'https://api.openai.com/v1/images/generations'])]
+    public function testItUsesCorrectBaseUrl(?string $region, string $expectedUrl)
+    {
+        $resultCallback = static function (string $method, string $url, array $options) use ($expectedUrl): HttpResponse {
+            self::assertSame('POST', $method);
+            self::assertSame($expectedUrl, $url);
+            self::assertSame('Authorization: Bearer sk-api-key', $options['normalized_headers']['authorization'][0]);
+
+            return new MockResponse();
+        };
+        $httpClient = new MockHttpClient([$resultCallback]);
+        $modelClient = new ModelClient($httpClient, 'sk-api-key', $region);
+        $modelClient->request(new DallE(), 'foo', ['n' => 1, 'response_format' => 'url']);
+    }
 }
