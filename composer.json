@@ -4,9 +4,26 @@
     "description": "PHP library for interacting with AI platform provider.",
     "keywords": [
         "ai",
+        "albert",
+        "anthropic",
+        "azure",
+        "bedrock",
+        "cerebras",
+        "elevenlabs",
+        "gemini",
         "huggingface",
+        "inference",
+        "llama",
+        "lmstudio",
+        "meta",
+        "mistral",
+        "ollama",
+        "openai",
+        "openrouter",
+        "replicate",
         "transformers",
-        "inference"
+        "vertexai",
+        "voyage"
     ],
     "license": "MIT",
     "authors": [
