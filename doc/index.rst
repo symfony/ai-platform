@@ -45,7 +45,7 @@ And with a ``Symfony\AI\Platform\PlatformInterface`` instance, and a ``Symfony\A
 use the platform to interact with the AI model::
 
     // Generate a vector embedding for a text, returns a Symfony\AI\Platform\Result\VectorResult
-    $embeddingsResult = $platform->invoke($embeddings, 'What is the capital of France?');
+    $vectorResult = $platform->invoke($embeddings, 'What is the capital of France?');
 
     // Generate a text completion with GPT, returns a Symfony\AI\Platform\Result\TextResult
     $result = $platform->invoke($model, new MessageBag(Message::ofUser('What is the capital of France?')));
