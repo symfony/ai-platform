@@ -37,7 +37,6 @@ final class ModelClientTest extends TestCase
     {
         $reflection = new \ReflectionClass(ModelClient::class);
         $getUrlMethod = $reflection->getMethod('getUrl');
-        $getUrlMethod->setAccessible(true);
 
         $model = new Model('test-model');
         $httpClient = new MockHttpClient();
@@ -87,7 +86,6 @@ final class ModelClientTest extends TestCase
 
         $reflection = new \ReflectionClass(ModelClient::class);
         $getPayloadMethod = $reflection->getMethod('getPayload');
-        $getPayloadMethod->setAccessible(true);
 
         $httpClient = new MockHttpClient();
         $modelClient = new ModelClient($httpClient, 'test-provider', 'test-api-key');

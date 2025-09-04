@@ -92,7 +92,6 @@ class ModelClientTest extends TestCase
         $client = new ModelClient($httpClient, 'http://localhost:1234');
 
         $reflection = new \ReflectionProperty($client, 'httpClient');
-        $reflection->setAccessible(true);
 
         $this->assertInstanceOf(EventSourceHttpClient::class, $reflection->getValue($client));
     }
@@ -103,7 +102,6 @@ class ModelClientTest extends TestCase
         $client = new ModelClient($eventSourceHttpClient, 'http://localhost:1234');
 
         $reflection = new \ReflectionProperty($client, 'httpClient');
-        $reflection->setAccessible(true);
 
         $this->assertSame($eventSourceHttpClient, $reflection->getValue($client));
     }
