@@ -45,10 +45,10 @@ And with a ``Symfony\AI\Platform\PlatformInterface`` instance, and a ``Symfony\A
 use the platform to interact with the AI model::
 
     // Generate a vector embedding for a text, returns a Symfony\AI\Platform\Result\VectorResult
-    $result = $platform->invoke($embeddings, 'What is the capital of France?');
+    $embeddingsResult = $platform->invoke($embeddings, 'What is the capital of France?');
 
     // Generate a text completion with GPT, returns a Symfony\AI\Platform\Result\TextResult
-    $embeddingsResult = $platform->invoke($model, new MessageBag(Message::ofUser('What is the capital of France?')));
+    $result = $platform->invoke($model, new MessageBag(Message::ofUser('What is the capital of France?')));
 
 Depending on the model and its capabilities, different types of inputs and outputs are supported, which results in a
 very flexible and powerful interface for working with AI models.
