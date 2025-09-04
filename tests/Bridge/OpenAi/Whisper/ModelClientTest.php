@@ -13,10 +13,12 @@ namespace Symfony\AI\Platform\Tests\Bridge\OpenAi\Whisper;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Small;
+use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\OpenAi\Whisper;
 use Symfony\AI\Platform\Bridge\OpenAi\Whisper\ModelClient;
 use Symfony\AI\Platform\Bridge\OpenAi\Whisper\Task;
+use Symfony\AI\Platform\Exception\InvalidArgumentException;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
 
@@ -24,9 +26,38 @@ use Symfony\Component\HttpClient\Response\MockResponse;
 #[Small]
 final class ModelClientTest extends TestCase
 {
+    public function testItThrowsExceptionWhenApiKeyIsEmpty()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The API key must not be empty.');
+
+        new ModelClient(new MockHttpClient(), '');
+    }
+
+    #[TestWith(['api-key-without-prefix'])]
+    #[TestWith(['pk-api-key'])]
+    #[TestWith(['SK-api-key'])]
+    #[TestWith(['skapikey'])]
+    #[TestWith(['sk api-key'])]
+    #[TestWith(['sk'])]
+    public function testItThrowsExceptionWhenApiKeyDoesNotStartWithSk(string $invalidApiKey)
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The API key must start with "sk-".');
+
+        new ModelClient(new MockHttpClient(), $invalidApiKey);
+    }
+
+    public function testItAcceptsValidApiKey()
+    {
+        $modelClient = new ModelClient(new MockHttpClient(), 'sk-valid-api-key');
+
+        $this->assertInstanceOf(ModelClient::class, $modelClient);
+    }
+
     public function testItSupportsWhisperModel()
     {
-        $client = new ModelClient(new MockHttpClient(), 'test-key');
+        $client = new ModelClient(new MockHttpClient(), 'sk-test-key');
         $this->assertTrue($client->supports(new Whisper()));
     }
 
@@ -41,7 +72,7 @@ final class ModelClientTest extends TestCase
             },
         ]);
 
-        $client = new ModelClient($httpClient, 'test-key');
+        $client = new ModelClient($httpClient, 'sk-test-key');
         $client->request(new Whisper(), ['file' => 'audio-data']);
 
         $this->assertSame(1, $httpClient->getRequestsCount());
@@ -58,7 +89,7 @@ final class ModelClientTest extends TestCase
             },
         ]);
 
-        $client = new ModelClient($httpClient, 'test-key');
+        $client = new ModelClient($httpClient, 'sk-test-key');
         $client->request(new Whisper(), ['file' => 'audio-data'], ['task' => Task::TRANSCRIPTION]);
 
         $this->assertSame(1, $httpClient->getRequestsCount());
@@ -75,7 +106,7 @@ final class ModelClientTest extends TestCase
             },
         ]);
 
-        $client = new ModelClient($httpClient, 'test-key');
+        $client = new ModelClient($httpClient, 'sk-test-key');
         $client->request(new Whisper(), ['file' => 'audio-data'], ['task' => Task::TRANSLATION]);
 
         $this->assertSame(1, $httpClient->getRequestsCount());
