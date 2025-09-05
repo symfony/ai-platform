@@ -1,7 +1,8 @@
 {
     "name": "symfony/ai-platform",
-    "type": "library",
     "description": "PHP library for interacting with AI platform provider.",
+    "license": "MIT",
+    "type": "library",
     "keywords": [
         "ai",
         "albert",
@@ -25,7 +26,6 @@
         "vertexai",
         "voyage"
     ],
-    "license": "MIT",
     "authors": [
         {
             "name": "Christopher Hertel",
@@ -66,6 +66,18 @@
         "symfony/process": "^6.4 || ^7.1",
         "symfony/var-dumper": "^6.4 || ^7.1"
     },
+    "autoload": {
+        "psr-4": {
+            "Symfony\\AI\\Platform\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Symfony\\AI\\Fixtures\\": "../../fixtures",
+            "Symfony\\AI\\PHPStan\\": "../../.phpstan/",
+            "Symfony\\AI\\Platform\\Tests\\": "tests/"
+        }
+    },
     "config": {
         "allow-plugins": {
             "codewithkyrian/platform-package-installer": true,
@@ -77,18 +89,6 @@
         "thanks": {
             "name": "symfony/ai",
             "url": "https://github.com/symfony/ai"
-        }
-    },
-    "autoload": {
-        "psr-4": {
-            "Symfony\\AI\\Platform\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Symfony\\AI\\Platform\\Tests\\": "tests/",
-            "Symfony\\AI\\Fixtures\\": "../../fixtures",
-            "Symfony\\AI\\PHPStan\\": "../../.phpstan/"
         }
     }
 }
