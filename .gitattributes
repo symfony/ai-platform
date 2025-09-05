@@ -4,3 +4,4 @@
 .gitignore export-ignore
 phpstan.dist.neon export-ignore
 phpunit.xml.dist export-ignore
+CLAUDE.md export-ignore
