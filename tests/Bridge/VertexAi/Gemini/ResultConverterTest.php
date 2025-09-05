@@ -46,8 +46,54 @@ final class ResultConverterTest extends TestCase
         $result = $resultConverter->convert(new RawHttpResult($response));
 
         // Assert
-
         $this->assertInstanceOf(TextResult::class, $result);
         $this->assertSame('Hello, world!', $result->getContent());
+    }
+
+    public function testItReturnsAggregatedTextOnSuccess()
+    {
+        $response = $this->createStub(ResponseInterface::class);
+        $responseContent = file_get_contents(\dirname(__DIR__, 6).'/fixtures/Bridge/VertexAi/code_execution_outcome_ok.json');
+
+        $response
+            ->method('toArray')
+            ->willReturn(json_decode($responseContent, true));
+
+        $converter = new ResultConverter();
+
+        $result = $converter->convert(new RawHttpResult($response));
+        $this->assertInstanceOf(TextResult::class, $result);
+
+        $this->assertEquals("Second text\nThird text\nFourth text", $result->getContent());
+    }
+
+    public function testItThrowsExceptionOnFailure()
+    {
+        $response = $this->createStub(ResponseInterface::class);
+        $responseContent = file_get_contents(\dirname(__DIR__, 6).'/fixtures/Bridge/VertexAi/code_execution_outcome_failed.json');
+
+        $response
+            ->method('toArray')
+            ->willReturn(json_decode($responseContent, true));
+
+        $converter = new ResultConverter();
+
+        $this->expectException(\RuntimeException::class);
+        $converter->convert(new RawHttpResult($response));
+    }
+
+    public function testItThrowsExceptionOnTimeout()
+    {
+        $response = $this->createStub(ResponseInterface::class);
+        $responseContent = file_get_contents(\dirname(__DIR__, 6).'/fixtures/Bridge/VertexAi/code_execution_outcome_deadline_exceeded.json');
+
+        $response
+            ->method('toArray')
+            ->willReturn(json_decode($responseContent, true));
+
+        $converter = new ResultConverter();
+
+        $this->expectException(\RuntimeException::class);
+        $converter->convert(new RawHttpResult($response));
     }
 }
