@@ -14,7 +14,7 @@ namespace Symfony\AI\Platform\Result;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
 /**
- * @author Christopher Hertel <mail@christopher-hertel.de
+ * @author Christopher Hertel <mail@christopher-hertel.de>
  */
 final readonly class RawHttpResult implements RawResultInterface
 {
