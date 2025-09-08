@@ -20,7 +20,6 @@ use Symfony\AI\Platform\Bridge\OpenAi\Gpt;
 use Symfony\AI\Platform\Contract;
 use Symfony\AI\Platform\Contract\Normalizer\Message\MessageBagNormalizer;
 use Symfony\AI\Platform\Message\Content\Document;
-use Symfony\AI\Platform\Message\Content\File;
 
 #[Medium]
 #[CoversClass(DocumentNormalizer::class)]
@@ -34,9 +33,6 @@ final class DocumentNormalizerTest extends TestCase
         $this->assertTrue($normalizer->supportsNormalization(new Document('some content', 'application/pdf'), context: [
             Contract::CONTEXT_MODEL => new Gpt(),
         ]));
-        $this->assertTrue($normalizer->supportsNormalization(new File('some content', 'application/pdf'), context: [
-            Contract::CONTEXT_MODEL => new Gpt(),
-        ]));
         $this->assertFalse($normalizer->supportsNormalization('not a document'));
     }
 
@@ -45,18 +41,18 @@ final class DocumentNormalizerTest extends TestCase
         $normalizer = new DocumentNormalizer();
 
         $expected = [
-            File::class => true,
+            Document::class => true,
         ];
 
         $this->assertSame($expected, $normalizer->getSupportedTypes(null));
     }
 
     #[DataProvider('normalizeDataProvider')]
-    public function testNormalize(File $file, array $expected)
+    public function testNormalize(Document $document, array $expected)
     {
         $normalizer = new DocumentNormalizer();
 
-        $normalized = $normalizer->normalize($file);
+        $normalized = $normalizer->normalize($document);
 
         $this->assertEquals($expected, $normalized);
     }
@@ -64,7 +60,7 @@ final class DocumentNormalizerTest extends TestCase
     public static function normalizeDataProvider(): iterable
     {
         yield 'document from file' => [
-            File::fromFile(\dirname(__DIR__, 6).'/fixtures/document.pdf'),
+            Document::fromFile(\dirname(__DIR__, 6).'/fixtures/document.pdf'),
             [
                 'type' => 'file',
                 'file' => [
