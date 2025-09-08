@@ -14,8 +14,10 @@ namespace Symfony\AI\Platform\Contract\JsonSchema;
 use Symfony\AI\Platform\Contract\JsonSchema\Attribute\With;
 use Symfony\AI\Platform\Exception\InvalidArgumentException;
 use Symfony\Component\TypeInfo\Type;
+use Symfony\Component\TypeInfo\Type\BackedEnumType;
 use Symfony\Component\TypeInfo\Type\BuiltinType;
 use Symfony\Component\TypeInfo\Type\CollectionType;
+use Symfony\Component\TypeInfo\Type\NullableType;
 use Symfony\Component\TypeInfo\Type\ObjectType;
 use Symfony\Component\TypeInfo\TypeIdentifier;
 use Symfony\Component\TypeInfo\TypeResolver\TypeResolver;
@@ -51,6 +53,7 @@ use Symfony\Component\TypeInfo\TypeResolver\TypeResolver;
  * }
  *
  * @author Christopher Hertel <mail@christopher-hertel.de>
+ * @author Oskar Stark <oskarstark@googlemail.com>
  */
 final readonly class Factory
 {
@@ -135,6 +138,19 @@ final readonly class Factory
      */
     private function getTypeSchema(Type $type): array
     {
+        // Handle BackedEnumType directly
+        if ($type instanceof BackedEnumType) {
+            return $this->buildEnumSchema($type->getClassName());
+        }
+
+        // Handle NullableType that wraps a BackedEnumType
+        if ($type instanceof NullableType) {
+            $wrappedType = $type->getWrappedType();
+            if ($wrappedType instanceof BackedEnumType) {
+                return $this->buildEnumSchema($wrappedType->getClassName());
+            }
+        }
+
         switch (true) {
             case $type->isIdentifiedBy(TypeIdentifier::INT):
                 return ['type' => 'integer'];
@@ -168,11 +184,14 @@ final readonly class Factory
                     throw new InvalidArgumentException('Cannot build schema from plain object type.');
                 }
                 \assert($type instanceof ObjectType);
-                if (\in_array($type->getClassName(), ['DateTime', 'DateTimeImmutable', 'DateTimeInterface'], true)) {
+
+                $className = $type->getClassName();
+
+                if (\in_array($className, ['DateTime', 'DateTimeImmutable', 'DateTimeInterface'], true)) {
                     return ['type' => 'string', 'format' => 'date-time'];
                 } else {
                     // Recursively build the schema for an object type
-                    return $this->buildProperties($type->getClassName()) ?? ['type' => 'object'];
+                    return $this->buildProperties($className) ?? ['type' => 'object'];
                 }
 
                 // no break
@@ -181,5 +200,37 @@ final readonly class Factory
                 // Fallback to string for any unhandled types
                 return ['type' => 'string'];
         }
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function buildEnumSchema(string $enumClassName): array
+    {
+        $reflection = new \ReflectionEnum($enumClassName);
+
+        if (!$reflection->isBacked()) {
+            throw new InvalidArgumentException(\sprintf('Enum "%s" is not backed.', $enumClassName));
+        }
+
+        $cases = $reflection->getCases();
+        $values = [];
+        $backingType = $reflection->getBackingType();
+
+        foreach ($cases as $case) {
+            $values[] = $case->getBackingValue();
+        }
+
+        if (null === $backingType) {
+            throw new InvalidArgumentException(\sprintf('Backed enum "%s" has no backing type.', $enumClassName));
+        }
+
+        $typeName = $backingType->getName();
+        $jsonType = 'string' === $typeName ? 'string' : ('int' === $typeName ? 'integer' : 'string');
+
+        return [
+            'type' => $jsonType,
+            'enum' => $values,
+        ];
     }
 }

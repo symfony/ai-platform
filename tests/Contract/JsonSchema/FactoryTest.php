@@ -21,6 +21,7 @@ use Symfony\AI\Fixtures\StructuredOutput\User;
 use Symfony\AI\Fixtures\Tool\ToolNoParams;
 use Symfony\AI\Fixtures\Tool\ToolOptionalParam;
 use Symfony\AI\Fixtures\Tool\ToolRequiredParams;
+use Symfony\AI\Fixtures\Tool\ToolWithBackedEnums;
 use Symfony\AI\Fixtures\Tool\ToolWithToolParameterAttribute;
 use Symfony\AI\Platform\Contract\JsonSchema\Attribute\With;
 use Symfony\AI\Platform\Contract\JsonSchema\DescriptionParser;
@@ -262,6 +263,40 @@ final class FactoryTest extends TestCase
         ];
 
         $actual = $this->factory->buildProperties(ExampleDto::class);
+
+        $this->assertSame($expected, $actual);
+    }
+
+    public function testBuildParametersWithBackedEnums()
+    {
+        $actual = $this->factory->buildParameters(ToolWithBackedEnums::class, '__invoke');
+        $expected = [
+            'type' => 'object',
+            'properties' => [
+                'searchTerms' => [
+                    'type' => 'array',
+                    'items' => ['type' => 'string'],
+                    'description' => 'The search terms',
+                ],
+                'mode' => [
+                    'type' => 'string',
+                    'enum' => ['and', 'or', 'not'],
+                    'description' => 'The search mode',
+                ],
+                'priority' => [
+                    'type' => 'integer',
+                    'enum' => [1, 5, 10],
+                    'description' => 'The search priority',
+                ],
+                'fallback' => [
+                    'type' => ['string', 'null'],
+                    'enum' => ['and', 'or', 'not'],
+                    'description' => 'Optional fallback mode',
+                ],
+            ],
+            'required' => ['searchTerms', 'mode', 'priority'],
+            'additionalProperties' => false,
+        ];
 
         $this->assertSame($expected, $actual);
     }
