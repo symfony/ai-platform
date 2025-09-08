@@ -15,7 +15,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Medium;
 use PHPUnit\Framework\TestCase;
-use Symfony\AI\Platform\Bridge\OpenAi\Contract\FileNormalizer;
+use Symfony\AI\Platform\Bridge\OpenAi\Contract\DocumentNormalizer;
 use Symfony\AI\Platform\Bridge\OpenAi\Gpt;
 use Symfony\AI\Platform\Contract;
 use Symfony\AI\Platform\Contract\Normalizer\Message\MessageBagNormalizer;
@@ -23,13 +23,13 @@ use Symfony\AI\Platform\Message\Content\Document;
 use Symfony\AI\Platform\Message\Content\File;
 
 #[Medium]
-#[CoversClass(FileNormalizer::class)]
+#[CoversClass(DocumentNormalizer::class)]
 #[CoversClass(MessageBagNormalizer::class)]
 final class DocumentNormalizerTest extends TestCase
 {
     public function testSupportsNormalization()
     {
-        $normalizer = new FileNormalizer();
+        $normalizer = new DocumentNormalizer();
 
         $this->assertTrue($normalizer->supportsNormalization(new Document('some content', 'application/pdf'), context: [
             Contract::CONTEXT_MODEL => new Gpt(),
@@ -42,7 +42,7 @@ final class DocumentNormalizerTest extends TestCase
 
     public function testGetSupportedTypes()
     {
-        $normalizer = new FileNormalizer();
+        $normalizer = new DocumentNormalizer();
 
         $expected = [
             File::class => true,
@@ -54,7 +54,7 @@ final class DocumentNormalizerTest extends TestCase
     #[DataProvider('normalizeDataProvider')]
     public function testNormalize(File $file, array $expected)
     {
-        $normalizer = new FileNormalizer();
+        $normalizer = new DocumentNormalizer();
 
         $normalized = $normalizer->normalize($file);
 
