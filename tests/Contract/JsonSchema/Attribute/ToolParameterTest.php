@@ -26,11 +26,11 @@ final class ToolParameterTest extends TestCase
         $this->assertSame($enum, $toolParameter->enum);
     }
 
-    public function testInvalidEnumContainsNonString()
+    public function testInvalidEnumContainsInvalidType()
     {
         $this->expectException(InvalidArgumentException::class);
-        $enum = ['value1', 2];
-        new With(enum: $enum);
+        $enum = ['value1', new \stdClass()];
+        new With(enum: $enum); /* @phpstan-ignore-line argument.type */
     }
 
     public function testValidConstString()

@@ -20,8 +20,8 @@ use Symfony\AI\Platform\Exception\InvalidArgumentException;
 final readonly class With
 {
     /**
-     * @param list<int|string>|null    $enum
-     * @param string|int|string[]|null $const
+     * @param list<int|float|string|null>|null $enum
+     * @param string|int|string[]|null         $const
      */
     public function __construct(
         // can be used by many types
@@ -53,8 +53,9 @@ final readonly class With
         public ?bool $dependentRequired = null,
     ) {
         if (\is_array($enum)) {
-            if (array_filter($enum, fn ($item) => \is_string($item)) !== $enum) {
-                throw new InvalidArgumentException('All enum values must be strings.');
+            /* @phpstan-ignore-next-line function.alreadyNarrowedType */
+            if (array_filter($enum, fn (mixed $item) => null === $item || \is_int($item) || \is_float($item) || \is_string($item)) !== $enum) {
+                throw new InvalidArgumentException('All enum values must be float, integer, strings, or null.');
             }
         }
 

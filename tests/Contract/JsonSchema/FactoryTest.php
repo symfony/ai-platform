@@ -14,6 +14,7 @@ namespace Symfony\AI\Platform\Tests\Contract\JsonSchema;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
+use Symfony\AI\Fixtures\StructuredOutput\ExampleDto;
 use Symfony\AI\Fixtures\StructuredOutput\MathReasoning;
 use Symfony\AI\Fixtures\StructuredOutput\Step;
 use Symfony\AI\Fixtures\StructuredOutput\User;
@@ -237,6 +238,30 @@ final class FactoryTest extends TestCase
         ];
 
         $actual = $this->factory->buildProperties(Step::class);
+
+        $this->assertSame($expected, $actual);
+    }
+
+    public function testBuildPropertiesForExampleDto()
+    {
+        $expected = [
+            'type' => 'object',
+            'properties' => [
+                'name' => ['type' => 'string'],
+                'taxRate' => [
+                    'type' => 'integer',
+                    'enum' => [7, 19],
+                ],
+                'category' => [
+                    'type' => ['string', 'null'],
+                    'enum' => ['Foo', 'Bar', null],
+                ],
+            ],
+            'required' => ['name', 'taxRate'],
+            'additionalProperties' => false,
+        ];
+
+        $actual = $this->factory->buildProperties(ExampleDto::class);
 
         $this->assertSame($expected, $actual);
     }
