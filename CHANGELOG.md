@@ -24,6 +24,7 @@ CHANGELOG
    - Cerebras (language models like Llama 4, Qwen 3, and more)
    - Perplexity (Sonar models, supporting search results)
    - AI/ML API (language models and embeddings)
+   - Docker Model Runner (local model hosting)
  * Add comprehensive message system with role-based messaging:
    - `UserMessage` for user inputs with multi-modal content
    - `SystemMessage` for system instructions
