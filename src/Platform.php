@@ -11,6 +11,8 @@
 
 namespace Symfony\AI\Platform;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Symfony\AI\Platform\Event\InvocationEvent;
 use Symfony\AI\Platform\Exception\RuntimeException;
 use Symfony\AI\Platform\ModelCatalog\ModelCatalogInterface;
 use Symfony\AI\Platform\Result\DeferredResult;
@@ -38,8 +40,9 @@ final class Platform implements PlatformInterface
     public function __construct(
         iterable $modelClients,
         iterable $resultConverters,
-        private ModelCatalogInterface $modelCatalog,
+        private readonly ModelCatalogInterface $modelCatalog,
         private ?Contract $contract = null,
+        private readonly ?EventDispatcherInterface $eventDispatcher = null,
     ) {
         $this->contract = $contract ?? Contract::create();
         $this->modelClients = $modelClients instanceof \Traversable ? iterator_to_array($modelClients) : $modelClients;
@@ -49,8 +52,12 @@ final class Platform implements PlatformInterface
     public function invoke(string $model, array|string|object $input, array $options = []): DeferredResult
     {
         $model = $this->modelCatalog->getModel($model);
-        $payload = $this->contract->createRequestPayload($model, $input);
-        $options = array_merge($model->getOptions(), $options);
+
+        $event = new InvocationEvent($model, $input, $options);
+        $this->eventDispatcher?->dispatch($event);
+
+        $payload = $this->contract->createRequestPayload($event->getModel(), $event->getInput());
+        $options = array_merge($model->getOptions(), $event->getOptions());
 
         if (isset($options['tools'])) {
             $options['tools'] = $this->contract->createToolOption($options['tools'], $model);

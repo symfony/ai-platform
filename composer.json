@@ -48,6 +48,7 @@
         "phpstan/phpdoc-parser": "^2.1",
         "psr/log": "^3.0",
         "symfony/clock": "^7.3|^8.0",
+        "symfony/event-dispatcher": "^7.3|^8.0",
         "symfony/http-client": "^7.3|^8.0",
         "symfony/property-access": "^7.3|^8.0",
         "symfony/property-info": "^7.3|^8.0",
@@ -66,7 +67,6 @@
         "symfony/ai-agent": "@dev",
         "symfony/console": "^7.3|^8.0",
         "symfony/dotenv": "^7.3|^8.0",
-        "symfony/event-dispatcher": "^7.3|^8.0",
         "symfony/finder": "^7.3|^8.0",
         "symfony/process": "^7.3|^8.0",
         "symfony/var-dumper": "^7.3|^8.0"
