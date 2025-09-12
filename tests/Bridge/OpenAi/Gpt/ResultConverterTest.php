@@ -163,7 +163,7 @@ class ResultConverterTest extends TestCase
         $httpResponse->method('getStatusCode')->willReturn(401);
         $httpResponse->method('getContent')->willReturn(json_encode([
             'error' => [
-                'message' => 'Invalid API key provided: sk-invalid'
+                'message' => 'Invalid API key provided: sk-invalid',
             ],
         ]));
 
