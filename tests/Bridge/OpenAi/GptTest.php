@@ -25,7 +25,7 @@ final class GptTest extends TestCase
 {
     public function testItCreatesGptWithDefaultSettings()
     {
-        $gpt = new Gpt();
+        $gpt = new Gpt(Gpt::GPT_4O);
 
         $this->assertSame(Gpt::GPT_4O, $gpt->getName());
         $this->assertSame([], $gpt->getOptions());
