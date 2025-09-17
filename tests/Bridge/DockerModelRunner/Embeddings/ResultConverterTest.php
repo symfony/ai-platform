@@ -13,10 +13,12 @@ namespace Symfony\AI\Platform\Tests\Bridge\DockerModelRunner\Embeddings;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Small;
+use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\DockerModelRunner\Embeddings;
 use Symfony\AI\Platform\Bridge\DockerModelRunner\Embeddings\ResultConverter;
+use Symfony\AI\Platform\Exception\ModelNotFoundException;
 use Symfony\AI\Platform\Exception\RuntimeException;
 use Symfony\AI\Platform\Result\RawHttpResult;
 use Symfony\AI\Platform\Result\VectorResult;
@@ -85,5 +87,44 @@ class ResultConverterTest extends TestCase
         $converter = new ResultConverter();
 
         $this->assertTrue($converter->supports(new Embeddings('test-model')));
+    }
+
+    #[TestWith(['Model not found'])]
+    #[TestWith(['MODEL NOT FOUND'])]
+    public function testItThrowsModelNotFoundExceptionWhen404WithModelNotFoundMessage(string $message)
+    {
+        $response = $this->createMock(ResponseInterface::class);
+        $response
+            ->method('getStatusCode')
+            ->willReturn(404);
+        $response
+            ->method('getContent')
+            ->with(false)
+            ->willReturn($message);
+
+        $this->expectException(ModelNotFoundException::class);
+        $this->expectExceptionMessage($message);
+
+        (new ResultConverter())->convert(new RawHttpResult($response));
+    }
+
+    public function testItDoesNotThrowModelNotFoundExceptionWhen404WithoutModelNotFoundMessage()
+    {
+        $response = $this->createMock(ResponseInterface::class);
+        $response
+            ->method('getStatusCode')
+            ->willReturn(404);
+        $response
+            ->method('getContent')
+            ->with(false)
+            ->willReturn('Not found');
+        $response
+            ->method('toArray')
+            ->willReturn(['error' => 'some other error']);
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Response does not contain data.');
+
+        (new ResultConverter())->convert(new RawHttpResult($response));
     }
 }
