@@ -11,10 +11,7 @@
 
 namespace Symfony\AI\Platform\Tests\Bridge\VertexAi\Contract;
 
-use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\VertexAi\Contract\UserMessageNormalizer;
 use Symfony\AI\Platform\Bridge\VertexAi\Gemini\Model;
@@ -26,15 +23,6 @@ use Symfony\AI\Platform\Message\Content\Image;
 use Symfony\AI\Platform\Message\Content\Text;
 use Symfony\AI\Platform\Message\UserMessage;
 
-#[Small]
-#[CoversClass(UserMessageNormalizer::class)]
-#[UsesClass(Model::class)]
-#[UsesClass(UserMessage::class)]
-#[UsesClass(Text::class)]
-#[UsesClass(File::class)]
-#[UsesClass(Image::class)]
-#[UsesClass(Document::class)]
-#[UsesClass(Audio::class)]
 final class UserMessageNormalizerTest extends TestCase
 {
     public function testSupportsNormalization()

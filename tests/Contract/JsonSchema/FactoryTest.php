@@ -11,8 +11,6 @@
 
 namespace Symfony\AI\Platform\Tests\Contract\JsonSchema;
 
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Fixtures\StructuredOutput\ExampleDto;
 use Symfony\AI\Fixtures\StructuredOutput\MathReasoning;
@@ -25,13 +23,8 @@ use Symfony\AI\Fixtures\Tool\ToolOptionalParam;
 use Symfony\AI\Fixtures\Tool\ToolRequiredParams;
 use Symfony\AI\Fixtures\Tool\ToolWithBackedEnums;
 use Symfony\AI\Fixtures\Tool\ToolWithToolParameterAttribute;
-use Symfony\AI\Platform\Contract\JsonSchema\Attribute\With;
-use Symfony\AI\Platform\Contract\JsonSchema\DescriptionParser;
 use Symfony\AI\Platform\Contract\JsonSchema\Factory;
 
-#[CoversClass(Factory::class)]
-#[UsesClass(With::class)]
-#[UsesClass(DescriptionParser::class)]
 final class FactoryTest extends TestCase
 {
     private Factory $factory;

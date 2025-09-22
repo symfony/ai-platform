@@ -11,8 +11,6 @@
 
 namespace Symfony\AI\Platform\Tests\Bridge\HuggingFace\Output;
 
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
@@ -21,8 +19,6 @@ use Symfony\AI\Platform\Bridge\HuggingFace\Output\DetectedObject;
 /**
  * @author Oskar Stark <oskar.stark@gmail.com>
  */
-#[CoversClass(DetectedObject::class)]
-#[Small]
 final class DetectedObjectTest extends TestCase
 {
     #[TestDox('Construction with all parameters creates valid instance')]

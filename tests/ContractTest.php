@@ -11,25 +11,13 @@
 
 namespace Symfony\AI\Platform\Tests;
 
-use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Large;
-use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\OpenAi\Embeddings;
 use Symfony\AI\Platform\Bridge\OpenAi\Gpt;
 use Symfony\AI\Platform\Bridge\OpenAi\Whisper;
 use Symfony\AI\Platform\Bridge\OpenAi\Whisper\AudioNormalizer;
 use Symfony\AI\Platform\Contract;
-use Symfony\AI\Platform\Contract\Normalizer\Message\AssistantMessageNormalizer;
-use Symfony\AI\Platform\Contract\Normalizer\Message\Content\ImageNormalizer;
-use Symfony\AI\Platform\Contract\Normalizer\Message\Content\ImageUrlNormalizer;
-use Symfony\AI\Platform\Contract\Normalizer\Message\Content\TextNormalizer;
-use Symfony\AI\Platform\Contract\Normalizer\Message\MessageBagNormalizer;
-use Symfony\AI\Platform\Contract\Normalizer\Message\SystemMessageNormalizer;
-use Symfony\AI\Platform\Contract\Normalizer\Message\ToolCallMessageNormalizer;
-use Symfony\AI\Platform\Contract\Normalizer\Message\UserMessageNormalizer;
-use Symfony\AI\Platform\Contract\Normalizer\Result\ToolCallNormalizer;
 use Symfony\AI\Platform\Message\AssistantMessage;
 use Symfony\AI\Platform\Message\Content\Audio;
 use Symfony\AI\Platform\Message\Content\Image;
@@ -38,30 +26,11 @@ use Symfony\AI\Platform\Message\Message;
 use Symfony\AI\Platform\Message\MessageBag;
 use Symfony\AI\Platform\Message\MessageInterface;
 use Symfony\AI\Platform\Message\Role;
-use Symfony\AI\Platform\Message\SystemMessage;
-use Symfony\AI\Platform\Message\UserMessage;
 use Symfony\AI\Platform\Model;
 use Symfony\Component\Uid\AbstractUid;
 use Symfony\Component\Uid\TimeBasedUidInterface;
 use Symfony\Component\Uid\Uuid;
 
-#[Large]
-#[CoversClass(Contract::class)]
-#[CoversClass(AssistantMessageNormalizer::class)]
-#[CoversClass(AudioNormalizer::class)]
-#[CoversClass(ImageNormalizer::class)]
-#[CoversClass(ImageUrlNormalizer::class)]
-#[CoversClass(TextNormalizer::class)]
-#[CoversClass(MessageBagNormalizer::class)]
-#[CoversClass(SystemMessageNormalizer::class)]
-#[CoversClass(ToolCallMessageNormalizer::class)]
-#[CoversClass(UserMessageNormalizer::class)]
-#[CoversClass(ToolCallNormalizer::class)]
-#[UsesClass(AssistantMessage::class)]
-#[UsesClass(MessageBag::class)]
-#[UsesClass(SystemMessage::class)]
-#[UsesClass(UserMessage::class)]
-#[UsesClass(Model::class)]
 final class ContractTest extends TestCase
 {
     #[DataProvider('providePayloadTestCases')]

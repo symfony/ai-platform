@@ -13,10 +13,7 @@ namespace Symfony\AI\Platform\Tests\Bridge\Bedrock\Meta;
 
 use AsyncAws\BedrockRuntime\Result\InvokeModelResponse;
 use AsyncAws\Core\Test\ResultMockFactory;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\TestDox;
-use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\Bedrock\Meta\LlamaResultConverter;
 use Symfony\AI\Platform\Bridge\Bedrock\RawBedrockResult;
@@ -27,10 +24,6 @@ use Symfony\AI\Platform\Result\TextResult;
 /**
  * @author Oskar Stark <oskarstark@googlemail.com>
  */
-#[CoversClass(LlamaResultConverter::class)]
-#[Small]
-#[UsesClass(RawBedrockResult::class)]
-#[UsesClass(TextResult::class)]
 final class LlamaResultConverterTest extends TestCase
 {
     #[TestDox('Supports Llama model')]

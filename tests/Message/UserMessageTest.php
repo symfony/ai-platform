@@ -11,9 +11,6 @@
 
 namespace Symfony\AI\Platform\Tests\Message;
 
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Message\Content\Audio;
 use Symfony\AI\Platform\Message\Content\ImageUrl;
@@ -25,12 +22,6 @@ use Symfony\Component\Uid\AbstractUid;
 use Symfony\Component\Uid\TimeBasedUidInterface;
 use Symfony\Component\Uid\UuidV7;
 
-#[CoversClass(UserMessage::class)]
-#[UsesClass(Text::class)]
-#[UsesClass(Audio::class)]
-#[UsesClass(ImageUrl::class)]
-#[UsesClass(Role::class)]
-#[Small]
 final class UserMessageTest extends TestCase
 {
     use UuidAssertionTrait;

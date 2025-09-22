@@ -11,10 +11,7 @@
 
 namespace Symfony\AI\Platform\Tests\Bridge\HuggingFace;
 
-use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\HuggingFace\Contract\FileNormalizer;
 use Symfony\AI\Platform\Bridge\HuggingFace\Contract\MessageBagNormalizer;
@@ -28,9 +25,6 @@ use Symfony\AI\Platform\Model;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
 
-#[CoversClass(ModelClient::class)]
-#[Small]
-#[UsesClass(Model::class)]
 final class ModelClientTest extends TestCase
 {
     #[DataProvider('urlTestCases')]

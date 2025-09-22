@@ -11,9 +11,7 @@
 
 namespace Symfony\AI\Platform\Tests\Bridge\Albert;
 
-use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\Albert\EmbeddingsModelClient;
 use Symfony\AI\Platform\Bridge\OpenAi\Embeddings;
@@ -21,8 +19,6 @@ use Symfony\AI\Platform\Bridge\OpenAi\Gpt;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\JsonMockResponse;
 
-#[CoversClass(EmbeddingsModelClient::class)]
-#[Small]
 final class EmbeddingsModelClientTest extends TestCase
 {
     public function testSupportsEmbeddingsModel()

@@ -11,8 +11,6 @@
 
 namespace Symfony\AI\Platform\Tests\Bridge\ElevenLabs;
 
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\ElevenLabs\Contract\AudioNormalizer;
 use Symfony\AI\Platform\Bridge\ElevenLabs\ElevenLabs;
@@ -25,12 +23,6 @@ use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\JsonMockResponse;
 use Symfony\Component\HttpClient\Response\MockResponse;
 
-#[CoversClass(ElevenLabsClient::class)]
-#[UsesClass(ElevenLabs::class)]
-#[UsesClass(Model::class)]
-#[UsesClass(Audio::class)]
-#[UsesClass(AudioNormalizer::class)]
-#[UsesClass(RawHttpResult::class)]
 final class ElevenLabsClientTest extends TestCase
 {
     public function testSupportsModel()

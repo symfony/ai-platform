@@ -11,10 +11,7 @@
 
 namespace Symfony\AI\Platform\Tests\Bridge\OpenAi\Embeddings;
 
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\TestWith;
-use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\OpenAi\Embeddings;
 use Symfony\AI\Platform\Bridge\OpenAi\Embeddings\ModelClient;
@@ -26,9 +23,6 @@ use Symfony\Contracts\HttpClient\ResponseInterface as HttpResponse;
 /**
  * @author Oskar Stark <oskarstark@googlemail.com>
  */
-#[CoversClass(ModelClient::class)]
-#[UsesClass(Embeddings::class)]
-#[Small]
 final class ModelClientTest extends TestCase
 {
     public function testItThrowsExceptionWhenApiKeyIsEmpty()

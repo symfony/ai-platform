@@ -11,27 +11,18 @@
 
 namespace Symfony\AI\Platform\Tests\Bridge\Voyage;
 
-use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\Voyage\ResultConverter;
 use Symfony\AI\Platform\Bridge\Voyage\Voyage;
 use Symfony\AI\Platform\Exception\RuntimeException;
 use Symfony\AI\Platform\Result\RawHttpResult;
 use Symfony\AI\Platform\Result\VectorResult;
-use Symfony\AI\Platform\Vector\Vector;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
 /**
  * @author Oskar Stark <oskarstark@googlemail.com>
  */
-#[CoversClass(ResultConverter::class)]
-#[Small]
-#[UsesClass(Vector::class)]
-#[UsesClass(VectorResult::class)]
-#[UsesClass(Voyage::class)]
 class ResultConverterTest extends TestCase
 {
     public function testItConvertsAResponseToAVectorResult()

@@ -11,8 +11,6 @@
 
 namespace Symfony\AI\Platform\Tests\Bridge\Azure\OpenAi;
 
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\Azure\OpenAi\WhisperModelClient;
@@ -22,8 +20,6 @@ use Symfony\AI\Platform\Exception\InvalidArgumentException;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
 
-#[CoversClass(WhisperModelClient::class)]
-#[Small]
 final class WhisperModelClientTest extends TestCase
 {
     #[TestWith(['http://test.azure.com', 'The base URL must not contain the protocol.'])]

@@ -11,8 +11,6 @@
 
 namespace Symfony\AI\Platform\Tests\Bridge\HuggingFace\Output;
 
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
@@ -22,8 +20,6 @@ use Symfony\AI\Platform\Bridge\HuggingFace\Output\TokenClassificationResult;
 /**
  * @author Oskar Stark <oskar.stark@gmail.com>
  */
-#[CoversClass(TokenClassificationResult::class)]
-#[Small]
 final class TokenClassificationResultTest extends TestCase
 {
     #[TestDox('Construction with tokens array creates valid instance')]

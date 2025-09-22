@@ -11,11 +11,8 @@
 
 namespace Symfony\AI\Platform\Tests\Bridge\HuggingFace;
 
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\Attributes\TestWith;
-use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\HuggingFace\ResultConverter;
 use Symfony\AI\Platform\Bridge\HuggingFace\Task;
@@ -27,7 +24,6 @@ use Symfony\AI\Platform\Result\ObjectResult;
 use Symfony\AI\Platform\Result\RawHttpResult;
 use Symfony\AI\Platform\Result\TextResult;
 use Symfony\AI\Platform\Result\VectorResult;
-use Symfony\AI\Platform\Vector\Vector;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\JsonMockResponse;
 use Symfony\Component\HttpClient\Response\MockResponse;
@@ -35,15 +31,6 @@ use Symfony\Component\HttpClient\Response\MockResponse;
 /**
  * @author Oskar Stark <oskarstark@googlemail.com>
  */
-#[CoversClass(ResultConverter::class)]
-#[Small]
-#[UsesClass(Model::class)]
-#[UsesClass(RawHttpResult::class)]
-#[UsesClass(TextResult::class)]
-#[UsesClass(ObjectResult::class)]
-#[UsesClass(BinaryResult::class)]
-#[UsesClass(VectorResult::class)]
-#[UsesClass(Vector::class)]
 final class ResultConverterTest extends TestCase
 {
     #[TestDox('Supports conversion for all models')]

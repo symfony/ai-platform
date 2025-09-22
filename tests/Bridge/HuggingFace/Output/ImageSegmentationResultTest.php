@@ -11,8 +11,6 @@
 
 namespace Symfony\AI\Platform\Tests\Bridge\HuggingFace\Output;
 
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\HuggingFace\Output\ImageSegment;
@@ -21,8 +19,6 @@ use Symfony\AI\Platform\Bridge\HuggingFace\Output\ImageSegmentationResult;
 /**
  * @author Oskar Stark <oskar.stark@gmail.com>
  */
-#[CoversClass(ImageSegmentationResult::class)]
-#[Small]
 final class ImageSegmentationResultTest extends TestCase
 {
     #[TestDox('Construction with segments array creates valid instance')]

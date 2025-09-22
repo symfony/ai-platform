@@ -11,8 +11,6 @@
 
 namespace Symfony\AI\Platform\Tests\Contract\Normalizer\Message;
 
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\OpenAi\Gpt;
 use Symfony\AI\Platform\Contract;
@@ -21,16 +19,8 @@ use Symfony\AI\Platform\Message\Content\Text;
 use Symfony\AI\Platform\Message\MessageBag;
 use Symfony\AI\Platform\Message\SystemMessage;
 use Symfony\AI\Platform\Message\UserMessage;
-use Symfony\AI\Platform\Model;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-#[CoversClass(MessageBagNormalizer::class)]
-#[UsesClass(MessageBag::class)]
-#[UsesClass(SystemMessage::class)]
-#[UsesClass(UserMessage::class)]
-#[UsesClass(Text::class)]
-#[UsesClass(Gpt::class)]
-#[UsesClass(Model::class)]
 final class MessageBagNormalizerTest extends TestCase
 {
     private MessageBagNormalizer $normalizer;

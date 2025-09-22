@@ -11,14 +11,12 @@
 
 namespace Symfony\AI\Platform\Bridge\Anthropic\Tests;
 
-use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\Anthropic\Claude;
 use Symfony\AI\Platform\Bridge\Anthropic\ModelClient;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\JsonMockResponse;
 
-#[CoversClass(ModelClient::class)]
 class ModelClientTest extends TestCase
 {
     private MockHttpClient $httpClient;

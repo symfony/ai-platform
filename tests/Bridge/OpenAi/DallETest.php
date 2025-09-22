@@ -11,13 +11,9 @@
 
 namespace Symfony\AI\Platform\Tests\Bridge\OpenAi;
 
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\OpenAi\DallE;
 
-#[CoversClass(DallE::class)]
-#[Small]
 final class DallETest extends TestCase
 {
     public function testItCreatesDallEWithDefaultSettings()

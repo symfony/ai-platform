@@ -11,17 +11,13 @@
 
 namespace Symfony\AI\Platform\Tests\Bridge\Mistral\Contract;
 
-use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Medium;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\Mistral\Contract\DocumentNormalizer;
 use Symfony\AI\Platform\Bridge\Mistral\Mistral;
 use Symfony\AI\Platform\Contract;
 use Symfony\AI\Platform\Message\Content\Document;
 
-#[Medium]
-#[CoversClass(DocumentNormalizer::class)]
 final class DocumentNormalizerTest extends TestCase
 {
     public function testSupportsNormalization()

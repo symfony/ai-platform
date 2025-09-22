@@ -13,28 +13,18 @@ namespace Symfony\AI\Platform\Tests\Bridge\Bedrock\Anthropic;
 
 use AsyncAws\BedrockRuntime\Result\InvokeModelResponse;
 use AsyncAws\Core\Test\ResultMockFactory;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\TestDox;
-use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\Anthropic\Claude;
 use Symfony\AI\Platform\Bridge\Bedrock\Anthropic\ClaudeResultConverter;
 use Symfony\AI\Platform\Bridge\Bedrock\RawBedrockResult;
 use Symfony\AI\Platform\Exception\RuntimeException;
 use Symfony\AI\Platform\Result\TextResult;
-use Symfony\AI\Platform\Result\ToolCall;
 use Symfony\AI\Platform\Result\ToolCallResult;
 
 /**
  * @author Oskar Stark <oskarstark@googlemail.com>
  */
-#[CoversClass(ClaudeResultConverter::class)]
-#[Small]
-#[UsesClass(RawBedrockResult::class)]
-#[UsesClass(TextResult::class)]
-#[UsesClass(ToolCall::class)]
-#[UsesClass(ToolCallResult::class)]
 final class ClaudeResultConverterTest extends TestCase
 {
     #[TestDox('Supports Claude model')]

@@ -11,19 +11,13 @@
 
 namespace Symfony\AI\Platform\Tests\Bridge\Perplexity\Contract;
 
-use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Medium;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\Perplexity\Contract\FileUrlNormalizer;
 use Symfony\AI\Platform\Bridge\Perplexity\Perplexity;
 use Symfony\AI\Platform\Contract;
-use Symfony\AI\Platform\Contract\Normalizer\Message\MessageBagNormalizer;
 use Symfony\AI\Platform\Message\Content\DocumentUrl;
 
-#[Medium]
-#[CoversClass(FileUrlNormalizer::class)]
-#[CoversClass(MessageBagNormalizer::class)]
 final class FileUrlNormalizerTest extends TestCase
 {
     public function testSupportsNormalization()

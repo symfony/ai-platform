@@ -11,16 +11,12 @@
 
 namespace Symfony\AI\Platform\Tests\Bridge\Perplexity;
 
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\Perplexity\Perplexity;
 
 /**
  * @author Mathieu Santostefano <msantostefano@proton.me>
  */
-#[CoversClass(Perplexity::class)]
-#[Small]
 final class PerplexityTest extends TestCase
 {
     public function testItCreatesPerplexityWithDefaultSettings()

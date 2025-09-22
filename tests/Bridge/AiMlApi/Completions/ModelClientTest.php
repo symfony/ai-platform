@@ -11,18 +11,12 @@
 
 namespace Symfony\AI\Platform\Tests\Bridge\AiMlApi\Completions;
 
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\AiMlApi\Completions;
 use Symfony\AI\Platform\Bridge\AiMlApi\Completions\ModelClient;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
 
-#[CoversClass(ModelClient::class)]
-#[UsesClass(Completions::class)]
-#[Small]
 class ModelClientTest extends TestCase
 {
     public function testItIsSupportingTheCorrectModel()

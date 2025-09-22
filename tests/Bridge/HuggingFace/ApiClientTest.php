@@ -11,10 +11,7 @@
 
 namespace Symfony\AI\Platform\Tests\Bridge\HuggingFace;
 
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\TestDox;
-use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\HuggingFace\ApiClient;
 use Symfony\AI\Platform\Model;
@@ -24,9 +21,6 @@ use Symfony\Component\HttpClient\Response\JsonMockResponse;
 /**
  * @author Oskar Stark <oskarstark@googlemail.com>
  */
-#[CoversClass(ApiClient::class)]
-#[Small]
-#[UsesClass(Model::class)]
 final class ApiClientTest extends TestCase
 {
     #[TestDox('Returns array of Model objects when API responds with model data')]

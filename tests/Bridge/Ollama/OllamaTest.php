@@ -11,15 +11,11 @@
 
 namespace Symfony\AI\Platform\Tests\Bridge\Ollama;
 
-use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\Ollama\Ollama;
 use Symfony\AI\Platform\Capability;
 
-#[CoversClass(Ollama::class)]
-#[Small]
 final class OllamaTest extends TestCase
 {
     #[DataProvider('provideModelsWithToolCallingCapability')]
