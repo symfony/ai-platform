@@ -28,7 +28,6 @@ final class ResultConverterTest extends TestCase
 {
     public function testItConvertsAResponseToAVectorResult()
     {
-        // Arrange
         $payload = [
             'content' => ['parts' => [['text' => 'Hello, world!']]],
         ];
@@ -42,10 +41,8 @@ final class ResultConverterTest extends TestCase
 
         $resultConverter = new ResultConverter();
 
-        // Act
         $result = $resultConverter->convert(new RawHttpResult($response));
 
-        // Assert
         $this->assertInstanceOf(TextResult::class, $result);
         $this->assertSame('Hello, world!', $result->getContent());
     }

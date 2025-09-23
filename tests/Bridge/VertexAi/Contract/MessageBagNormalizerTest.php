@@ -66,11 +66,9 @@ final class MessageBagNormalizerTest extends TestCase
     {
         $normalizer = new MessageBagNormalizer();
 
-        // Set up the inner normalizers
         $userMessageNormalizer = new UserMessageNormalizer();
         $assistantMessageNormalizer = new AssistantMessageNormalizer();
 
-        // Mock a normalizer that delegates to the appropriate concrete normalizer
         $mockNormalizer = $this->createMock(NormalizerInterface::class);
         $mockNormalizer->method('normalize')
             ->willReturnCallback(function ($message) use ($userMessageNormalizer, $assistantMessageNormalizer): ?array {

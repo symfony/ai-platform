@@ -168,7 +168,6 @@ final class FillMaskResultTest extends TestCase
 
         $this->assertCount(3, $result->fills);
 
-        // Test edge cases are properly handled
         $this->assertSame(0, $result->fills[0]->token);
         $this->assertSame('', $result->fills[0]->tokenStr);
         $this->assertSame('', $result->fills[0]->sequence);

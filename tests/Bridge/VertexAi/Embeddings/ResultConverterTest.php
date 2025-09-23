@@ -31,7 +31,6 @@ final class ResultConverterTest extends TestCase
 {
     public function testItConvertsAResponseToAVectorResult()
     {
-        // Assert
         $expectedResponse = [
             'predictions' => [
                 ['embeddings' => ['values' => [0.3, 0.4, 0.4]]],

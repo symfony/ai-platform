@@ -32,7 +32,6 @@ final class ModelClientTest extends TestCase
 {
     public function testItGeneratesTheEmbeddingSuccessfully()
     {
-        // Assert
         $expectedResponse = [
             'predictions' => [
                 ['embeddings' => ['values' => [0.3, 0.4, 0.4]]],
@@ -44,10 +43,8 @@ final class ModelClientTest extends TestCase
 
         $model = new Model(Model::GEMINI_EMBEDDING_001, ['outputDimensionality' => 1536, 'task_type' => TaskType::CLASSIFICATION]);
 
-        // Act
         $result = $client->request($model, 'test payload');
 
-        // Assert
         $this->assertSame($expectedResponse, $result->getData());
     }
 }

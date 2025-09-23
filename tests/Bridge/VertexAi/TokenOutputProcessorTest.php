@@ -48,7 +48,6 @@ final class TokenOutputProcessorTest extends TestCase
 
     public function testItAddsUsageTokensToMetadata()
     {
-        // Arrange
         $textResult = new TextResult('test');
 
         $rawResponse = $this->createRawResponse([
@@ -64,10 +63,8 @@ final class TokenOutputProcessorTest extends TestCase
         $processor = new TokenOutputProcessor();
         $output = $this->createOutput($textResult);
 
-        // Act
         $processor->processOutput($output);
 
-        // Assert
         $metadata = $output->result->getMetadata();
         $tokenUsage = $metadata->get('token_usage');
 
@@ -81,7 +78,6 @@ final class TokenOutputProcessorTest extends TestCase
 
     public function testItHandlesMissingUsageFields()
     {
-        // Arrange
         $textResult = new TextResult('test');
 
         $rawResponse = $this->createRawResponse([
@@ -94,10 +90,8 @@ final class TokenOutputProcessorTest extends TestCase
         $processor = new TokenOutputProcessor();
         $output = $this->createOutput($textResult);
 
-        // Act
         $processor->processOutput($output);
 
-        // Assert
         $metadata = $output->result->getMetadata();
         $tokenUsage = $metadata->get('token_usage');
 
@@ -111,17 +105,14 @@ final class TokenOutputProcessorTest extends TestCase
 
     public function testItAddsEmptyTokenUsageWhenUsageMetadataNotPresent()
     {
-        // Arrange
         $textResult = new TextResult('test');
         $rawResponse = $this->createRawResponse(['other' => 'data']);
         $textResult->setRawResult($rawResponse);
         $processor = new TokenOutputProcessor();
         $output = $this->createOutput($textResult);
 
-        // Act
         $processor->processOutput($output);
 
-        // Assert
         $metadata = $output->result->getMetadata();
         $tokenUsage = $metadata->get('token_usage');
 
