@@ -41,7 +41,7 @@ final class ElevenLabsClientTest extends TestCase
             'https://api.elevenlabs.io/v1',
         );
 
-        $this->assertTrue($client->supports(new ElevenLabs()));
+        $this->assertTrue($client->supports(new ElevenLabs(ElevenLabs::ELEVEN_MULTILINGUAL_V2)));
         $this->assertFalse($client->supports(new Model('any-model')));
     }
 
@@ -129,7 +129,7 @@ final class ElevenLabsClientTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The payload must contain a "text" key');
         $this->expectExceptionCode(0);
-        $client->request(new ElevenLabs(options: [
+        $client->request(new ElevenLabs(ElevenLabs::ELEVEN_MULTILINGUAL_V2, [
             'voice' => 'Dslrhjl3ZpzrctukrQSN',
         ]), []);
     }
@@ -154,7 +154,7 @@ final class ElevenLabsClientTest extends TestCase
             'my-api-key',
         );
 
-        $client->request(new ElevenLabs(options: [
+        $client->request(new ElevenLabs(ElevenLabs::ELEVEN_MULTILINGUAL_V2, [
             'voice' => 'Dslrhjl3ZpzrctukrQSN',
         ]), [
             'text' => 'foo',
@@ -183,7 +183,7 @@ final class ElevenLabsClientTest extends TestCase
             'my-api-key',
         );
 
-        $result = $client->request(new ElevenLabs(options: [
+        $result = $client->request(new ElevenLabs(ElevenLabs::ELEVEN_MULTILINGUAL_V2, [
             'voice' => 'Dslrhjl3ZpzrctukrQSN',
             'stream' => true,
         ]), [

@@ -27,7 +27,7 @@ class ModelClientTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->model = new Claude();
+        $this->model = new Claude(Claude::SONNET_37);
     }
 
     public function testAnthropicBetaHeaderIsSetWithSingleBetaFeature()

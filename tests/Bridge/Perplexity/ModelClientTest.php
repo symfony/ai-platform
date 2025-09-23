@@ -81,7 +81,7 @@ final class ModelClientTest extends TestCase
     {
         $modelClient = new ModelClient(new MockHttpClient(), 'pplx-api-key');
 
-        $this->assertTrue($modelClient->supports(new Perplexity()));
+        $this->assertTrue($modelClient->supports(new Perplexity(Perplexity::SONAR)));
     }
 
     public function testItIsExecutingTheCorrectRequest()
@@ -96,7 +96,7 @@ final class ModelClientTest extends TestCase
         };
         $httpClient = new MockHttpClient([$resultCallback]);
         $modelClient = new ModelClient($httpClient, 'pplx-api-key');
-        $modelClient->request(new Perplexity(), ['model' => 'sonar', 'messages' => [['role' => 'user', 'content' => 'test message']]]);
+        $modelClient->request(new Perplexity(Perplexity::SONAR), ['model' => 'sonar', 'messages' => [['role' => 'user', 'content' => 'test message']]]);
     }
 
     public function testItIsExecutingTheCorrectRequestWithArrayPayload()
@@ -111,6 +111,6 @@ final class ModelClientTest extends TestCase
         };
         $httpClient = new MockHttpClient([$resultCallback]);
         $modelClient = new ModelClient($httpClient, 'pplx-api-key');
-        $modelClient->request(new Perplexity(), ['model' => 'sonar', 'messages' => [['role' => 'user', 'content' => 'Hello']]]);
+        $modelClient->request(new Perplexity(Perplexity::SONAR), ['model' => 'sonar', 'messages' => [['role' => 'user', 'content' => 'Hello']]]);
     }
 }

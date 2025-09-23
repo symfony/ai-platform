@@ -25,7 +25,7 @@ final class PerplexityTest extends TestCase
 {
     public function testItCreatesPerplexityWithDefaultSettings()
     {
-        $perplexity = new Perplexity();
+        $perplexity = new Perplexity(Perplexity::SONAR);
 
         $this->assertSame(Perplexity::SONAR, $perplexity->getName());
         $this->assertSame([], $perplexity->getOptions());

@@ -29,7 +29,7 @@ final class DocumentUrlNormalizerTest extends TestCase
         $normalizer = new DocumentUrlNormalizer();
 
         $this->assertTrue($normalizer->supportsNormalization(new DocumentUrl('https://example.com/document.pdf'), context: [
-            Contract::CONTEXT_MODEL => new Mistral(),
+            Contract::CONTEXT_MODEL => new Mistral(Mistral::MISTRAL_LARGE),
         ]));
         $this->assertFalse($normalizer->supportsNormalization('not a document url'));
     }

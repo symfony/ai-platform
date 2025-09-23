@@ -31,7 +31,7 @@ final class FileUrlNormalizerTest extends TestCase
         $normalizer = new FileUrlNormalizer();
 
         $this->assertTrue($normalizer->supportsNormalization(new DocumentUrl(\dirname(__DIR__, 6).'/fixtures/not-a-document.pdf'), context: [
-            Contract::CONTEXT_MODEL => new Perplexity(),
+            Contract::CONTEXT_MODEL => new Perplexity(Perplexity::SONAR),
         ]));
         $this->assertFalse($normalizer->supportsNormalization('not a document'));
     }
