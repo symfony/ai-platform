@@ -374,7 +374,7 @@ This allows fast and isolated testing of AI-powered features without relying on 
 .. _`Amazon's Nova`: https://nova.amazon.com
 .. _`Mistral's Mistral`: https://www.mistral.ai/
 .. _`Albert API`: https://github.com/etalab-ia/albert-api
-.. _`Albert`: https://alliance.numerique.gouv.fr/produit/albert/
+.. _`Albert`: https://alliance.numerique.gouv.fr/produit/produits-interminist%C3%A9rielles/albert-api/
 .. _`Mistral`: https://www.mistral.ai/
 .. _`Gemini Text Embeddings`: https://ai.google.dev/gemini-api/docs/embeddings
 .. _`Vertex AI Gen AI`: https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/inference
