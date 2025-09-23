@@ -11,8 +11,6 @@
 
 namespace Symfony\AI\Platform\Tests\Result;
 
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Result\VectorResult;
 use Symfony\AI\Platform\Vector\Vector;
@@ -20,8 +18,6 @@ use Symfony\AI\Platform\Vector\Vector;
 /**
  * @author Oskar Stark <oskarstark@googlemail.com>
  */
-#[CoversClass(VectorResult::class)]
-#[Small]
 final class VectorResultTest extends TestCase
 {
     public function testGetContentWithSingleVector()

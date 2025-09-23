@@ -11,10 +11,7 @@
 
 namespace Symfony\AI\Platform\Tests\Bridge\Azure\OpenAi;
 
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\TestWith;
-use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\Azure\OpenAi\GptModelClient;
 use Symfony\AI\Platform\Bridge\OpenAi\Gpt;
@@ -22,9 +19,6 @@ use Symfony\AI\Platform\Exception\InvalidArgumentException;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
 
-#[CoversClass(GptModelClient::class)]
-#[UsesClass(Gpt::class)]
-#[Small]
 /**
  * @author Oskar Stark <oskarstark@googlemail.com>
  */

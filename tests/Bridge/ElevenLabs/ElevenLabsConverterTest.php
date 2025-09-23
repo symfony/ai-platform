@@ -11,8 +11,6 @@
 
 namespace Symfony\AI\Platform\Tests\Bridge\ElevenLabs;
 
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\ElevenLabs\ElevenLabs;
 use Symfony\AI\Platform\Bridge\ElevenLabs\ElevenLabsResultConverter;
@@ -22,12 +20,6 @@ use Symfony\AI\Platform\Result\InMemoryRawResult;
 use Symfony\AI\Platform\Result\TextResult;
 use Symfony\Component\HttpClient\MockHttpClient;
 
-#[CoversClass(ElevenLabsResultConverter::class)]
-#[UsesClass(ElevenLabs::class)]
-#[UsesClass(Model::class)]
-#[UsesClass(TextResult::class)]
-#[UsesClass(BinaryResult::class)]
-#[UsesClass(InMemoryRawResult::class)]
 final class ElevenLabsConverterTest extends TestCase
 {
     public function testSupportsModel()

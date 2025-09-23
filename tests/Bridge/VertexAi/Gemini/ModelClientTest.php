@@ -11,18 +11,12 @@
 
 namespace Symfony\AI\Platform\Tests\Bridge\VertexAi\Gemini;
 
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\VertexAi\Gemini\Model;
 use Symfony\AI\Platform\Bridge\VertexAi\Gemini\ModelClient;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\JsonMockResponse;
 
-#[Small]
-#[CoversClass(ModelClient::class)]
-#[UsesClass(Model::class)]
 final class ModelClientTest extends TestCase
 {
     public function testItInvokesTheTextModelsSuccessfully()

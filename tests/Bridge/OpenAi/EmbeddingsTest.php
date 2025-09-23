@@ -11,16 +11,12 @@
 
 namespace Symfony\AI\Platform\Tests\Bridge\OpenAi;
 
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\OpenAi\Embeddings;
 
 /**
  * @author Oskar Stark <oskarstark@googlemail.com>
  */
-#[CoversClass(Embeddings::class)]
-#[Small]
 final class EmbeddingsTest extends TestCase
 {
     public function testItCreatesEmbeddingsWithDefaultSettings()

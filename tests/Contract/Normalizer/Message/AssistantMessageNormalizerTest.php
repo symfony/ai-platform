@@ -11,17 +11,12 @@
 
 namespace Symfony\AI\Platform\Tests\Contract\Normalizer\Message;
 
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Contract\Normalizer\Message\AssistantMessageNormalizer;
 use Symfony\AI\Platform\Message\AssistantMessage;
 use Symfony\AI\Platform\Result\ToolCall;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-#[CoversClass(AssistantMessageNormalizer::class)]
-#[UsesClass(AssistantMessage::class)]
-#[UsesClass(ToolCall::class)]
 final class AssistantMessageNormalizerTest extends TestCase
 {
     private AssistantMessageNormalizer $normalizer;

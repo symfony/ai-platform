@@ -11,8 +11,6 @@
 
 namespace Symfony\AI\Platform\Tests\Bridge\OpenAi;
 
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\OpenAi\PlatformFactory;
 use Symfony\AI\Platform\Platform;
@@ -22,8 +20,6 @@ use Symfony\Component\HttpClient\MockHttpClient;
 /**
  * @author Oskar Stark <oskarstark@googlemail.com>
  */
-#[CoversClass(PlatformFactory::class)]
-#[Small]
 final class PlatformFactoryTest extends TestCase
 {
     public function testItCreatesPlatformWithDefaultSettings()

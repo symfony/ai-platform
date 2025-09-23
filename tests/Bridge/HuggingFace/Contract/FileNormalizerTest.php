@@ -11,17 +11,13 @@
 
 namespace Symfony\AI\Platform\Tests\Bridge\HuggingFace\Contract;
 
-use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Medium;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\HuggingFace\Contract\FileNormalizer;
 use Symfony\AI\Platform\Contract;
 use Symfony\AI\Platform\Message\Content\File;
 use Symfony\AI\Platform\Model;
 
-#[Medium]
-#[CoversClass(FileNormalizer::class)]
 final class FileNormalizerTest extends TestCase
 {
     public function testSupportsNormalization()

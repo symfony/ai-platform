@@ -11,7 +11,6 @@
 
 namespace Symfony\AI\Platform\Tests\Bridge\Replicate;
 
-use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\Replicate\Client;
 use Symfony\Component\Clock\MockClock;
@@ -21,7 +20,6 @@ use Symfony\Component\HttpClient\Response\MockResponse;
 /**
  * @author Oskar Stark <oskarstark@googlemail.com>
  */
-#[CoversClass(Client::class)]
 final class ClientTest extends TestCase
 {
     public function testRequestWithImmediateSuccess()

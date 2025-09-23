@@ -11,8 +11,6 @@
 
 namespace Symfony\AI\Platform\Tests\Bridge\Ollama;
 
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\Ollama\Ollama;
 use Symfony\AI\Platform\Bridge\Ollama\OllamaClient;
@@ -25,9 +23,6 @@ use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\JsonMockResponse;
 use Symfony\Component\HttpClient\Response\MockResponse;
 
-#[CoversClass(OllamaClient::class)]
-#[UsesClass(Ollama::class)]
-#[UsesClass(Model::class)]
 final class OllamaClientTest extends TestCase
 {
     public function testSupportsModel()

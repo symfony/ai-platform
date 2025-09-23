@@ -11,10 +11,7 @@
 
 namespace Symfony\AI\Platform\Tests\Bridge\Cerebras;
 
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\TestWith;
-use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\Cerebras\Model;
 use Symfony\AI\Platform\Bridge\Cerebras\ModelClient;
@@ -25,9 +22,6 @@ use Symfony\Component\HttpClient\Response\JsonMockResponse;
 /**
  * @author Junaid Farooq <ulislam.junaid125@gmail.com>
  */
-#[CoversClass(ModelClient::class)]
-#[UsesClass(Model::class)]
-#[Small]
 class ModelClientTest extends TestCase
 {
     public function testItDoesNotAllowAnEmptyKey()

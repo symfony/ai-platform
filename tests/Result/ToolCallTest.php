@@ -11,13 +11,9 @@
 
 namespace Symfony\AI\Platform\Tests\Result;
 
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Result\ToolCall;
 
-#[CoversClass(ToolCall::class)]
-#[Small]
 final class ToolCallTest extends TestCase
 {
     public function testToolCall()

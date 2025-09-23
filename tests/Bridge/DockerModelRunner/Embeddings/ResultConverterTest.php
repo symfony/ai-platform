@@ -11,25 +11,15 @@
 
 namespace Symfony\AI\Platform\Tests\Bridge\DockerModelRunner\Embeddings;
 
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\TestWith;
-use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\DockerModelRunner\Embeddings;
 use Symfony\AI\Platform\Bridge\DockerModelRunner\Embeddings\ResultConverter;
 use Symfony\AI\Platform\Exception\ModelNotFoundException;
 use Symfony\AI\Platform\Exception\RuntimeException;
 use Symfony\AI\Platform\Result\RawHttpResult;
-use Symfony\AI\Platform\Result\VectorResult;
-use Symfony\AI\Platform\Vector\Vector;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
-#[CoversClass(ResultConverter::class)]
-#[Small]
-#[UsesClass(Vector::class)]
-#[UsesClass(VectorResult::class)]
-#[UsesClass(Embeddings::class)]
 class ResultConverterTest extends TestCase
 {
     public function testItConvertsAResponseToAVectorResult()

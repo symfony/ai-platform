@@ -11,19 +11,11 @@
 
 namespace Symfony\AI\Platform\Tests\Bridge\HuggingFace;
 
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\Attributes\TestWith;
-use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Symfony\AI\Platform\Bridge\HuggingFace\Contract\FileNormalizer;
-use Symfony\AI\Platform\Bridge\HuggingFace\Contract\MessageBagNormalizer;
-use Symfony\AI\Platform\Bridge\HuggingFace\ModelClient;
 use Symfony\AI\Platform\Bridge\HuggingFace\PlatformFactory;
 use Symfony\AI\Platform\Bridge\HuggingFace\Provider;
-use Symfony\AI\Platform\Bridge\HuggingFace\ResultConverter;
-use Symfony\AI\Platform\Contract;
 use Symfony\AI\Platform\Platform;
 use Symfony\Component\HttpClient\EventSourceHttpClient;
 use Symfony\Component\HttpClient\MockHttpClient;
@@ -31,14 +23,6 @@ use Symfony\Component\HttpClient\MockHttpClient;
 /**
  * @author Oskar Stark <oskarstark@googlemail.com>
  */
-#[CoversClass(PlatformFactory::class)]
-#[Small]
-#[UsesClass(Platform::class)]
-#[UsesClass(ModelClient::class)]
-#[UsesClass(ResultConverter::class)]
-#[UsesClass(Contract::class)]
-#[UsesClass(FileNormalizer::class)]
-#[UsesClass(MessageBagNormalizer::class)]
 final class PlatformFactoryTest extends TestCase
 {
     #[TestDox('Creates Platform with default provider and auto-generated components')]

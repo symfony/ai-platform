@@ -11,8 +11,6 @@
 
 namespace Symfony\AI\Platform\Tests\Bridge\HuggingFace\Output;
 
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\HuggingFace\Output\DetectedObject;
@@ -21,8 +19,6 @@ use Symfony\AI\Platform\Bridge\HuggingFace\Output\ObjectDetectionResult;
 /**
  * @author Oskar Stark <oskar.stark@gmail.com>
  */
-#[CoversClass(ObjectDetectionResult::class)]
-#[Small]
 final class ObjectDetectionResultTest extends TestCase
 {
     #[TestDox('Construction with objects array creates valid instance')]

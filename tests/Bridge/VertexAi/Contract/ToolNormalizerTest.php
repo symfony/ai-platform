@@ -11,25 +11,16 @@
 
 namespace Symfony\AI\Platform\Tests\Bridge\VertexAi\Contract;
 
-use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Fixtures\Tool\ToolNoParams;
 use Symfony\AI\Fixtures\Tool\ToolRequiredParams;
 use Symfony\AI\Platform\Bridge\VertexAi\Contract\ToolNormalizer;
 use Symfony\AI\Platform\Bridge\VertexAi\Gemini\Model;
 use Symfony\AI\Platform\Contract;
-use Symfony\AI\Platform\Model as BaseModel;
 use Symfony\AI\Platform\Tool\ExecutionReference;
 use Symfony\AI\Platform\Tool\Tool;
 
-#[Small]
-#[CoversClass(ToolNormalizer::class)]
-#[UsesClass(BaseModel::class)]
-#[UsesClass(Model::class)]
-#[UsesClass(Tool::class)]
 final class ToolNormalizerTest extends TestCase
 {
     public function testSupportsNormalization()

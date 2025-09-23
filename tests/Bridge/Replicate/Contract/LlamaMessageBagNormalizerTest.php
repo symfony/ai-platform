@@ -11,7 +11,6 @@
 
 namespace Symfony\AI\Platform\Tests\Bridge\Replicate\Contract;
 
-use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\Meta\Llama;
 use Symfony\AI\Platform\Bridge\Replicate\Contract\LlamaMessageBagNormalizer;
@@ -22,7 +21,6 @@ use Symfony\AI\Platform\Model;
 /**
  * @author Oskar Stark <oskarstark@googlemail.com>
  */
-#[CoversClass(LlamaMessageBagNormalizer::class)]
 final class LlamaMessageBagNormalizerTest extends TestCase
 {
     public function testNormalizeWithSystemMessage()

@@ -11,16 +11,11 @@
 
 namespace Symfony\AI\Platform\Tests\Bridge\ElevenLabs\Contract;
 
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\ElevenLabs\Contract\ElevenLabsContract;
 use Symfony\AI\Platform\Bridge\ElevenLabs\ElevenLabs;
 use Symfony\AI\Platform\Message\Content\Audio;
 
-#[CoversClass(ElevenLabsContract::class)]
-#[UsesClass(Audio::class)]
-#[UsesClass(ElevenLabs::class)]
 final class ElevenLabsContractTest extends TestCase
 {
     public function testItCanCreatePayloadWithAudio()

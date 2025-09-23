@@ -11,10 +11,7 @@
 
 namespace Symfony\AI\Platform\Tests\Bridge\VertexAi\Contract;
 
-use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Medium;
-use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\VertexAi\Contract\AssistantMessageNormalizer;
 use Symfony\AI\Platform\Bridge\VertexAi\Contract\MessageBagNormalizer;
@@ -26,18 +23,8 @@ use Symfony\AI\Platform\Message\Content\Image;
 use Symfony\AI\Platform\Message\Message;
 use Symfony\AI\Platform\Message\MessageBag;
 use Symfony\AI\Platform\Message\UserMessage;
-use Symfony\AI\Platform\Model as BaseModel;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-#[Medium]
-#[CoversClass(MessageBagNormalizer::class)]
-#[CoversClass(UserMessageNormalizer::class)]
-#[CoversClass(AssistantMessageNormalizer::class)]
-#[UsesClass(BaseModel::class)]
-#[UsesClass(Model::class)]
-#[UsesClass(MessageBag::class)]
-#[UsesClass(UserMessage::class)]
-#[UsesClass(AssistantMessage::class)]
 final class MessageBagNormalizerTest extends TestCase
 {
     public function testSupportsNormalization()

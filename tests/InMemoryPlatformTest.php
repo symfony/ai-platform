@@ -9,14 +9,12 @@
  * file that was distributed with this source code.
  */
 
-use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\InMemoryPlatform;
 use Symfony\AI\Platform\Model;
 use Symfony\AI\Platform\Result\VectorResult;
 use Symfony\AI\Platform\Vector\Vector;
 
-#[CoversClass(InMemoryPlatform::class)]
 class InMemoryPlatformTest extends TestCase
 {
     public function testPlatformInvokeWithFixedResult()

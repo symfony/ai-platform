@@ -11,9 +11,6 @@
 
 namespace Symfony\AI\Platform\Tests\Bridge\Ollama;
 
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\Ollama\Ollama;
 use Symfony\AI\Platform\Bridge\Ollama\OllamaResultConverter;
@@ -22,20 +19,9 @@ use Symfony\AI\Platform\Model;
 use Symfony\AI\Platform\Result\InMemoryRawResult;
 use Symfony\AI\Platform\Result\RawHttpResult;
 use Symfony\AI\Platform\Result\TextResult;
-use Symfony\AI\Platform\Result\ToolCall;
 use Symfony\AI\Platform\Result\ToolCallResult;
-use Symfony\AI\Platform\Result\VectorResult;
-use Symfony\AI\Platform\Vector\Vector;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
-#[CoversClass(OllamaResultConverter::class)]
-#[Small]
-#[UsesClass(Ollama::class)]
-#[UsesClass(TextResult::class)]
-#[UsesClass(ToolCall::class)]
-#[UsesClass(ToolCallResult::class)]
-#[UsesClass(Vector::class)]
-#[UsesClass(VectorResult::class)]
 final class OllamaResultConverterTest extends TestCase
 {
     public function testSupportsLlamaModel()

@@ -11,8 +11,6 @@
 
 namespace Symfony\AI\Platform\Tests\Bridge\HuggingFace\Output;
 
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\HuggingFace\Output\FillMaskResult;
@@ -21,8 +19,6 @@ use Symfony\AI\Platform\Bridge\HuggingFace\Output\MaskFill;
 /**
  * @author Oskar Stark <oskar.stark@gmail.com>
  */
-#[CoversClass(FillMaskResult::class)]
-#[Small]
 final class FillMaskResultTest extends TestCase
 {
     #[TestDox('Construction with fills array creates valid instance')]

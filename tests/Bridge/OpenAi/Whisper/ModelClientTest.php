@@ -11,8 +11,6 @@
 
 namespace Symfony\AI\Platform\Tests\Bridge\OpenAi\Whisper;
 
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\OpenAi\Whisper;
@@ -22,8 +20,6 @@ use Symfony\AI\Platform\Exception\InvalidArgumentException;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
 
-#[CoversClass(ModelClient::class)]
-#[Small]
 final class ModelClientTest extends TestCase
 {
     public function testItThrowsExceptionWhenApiKeyIsEmpty()

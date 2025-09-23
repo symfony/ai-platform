@@ -11,23 +11,15 @@
 
 namespace Symfony\AI\Platform\Tests\Bridge\DockerModelRunner\Completions;
 
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\TestWith;
-use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\DockerModelRunner\Completions;
 use Symfony\AI\Platform\Bridge\DockerModelRunner\Completions\ResultConverter;
-use Symfony\AI\Platform\Bridge\OpenAi\Gpt\ResultConverter as OpenAiResultConverter;
 use Symfony\AI\Platform\Exception\ModelNotFoundException;
 use Symfony\AI\Platform\Exception\RuntimeException;
 use Symfony\AI\Platform\Result\RawHttpResult;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
-#[CoversClass(ResultConverter::class)]
-#[UsesClass(Completions::class)]
-#[UsesClass(OpenAiResultConverter::class)]
-#[Small]
 class ResultConverterTest extends TestCase
 {
     public function testItSupportsCompletionsModel()

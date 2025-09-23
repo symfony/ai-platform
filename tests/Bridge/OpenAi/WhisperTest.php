@@ -11,16 +11,12 @@
 
 namespace Symfony\AI\Platform\Tests\Bridge\OpenAi;
 
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\OpenAi\Whisper;
 
 /**
  * @author Oskar Stark <oskarstark@googlemail.com>
  */
-#[CoversClass(Whisper::class)]
-#[Small]
 final class WhisperTest extends TestCase
 {
     public function testItCreatesWhisperWithDefaultSettings()

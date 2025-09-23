@@ -11,14 +11,10 @@
 
 namespace Symfony\AI\Platform\Tests\Bridge\OpenAi;
 
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Agent\Output;
 use Symfony\AI\Platform\Bridge\OpenAi\TokenOutputProcessor;
 use Symfony\AI\Platform\Message\MessageBag;
-use Symfony\AI\Platform\Metadata\Metadata;
 use Symfony\AI\Platform\Metadata\TokenUsage;
 use Symfony\AI\Platform\Model;
 use Symfony\AI\Platform\Result\RawHttpResult;
@@ -27,13 +23,6 @@ use Symfony\AI\Platform\Result\StreamResult;
 use Symfony\AI\Platform\Result\TextResult;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
-#[CoversClass(TokenOutputProcessor::class)]
-#[UsesClass(Output::class)]
-#[UsesClass(TextResult::class)]
-#[UsesClass(StreamResult::class)]
-#[UsesClass(Metadata::class)]
-#[UsesClass(TokenUsage::class)]
-#[Small]
 final class TokenOutputProcessorTest extends TestCase
 {
     public function testItHandlesStreamResponsesWithoutProcessing()

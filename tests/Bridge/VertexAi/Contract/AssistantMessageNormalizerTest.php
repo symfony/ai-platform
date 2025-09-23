@@ -11,24 +11,14 @@
 
 namespace Symfony\AI\Platform\Tests\Bridge\VertexAi\Contract;
 
-use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\VertexAi\Contract\AssistantMessageNormalizer;
 use Symfony\AI\Platform\Bridge\VertexAi\Gemini\Model;
 use Symfony\AI\Platform\Contract;
 use Symfony\AI\Platform\Message\AssistantMessage;
-use Symfony\AI\Platform\Model as BaseModel;
 use Symfony\AI\Platform\Result\ToolCall;
 
-#[Small]
-#[CoversClass(AssistantMessageNormalizer::class)]
-#[UsesClass(Model::class)]
-#[UsesClass(AssistantMessage::class)]
-#[UsesClass(BaseModel::class)]
-#[UsesClass(ToolCall::class)]
 final class AssistantMessageNormalizerTest extends TestCase
 {
     public function testSupportsNormalization()

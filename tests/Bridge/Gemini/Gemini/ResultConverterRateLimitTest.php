@@ -11,8 +11,6 @@
 
 namespace Symfony\AI\Platform\Tests\Bridge\Gemini\Gemini;
 
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\Gemini\Gemini\ResultConverter;
 use Symfony\AI\Platform\Exception\RateLimitExceededException;
@@ -20,8 +18,6 @@ use Symfony\AI\Platform\Result\RawHttpResult;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
 
-#[CoversClass(ResultConverter::class)]
-#[Small]
 final class ResultConverterRateLimitTest extends TestCase
 {
     public function testRateLimitExceededThrowsException()

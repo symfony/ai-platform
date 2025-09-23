@@ -11,25 +11,14 @@
 
 namespace Symfony\AI\Platform\Tests\Bridge\Perplexity;
 
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\Perplexity\ResultConverter;
 use Symfony\AI\Platform\Exception\RuntimeException;
 use Symfony\AI\Platform\Result\ChoiceResult;
 use Symfony\AI\Platform\Result\RawHttpResult;
 use Symfony\AI\Platform\Result\TextResult;
-use Symfony\AI\Platform\Result\ToolCall;
-use Symfony\AI\Platform\Result\ToolCallResult;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
-#[CoversClass(ResultConverter::class)]
-#[Small]
-#[UsesClass(ChoiceResult::class)]
-#[UsesClass(TextResult::class)]
-#[UsesClass(ToolCall::class)]
-#[UsesClass(ToolCallResult::class)]
 class ResultConverterTest extends TestCase
 {
     public function testConvertTextResult()

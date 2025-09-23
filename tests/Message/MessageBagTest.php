@@ -11,9 +11,6 @@
 
 namespace Symfony\AI\Platform\Tests\Message;
 
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Message\AssistantMessage;
 use Symfony\AI\Platform\Message\Content\ImageUrl;
@@ -21,20 +18,9 @@ use Symfony\AI\Platform\Message\Content\Text;
 use Symfony\AI\Platform\Message\Message;
 use Symfony\AI\Platform\Message\MessageBag;
 use Symfony\AI\Platform\Message\SystemMessage;
-use Symfony\AI\Platform\Message\ToolCallMessage;
 use Symfony\AI\Platform\Message\UserMessage;
 use Symfony\AI\Platform\Result\ToolCall;
 
-#[CoversClass(MessageBag::class)]
-#[UsesClass(Message::class)]
-#[UsesClass(UserMessage::class)]
-#[UsesClass(SystemMessage::class)]
-#[UsesClass(AssistantMessage::class)]
-#[UsesClass(ImageUrl::class)]
-#[UsesClass(Text::class)]
-#[UsesClass(ToolCall::class)]
-#[UsesClass(ToolCallMessage::class)]
-#[Small]
 final class MessageBagTest extends TestCase
 {
     public function testGetSystemMessage()

@@ -11,10 +11,7 @@
 
 namespace Bridge\Perplexity;
 
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Small;
 use PHPUnit\Framework\Attributes\TestWith;
-use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\Perplexity\ModelClient;
 use Symfony\AI\Platform\Bridge\Perplexity\Perplexity;
@@ -27,9 +24,6 @@ use Symfony\Contracts\HttpClient\ResponseInterface as HttpResponse;
 /**
  * @author Mathieu Santostefano <msantostefano@proton.me>
  */
-#[CoversClass(ModelClient::class)]
-#[UsesClass(Perplexity::class)]
-#[Small]
 final class ModelClientTest extends TestCase
 {
     public function testItThrowsExceptionWhenApiKeyIsEmpty()

@@ -11,12 +11,10 @@
 
 namespace Symfony\AI\Platform\Tests\Contract\JsonSchema\Attribute;
 
-use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Contract\JsonSchema\Attribute\With;
 use Symfony\AI\Platform\Exception\InvalidArgumentException;
 
-#[CoversClass(With::class)]
 final class ToolParameterTest extends TestCase
 {
     public function testValidEnum()

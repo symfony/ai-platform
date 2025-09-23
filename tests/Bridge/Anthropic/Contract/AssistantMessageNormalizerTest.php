@@ -11,24 +11,14 @@
 
 namespace Symfony\AI\Platform\Tests\Bridge\Anthropic\Contract;
 
-use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Small;
-use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\Anthropic\Claude;
 use Symfony\AI\Platform\Bridge\Anthropic\Contract\AssistantMessageNormalizer;
 use Symfony\AI\Platform\Contract;
 use Symfony\AI\Platform\Message\AssistantMessage;
-use Symfony\AI\Platform\Model;
 use Symfony\AI\Platform\Result\ToolCall;
 
-#[Small]
-#[CoversClass(AssistantMessageNormalizer::class)]
-#[UsesClass(Claude::class)]
-#[UsesClass(AssistantMessage::class)]
-#[UsesClass(Model::class)]
-#[UsesClass(ToolCall::class)]
 final class AssistantMessageNormalizerTest extends TestCase
 {
     public function testSupportsNormalization()
