@@ -60,6 +60,7 @@
         "codewithkyrian/transformers": "^0.6.2",
         "google/auth": "^1.47",
         "phpstan/phpstan": "^2.1.17",
+        "phpstan/phpstan-strict-rules": "^2.0",
         "phpstan/phpstan-symfony": "^2.0.6",
         "phpunit/phpunit": "^11.5",
         "symfony/ai-agent": "@dev",
