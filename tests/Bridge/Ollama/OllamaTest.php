@@ -64,7 +64,9 @@ final class OllamaTest extends TestCase
         yield 'qwen2' => [Ollama::QWEN_2];
         yield 'qwen2.5' => [Ollama::QWEN_2_5];
         yield 'qwen2.5-coder' => [Ollama::QWEN_2_5_CODER];
+        yield 'qwen2.5-coder:32b' => [Ollama::QWEN_2_5_CODER_32B];
         yield 'qwen3' => [Ollama::QWEN_3];
+        yield 'qwen3:32b' => [Ollama::QWEN_3_32B];
 
         // Models that match the deepseek pattern
         yield 'deepseek-r1' => [Ollama::DEEPSEEK_R_1];
