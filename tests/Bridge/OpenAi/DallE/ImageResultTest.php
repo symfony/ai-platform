@@ -11,13 +11,11 @@
 
 namespace Symfony\AI\Platform\Tests\Bridge\OpenAi\DallE;
 
-use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\OpenAi\DallE\Base64Image;
 use Symfony\AI\Platform\Bridge\OpenAi\DallE\ImageResult;
 use Symfony\AI\Platform\Bridge\OpenAi\DallE\UrlImage;
 
-#[UsesClass(Base64Image::class)]
 final class ImageResultTest extends TestCase
 {
     public function testItCreatesImagesResult()

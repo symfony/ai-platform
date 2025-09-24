@@ -11,7 +11,6 @@
 
 namespace Symfony\AI\Platform\Tests\Bridge\OpenAi\DallE;
 
-use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\OpenAi\DallE\Base64Image;
 use Symfony\AI\Platform\Bridge\OpenAi\DallE\ImageResult;
@@ -20,7 +19,6 @@ use Symfony\AI\Platform\Bridge\OpenAi\DallE\UrlImage;
 use Symfony\AI\Platform\Result\RawHttpResult;
 use Symfony\Contracts\HttpClient\ResponseInterface as HttpResponse;
 
-#[UsesClass(Base64Image::class)]
 final class ResultConverterTest extends TestCase
 {
     public function testItIsConvertingTheResponse()
