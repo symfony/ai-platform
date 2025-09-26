@@ -11,6 +11,7 @@
 
 namespace Symfony\AI\Platform\Message;
 
+use Symfony\AI\Platform\Message\Content\Text;
 use Symfony\AI\Platform\Metadata\MetadataAwareTrait;
 
 /**
@@ -52,6 +53,34 @@ class MessageBag implements \Countable
         }
 
         return null;
+    }
+
+    public function getUserMessage(): ?UserMessage
+    {
+        foreach ($this->messages as $message) {
+            if ($message instanceof UserMessage) {
+                return $message;
+            }
+        }
+
+        return null;
+    }
+
+    public function getUserMessageText(): ?string
+    {
+        $userMessage = $this->getUserMessage();
+        if (null === $userMessage) {
+            return null;
+        }
+
+        $textParts = [];
+        foreach ($userMessage->content as $content) {
+            if ($content instanceof Text) {
+                $textParts[] = $content->text;
+            }
+        }
+
+        return implode(' ', $textParts);
     }
 
     public function with(MessageInterface $message): self

@@ -165,4 +165,96 @@ final class MessageBagTest extends TestCase
 
         $this->assertCount(1, $metadata);
     }
+
+    public function testGetUserMessage()
+    {
+        $messageBag = new MessageBag(
+            Message::forSystem('My amazing system prompt.'),
+            Message::ofAssistant('It is time to sleep.'),
+            Message::ofUser('Hello, world!'),
+            Message::ofAssistant('How can I help you?'),
+        );
+
+        $userMessage = $messageBag->getUserMessage();
+
+        $this->assertInstanceOf(UserMessage::class, $userMessage);
+        $this->assertInstanceOf(Text::class, $userMessage->content[0]);
+        $this->assertSame('Hello, world!', $userMessage->content[0]->text);
+    }
+
+    public function testGetUserMessageReturnsNullWithoutUserMessage()
+    {
+        $messageBag = new MessageBag(
+            Message::forSystem('My amazing system prompt.'),
+            Message::ofAssistant('It is time to sleep.'),
+        );
+
+        $this->assertNull($messageBag->getUserMessage());
+    }
+
+    public function testGetUserMessageReturnsFirstUserMessage()
+    {
+        $messageBag = new MessageBag(
+            Message::forSystem('My amazing system prompt.'),
+            Message::ofUser('First user message'),
+            Message::ofAssistant('Response'),
+            Message::ofUser('Second user message'),
+        );
+
+        $userMessage = $messageBag->getUserMessage();
+
+        $this->assertInstanceOf(UserMessage::class, $userMessage);
+        $this->assertInstanceOf(Text::class, $userMessage->content[0]);
+        $this->assertSame('First user message', $userMessage->content[0]->text);
+    }
+
+    public function testGetUserMessageText()
+    {
+        $messageBag = new MessageBag(
+            Message::forSystem('My amazing system prompt.'),
+            Message::ofUser('Hello, world!'),
+            Message::ofAssistant('How can I help you?'),
+        );
+
+        $userText = $messageBag->getUserMessageText();
+
+        $this->assertSame('Hello, world!', $userText);
+    }
+
+    public function testGetUserMessageTextReturnsNullWithoutUserMessage()
+    {
+        $messageBag = new MessageBag(
+            Message::forSystem('My amazing system prompt.'),
+            Message::ofAssistant('It is time to sleep.'),
+        );
+
+        $this->assertNull($messageBag->getUserMessageText());
+    }
+
+    public function testGetUserMessageTextWithMultipleTextParts()
+    {
+        $messageBag = new MessageBag(
+            Message::forSystem('My amazing system prompt.'),
+            Message::ofUser('Part one', 'Part two', 'Part three'),
+            Message::ofAssistant('Response'),
+        );
+
+        $userText = $messageBag->getUserMessageText();
+
+        $this->assertSame('Part one Part two Part three', $userText);
+    }
+
+    public function testGetUserMessageTextIgnoresNonTextContent()
+    {
+        $messageBag = new MessageBag(
+            Message::forSystem('My amazing system prompt.'),
+            Message::ofUser('Text content', new ImageUrl('http://example.com/image.png')),
+            Message::ofAssistant('Response'),
+        );
+
+        $userText = $messageBag->getUserMessageText();
+
+        // Should only return the text content, ignoring the image
+        $this->assertSame('Text content', $userText);
+    }
 }
