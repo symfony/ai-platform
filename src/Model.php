@@ -51,7 +51,7 @@ class Model
 
     public function supports(Capability $capability): bool
     {
-        return \in_array($capability, $this->capabilities, true);
+        return $capability->equalsOneOf($this->capabilities);
     }
 
     /**
