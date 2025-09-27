@@ -155,6 +155,35 @@ final class ElevenLabsClientTest extends TestCase
         $this->assertSame(2, $httpClient->getRequestsCount());
     }
 
+    public function testClientCanPerformTextToSpeechRequestWhenVoiceKeyIsProvidedAsRequestOption()
+    {
+        $payload = Audio::fromFile(\dirname(__DIR__, 5).'/fixtures/audio.mp3');
+
+        $httpClient = new MockHttpClient([
+            new JsonMockResponse([
+                [
+                    'model_id' => ElevenLabs::ELEVEN_MULTILINGUAL_V2,
+                    'can_do_text_to_speech' => true,
+                ],
+            ]),
+            new MockResponse($payload->asBinary()),
+        ]);
+
+        $client = new ElevenLabsClient(
+            $httpClient,
+            'https://api.elevenlabs.io/v1',
+            'my-api-key',
+        );
+
+        $client->request(new ElevenLabs(ElevenLabs::ELEVEN_MULTILINGUAL_V2), [
+            'text' => 'foo',
+        ], [
+            'voice' => 'Dslrhjl3ZpzrctukrQSN',
+        ]);
+
+        $this->assertSame(2, $httpClient->getRequestsCount());
+    }
+
     public function testClientCanPerformTextToSpeechRequestAsStream()
     {
         $payload = Audio::fromFile(\dirname(__DIR__, 5).'/fixtures/audio.mp3');
@@ -180,6 +209,37 @@ final class ElevenLabsClientTest extends TestCase
             'stream' => true,
         ]), [
             'text' => 'foo',
+        ]);
+
+        $this->assertInstanceOf(RawHttpResult::class, $result);
+        $this->assertSame(2, $httpClient->getRequestsCount());
+    }
+
+    public function testClientCanPerformTextToSpeechRequestAsStreamVoiceKeyIsProvidedAsRequestOption()
+    {
+        $payload = Audio::fromFile(\dirname(__DIR__, 5).'/fixtures/audio.mp3');
+
+        $httpClient = new MockHttpClient([
+            new JsonMockResponse([
+                [
+                    'model_id' => ElevenLabs::ELEVEN_MULTILINGUAL_V2,
+                    'can_do_text_to_speech' => true,
+                ],
+            ]),
+            new MockResponse($payload->asBinary()),
+        ]);
+
+        $client = new ElevenLabsClient(
+            $httpClient,
+            'https://api.elevenlabs.io/v1',
+            'my-api-key',
+        );
+
+        $result = $client->request(new ElevenLabs(ElevenLabs::ELEVEN_MULTILINGUAL_V2), [
+            'text' => 'foo',
+        ], [
+            'voice' => 'Dslrhjl3ZpzrctukrQSN',
+            'stream' => true,
         ]);
 
         $this->assertInstanceOf(RawHttpResult::class, $result);
