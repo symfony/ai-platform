@@ -14,6 +14,7 @@ namespace Symfony\AI\Platform\Tests\Bridge\OpenAi\Gpt;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\OpenAi\Gpt\ResultConverter;
 use Symfony\AI\Platform\Exception\AuthenticationException;
+use Symfony\AI\Platform\Exception\BadRequestException;
 use Symfony\AI\Platform\Exception\ContentFilterException;
 use Symfony\AI\Platform\Exception\RuntimeException;
 use Symfony\AI\Platform\Result\ChoiceResult;
@@ -193,6 +194,35 @@ class ResultConverterTest extends TestCase
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Unsupported finish reason "unsupported_reason"');
+
+        $converter->convert(new RawHttpResult($httpResponse));
+    }
+
+    public function testThrowsBadRequestExceptionOnBadRequestResponse()
+    {
+        $converter = new ResultConverter();
+        $httpResponse = self::createMock(ResponseInterface::class);
+        $httpResponse->method('getStatusCode')->willReturn(400);
+        $httpResponse->method('getContent')->willReturn(json_encode([
+            'error' => [
+                'message' => 'Bad Request: invalid parameters',
+            ],
+        ]));
+
+        $this->expectException(BadRequestException::class);
+        $this->expectExceptionMessage('Bad Request: invalid parameters');
+
+        $converter->convert(new RawHttpResult($httpResponse));
+    }
+
+    public function testThrowsBadRequestExceptionOnBadRequestResponseWithNoResponseBody()
+    {
+        $converter = new ResultConverter();
+        $httpResponse = self::createMock(ResponseInterface::class);
+        $httpResponse->method('getStatusCode')->willReturn(400);
+
+        $this->expectException(BadRequestException::class);
+        $this->expectExceptionMessage('Bad Request');
 
         $converter->convert(new RawHttpResult($httpResponse));
     }
