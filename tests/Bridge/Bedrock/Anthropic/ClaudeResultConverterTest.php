@@ -15,7 +15,7 @@ use AsyncAws\BedrockRuntime\Result\InvokeModelResponse;
 use AsyncAws\Core\Test\ResultMockFactory;
 use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\TestCase;
-use Symfony\AI\Platform\Bridge\Anthropic\Claude;
+use Symfony\AI\Platform\Bridge\Bedrock\Anthropic\Claude;
 use Symfony\AI\Platform\Bridge\Bedrock\Anthropic\ClaudeResultConverter;
 use Symfony\AI\Platform\Bridge\Bedrock\RawBedrockResult;
 use Symfony\AI\Platform\Exception\RuntimeException;
