@@ -89,8 +89,8 @@ final class ElevenLabsClientTest extends TestCase
 
         $client = new ElevenLabsClient(
             $httpClient,
-            'https://api.elevenlabs.io/v1',
             'my-api-key',
+            'https://api.elevenlabs.io/v1',
         );
 
         $payload = $normalizer->normalize(Audio::fromFile(\dirname(__DIR__, 5).'/fixtures/audio.mp3'));
@@ -114,8 +114,8 @@ final class ElevenLabsClientTest extends TestCase
 
         $client = new ElevenLabsClient(
             $mockHttpClient,
-            'https://api.elevenlabs.io/v1',
             'my-api-key',
+            'https://api.elevenlabs.io/v1',
         );
 
         $this->expectException(InvalidArgumentException::class);
@@ -142,8 +142,8 @@ final class ElevenLabsClientTest extends TestCase
 
         $client = new ElevenLabsClient(
             $httpClient,
-            'https://api.elevenlabs.io/v1',
             'my-api-key',
+            'https://api.elevenlabs.io/v1',
         );
 
         $client->request(new ElevenLabs(ElevenLabs::ELEVEN_MULTILINGUAL_V2, [
@@ -171,8 +171,8 @@ final class ElevenLabsClientTest extends TestCase
 
         $client = new ElevenLabsClient(
             $httpClient,
-            'https://api.elevenlabs.io/v1',
             'my-api-key',
+            'https://api.elevenlabs.io/v1',
         );
 
         $client->request(new ElevenLabs(ElevenLabs::ELEVEN_MULTILINGUAL_V2), [
@@ -200,8 +200,8 @@ final class ElevenLabsClientTest extends TestCase
 
         $client = new ElevenLabsClient(
             $httpClient,
-            'https://api.elevenlabs.io/v1',
             'my-api-key',
+            'https://api.elevenlabs.io/v1',
         );
 
         $result = $client->request(new ElevenLabs(ElevenLabs::ELEVEN_MULTILINGUAL_V2, [
@@ -231,8 +231,8 @@ final class ElevenLabsClientTest extends TestCase
 
         $client = new ElevenLabsClient(
             $httpClient,
-            'https://api.elevenlabs.io/v1',
             'my-api-key',
+            'https://api.elevenlabs.io/v1',
         );
 
         $result = $client->request(new ElevenLabs(ElevenLabs::ELEVEN_MULTILINGUAL_V2), [
