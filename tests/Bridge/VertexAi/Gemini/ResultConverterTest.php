@@ -15,6 +15,8 @@ use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\VertexAi\Gemini\ResultConverter;
 use Symfony\AI\Platform\Result\RawHttpResult;
 use Symfony\AI\Platform\Result\TextResult;
+use Symfony\AI\Platform\Result\ToolCall;
+use Symfony\AI\Platform\Result\ToolCallResult;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
 final class ResultConverterTest extends TestCase
@@ -55,6 +57,42 @@ final class ResultConverterTest extends TestCase
         $this->assertInstanceOf(TextResult::class, $result);
 
         $this->assertEquals("Second text\nThird text\nFourth text", $result->getContent());
+    }
+
+    public function testItReturnsToolCallEvenIfMultipleContentPartsAreGiven()
+    {
+        $payload = [
+            'content' => [
+                'parts' => [
+                    [
+                        'text' => 'foo',
+                    ],
+                    [
+                        'functionCall' => [
+                            'name' => 'some_tool',
+                            'args' => [],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+        $expectedResponse = [
+            'candidates' => [$payload],
+        ];
+        $response = $this->createStub(ResponseInterface::class);
+        $response
+            ->method('toArray')
+            ->willReturn($expectedResponse);
+
+        $resultConverter = new ResultConverter();
+
+        $result = $resultConverter->convert(new RawHttpResult($response));
+
+        $this->assertInstanceOf(ToolCallResult::class, $result);
+        $this->assertCount(1, $result->getContent());
+        $toolCall = $result->getContent()[0];
+        $this->assertInstanceOf(ToolCall::class, $toolCall);
+        $this->assertSame('some_tool', $toolCall->id);
     }
 
     public function testItThrowsExceptionOnFailure()

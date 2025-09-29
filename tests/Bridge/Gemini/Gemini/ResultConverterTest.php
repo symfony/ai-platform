@@ -15,6 +15,8 @@ use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\Gemini\Gemini\ResultConverter;
 use Symfony\AI\Platform\Exception\RuntimeException;
 use Symfony\AI\Platform\Result\RawHttpResult;
+use Symfony\AI\Platform\Result\ToolCall;
+use Symfony\AI\Platform\Result\ToolCallResult;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
 /**
@@ -39,5 +41,39 @@ final class ResultConverterTest extends TestCase
         $this->expectExceptionMessage('Error "400" - "INVALID_ARGUMENT": "Invalid request: The model does not support this feature.".');
 
         $converter->convert(new RawHttpResult($httpResponse));
+    }
+
+    public function testReturnsToolCallEvenIfMultipleContentPartsAreGiven()
+    {
+        $converter = new ResultConverter();
+        $httpResponse = self::createMock(ResponseInterface::class);
+        $httpResponse->method('getStatusCode')->willReturn(200);
+        $httpResponse->method('toArray')->willReturn([
+            'candidates' => [
+                [
+                    'content' => [
+                        'parts' => [
+                            [
+                                'text' => 'foo',
+                            ],
+                            [
+                                'functionCall' => [
+                                    'id' => '1234',
+                                    'name' => 'some_tool',
+                                    'args' => [],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+
+        $result = $converter->convert(new RawHttpResult($httpResponse));
+        $this->assertInstanceOf(ToolCallResult::class, $result);
+        $this->assertCount(1, $result->getContent());
+        $toolCall = $result->getContent()[0];
+        $this->assertInstanceOf(ToolCall::class, $toolCall);
+        $this->assertSame('1234', $toolCall->id);
     }
 }
