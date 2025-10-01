@@ -67,6 +67,24 @@ supports a specific feature, like ``Capability::INPUT_AUDIO`` or ``Capability::O
 **Options** are additional parameters that can be passed to the model, like ``temperature`` or ``max_tokens``, and are
 usually defined by the specific models and their documentation.
 
+**Model Size Variants**
+
+For providers like Ollama, you can specify model size variants using a colon notation (e.g., ``qwen3:32b``, ``llama3:7b``).
+If the exact model name with size variant is not found in the catalog, the system will automatically fall back to the base
+model name (``qwen3``, ``llama3``) and use its capabilities while preserving the full model name for the provider.
+
+You can also combine size variants with query parameters::
+
+    use Symfony\AI\Platform\Bridge\Ollama\ModelCatalog;
+
+    $catalog = new ModelCatalog();
+
+    // Get model with size variant
+    $model = $catalog->getModel('qwen3:32b');
+
+    // Get model with size variant and query parameters
+    $model = $catalog->getModel('qwen3:32b?temperature=0.5&top_p=0.9');
+
 **Supported Models & Platforms**
 
 * **Language Models**

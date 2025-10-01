@@ -32,15 +32,16 @@ abstract class AbstractModelCatalog implements ModelCatalogInterface
             throw new InvalidArgumentException('Model name cannot be empty.');
         }
 
-        $parsed = self::parseModelName($modelName);
+        $parsed = $this->parseModelName($modelName);
         $actualModelName = $parsed['name'];
+        $catalogKey = $parsed['catalogKey'];
         $options = $parsed['options'];
 
-        if (!isset($this->models[$actualModelName])) {
+        if (!isset($this->models[$catalogKey])) {
             throw new ModelNotFoundException(\sprintf('Model "%s" not found.', $actualModelName));
         }
 
-        $modelConfig = $this->models[$actualModelName];
+        $modelConfig = $this->models[$catalogKey];
         $modelClass = $modelConfig['class'];
 
         if (!class_exists($modelClass)) {
@@ -65,12 +66,13 @@ abstract class AbstractModelCatalog implements ModelCatalogInterface
 
     /**
      * Extracts model name and options from a model name string that may contain query parameters.
+     * Also resolves size variants (e.g., "model:23b") to their base model for catalog lookup.
      *
      * @param string $modelName The model name, potentially with query parameters (e.g., "model-name?param=value&other=123")
      *
-     * @return array{name: string, options: array<string, mixed>} An array containing the model name and parsed options
+     * @return array{name: string, catalogKey: string, options: array<string, mixed>} An array containing the model name, catalog lookup key, and parsed options
      */
-    protected static function parseModelName(string $modelName): array
+    protected function parseModelName(string $modelName): array
     {
         $options = [];
         $actualModelName = $modelName;
@@ -87,8 +89,18 @@ abstract class AbstractModelCatalog implements ModelCatalogInterface
             $options = self::convertNumericStrings($options);
         }
 
+        // Determine catalog key: try exact match first, then fall back to base model
+        $catalogKey = $actualModelName;
+        if (!isset($this->models[$actualModelName]) && str_contains($actualModelName, ':')) {
+            $baseModelName = explode(':', $actualModelName, 2)[0];
+            if (isset($this->models[$baseModelName])) {
+                $catalogKey = $baseModelName;
+            }
+        }
+
         return [
             'name' => $actualModelName,
+            'catalogKey' => $catalogKey,
             'options' => $options,
         ];
     }
