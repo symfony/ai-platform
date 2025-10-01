@@ -216,7 +216,8 @@ final class MessageBagTest extends TestCase
             Message::ofAssistant('How can I help you?'),
         );
 
-        $userText = $messageBag->getUserMessageText();
+        $userMessage = $messageBag->getUserMessage();
+        $userText = $userMessage?->asText();
 
         $this->assertSame('Hello, world!', $userText);
     }
@@ -228,7 +229,9 @@ final class MessageBagTest extends TestCase
             Message::ofAssistant('It is time to sleep.'),
         );
 
-        $this->assertNull($messageBag->getUserMessageText());
+        $userMessage = $messageBag->getUserMessage();
+
+        $this->assertNull($userMessage?->asText());
     }
 
     public function testGetUserMessageTextWithMultipleTextParts()
@@ -239,7 +242,8 @@ final class MessageBagTest extends TestCase
             Message::ofAssistant('Response'),
         );
 
-        $userText = $messageBag->getUserMessageText();
+        $userMessage = $messageBag->getUserMessage();
+        $userText = $userMessage?->asText();
 
         $this->assertSame('Part one Part two Part three', $userText);
     }
@@ -252,7 +256,8 @@ final class MessageBagTest extends TestCase
             Message::ofAssistant('Response'),
         );
 
-        $userText = $messageBag->getUserMessageText();
+        $userMessage = $messageBag->getUserMessage();
+        $userText = $userMessage?->asText();
 
         // Should only return the text content, ignoring the image
         $this->assertSame('Text content', $userText);

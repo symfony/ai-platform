@@ -108,4 +108,46 @@ final class UserMessageTest extends TestCase
         $this->assertInstanceOf(TimeBasedUidInterface::class, $message->getId());
         $this->assertInstanceOf(UuidV7::class, $message->getId());
     }
+
+    public function testAsTextWithSingleTextContent()
+    {
+        $message = new UserMessage(new Text('Hello, world!'));
+
+        $this->assertSame('Hello, world!', $message->asText());
+    }
+
+    public function testAsTextWithMultipleTextParts()
+    {
+        $message = new UserMessage(new Text('Part one'), new Text('Part two'), new Text('Part three'));
+
+        $this->assertSame('Part one Part two Part three', $message->asText());
+    }
+
+    public function testAsTextIgnoresNonTextContent()
+    {
+        $message = new UserMessage(
+            new Text('Text content'),
+            new ImageUrl('http://example.com/image.png'),
+            new Text('More text')
+        );
+
+        $this->assertSame('Text content More text', $message->asText());
+    }
+
+    public function testAsTextWithoutTextContent()
+    {
+        $message = new UserMessage(new ImageUrl('http://example.com/image.png'));
+
+        $this->assertNull($message->asText());
+    }
+
+    public function testAsTextWithAudioAndImage()
+    {
+        $message = new UserMessage(
+            Audio::fromFile(\dirname(__DIR__, 4).'/fixtures/audio.mp3'),
+            new ImageUrl('http://example.com/image.png')
+        );
+
+        $this->assertNull($message->asText());
+    }
 }

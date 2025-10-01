@@ -15,6 +15,7 @@ use Symfony\AI\Platform\Message\Content\Audio;
 use Symfony\AI\Platform\Message\Content\ContentInterface;
 use Symfony\AI\Platform\Message\Content\Image;
 use Symfony\AI\Platform\Message\Content\ImageUrl;
+use Symfony\AI\Platform\Message\Content\Text;
 use Symfony\Component\Uid\AbstractUid;
 use Symfony\Component\Uid\TimeBasedUidInterface;
 use Symfony\Component\Uid\Uuid;
@@ -68,5 +69,21 @@ final readonly class UserMessage implements MessageInterface
         }
 
         return false;
+    }
+
+    public function asText(): ?string
+    {
+        $textParts = [];
+        foreach ($this->content as $content) {
+            if ($content instanceof Text) {
+                $textParts[] = $content->text;
+            }
+        }
+
+        if ([] === $textParts) {
+            return null;
+        }
+
+        return implode(' ', $textParts);
     }
 }
