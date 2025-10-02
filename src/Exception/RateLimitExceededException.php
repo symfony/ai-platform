@@ -17,12 +17,12 @@ namespace Symfony\AI\Platform\Exception;
 final class RateLimitExceededException extends RuntimeException
 {
     public function __construct(
-        private readonly ?float $retryAfter = null,
+        private readonly ?int $retryAfter = null,
     ) {
         parent::__construct('Rate limit exceeded.');
     }
 
-    public function getRetryAfter(): ?float
+    public function getRetryAfter(): ?int
     {
         return $this->retryAfter;
     }

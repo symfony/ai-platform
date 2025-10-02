@@ -42,7 +42,7 @@ final class ResultConverterRateLimitTest extends TestCase
         try {
             $handler->convert(new RawHttpResult($httpResponse));
         } catch (RateLimitExceededException $e) {
-            $this->assertSame(20.0, $e->getRetryAfter());
+            $this->assertSame(20, $e->getRetryAfter());
             throw $e;
         }
     }
@@ -69,7 +69,7 @@ final class ResultConverterRateLimitTest extends TestCase
         try {
             $handler->convert(new RawHttpResult($httpResponse));
         } catch (RateLimitExceededException $e) {
-            $this->assertSame(150.0, $e->getRetryAfter());
+            $this->assertSame(150, $e->getRetryAfter());
             throw $e;
         }
     }

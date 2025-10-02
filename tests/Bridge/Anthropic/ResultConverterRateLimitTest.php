@@ -40,7 +40,7 @@ final class ResultConverterRateLimitTest extends TestCase
         try {
             $handler->convert(new RawHttpResult($httpResponse));
         } catch (RateLimitExceededException $e) {
-            $this->assertSame(60.0, $e->getRetryAfter());
+            $this->assertSame(60, $e->getRetryAfter());
             throw $e;
         }
     }
