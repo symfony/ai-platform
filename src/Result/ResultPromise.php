@@ -11,6 +11,7 @@
 
 namespace Symfony\AI\Platform\Result;
 
+use Symfony\AI\Platform\Exception\ExceptionInterface;
 use Symfony\AI\Platform\Exception\UnexpectedResultTypeException;
 use Symfony\AI\Platform\Vector\Vector;
 
@@ -32,6 +33,9 @@ final class ResultPromise
     ) {
     }
 
+    /**
+     * @throws ExceptionInterface
+     */
     public function getResult(): ResultInterface
     {
         return $this->await();
@@ -42,6 +46,9 @@ final class ResultPromise
         return $this->rawResult;
     }
 
+    /**
+     * @throws ExceptionInterface
+     */
     public function await(): ResultInterface
     {
         if (!$this->isConverted) {
@@ -58,21 +65,33 @@ final class ResultPromise
         return $this->convertedResult;
     }
 
+    /**
+     * @throws ExceptionInterface
+     */
     public function asText(): string
     {
         return $this->as(TextResult::class)->getContent();
     }
 
+    /**
+     * @throws ExceptionInterface
+     */
     public function asObject(): object
     {
         return $this->as(ObjectResult::class)->getContent();
     }
 
+    /**
+     * @throws ExceptionInterface
+     */
     public function asBinary(): string
     {
         return $this->as(BinaryResult::class)->getContent();
     }
 
+    /**
+     * @throws ExceptionInterface
+     */
     public function asBase64(): string
     {
         $result = $this->as(BinaryResult::class);
@@ -84,12 +103,17 @@ final class ResultPromise
 
     /**
      * @return Vector[]
+     *
+     * @throws ExceptionInterface
      */
     public function asVectors(): array
     {
         return $this->as(VectorResult::class)->getContent();
     }
 
+    /**
+     * @throws ExceptionInterface
+     */
     public function asStream(): \Generator
     {
         yield from $this->as(StreamResult::class)->getContent();
@@ -97,6 +121,8 @@ final class ResultPromise
 
     /**
      * @return ToolCall[]
+     *
+     * @throws ExceptionInterface
      */
     public function asToolCalls(): array
     {
@@ -105,6 +131,8 @@ final class ResultPromise
 
     /**
      * @param class-string $type
+     *
+     * @throws ExceptionInterface
      */
     private function as(string $type): ResultInterface
     {
