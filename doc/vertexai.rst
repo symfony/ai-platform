@@ -18,7 +18,8 @@ To use Vertex AI with Symfony AI Platform, you need to install the platform comp
 Setup
 -----
 
-**Authentication**
+Authentication
+~~~~~~~~~~~~~~
 
 Vertex AI requires Google Cloud authentication. Follow the `Google cloud authentication guide`_ to set up your credentials.
 
@@ -35,7 +36,8 @@ For ADC, install the Google Cloud SDK and authenticate:
 
 For detailed authentication setup, see `Setting up authentication for Vertex AI`_.
 
-**Environment Variables**
+Environment Variables
+~~~~~~~~~~~~~~~~~~~~~
 
 Configure your Google Cloud project and location:
 
@@ -94,7 +96,8 @@ Common model availability:
 * **europe-west1**: Good model availability
 * **global**: Limited model availability, some newer models may not be available
 
-**Troubleshooting Model Availability**
+Troubleshooting Model Availability
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If you encounter an error like::
 
@@ -107,7 +110,8 @@ This typically means:
 3. Use an alternative model that's available in your location
 4. Check the `Google Cloud Console for Vertex AI`_ for model availability in your region
 
-**Checking Model Availability**
+Checking Model Availability
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 You can check which models are available in your location using the Google Cloud Console or gcloud CLI::
 

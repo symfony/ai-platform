@@ -61,13 +61,14 @@ capabilities, and additional options. Usually, bridges to specific providers ext
 start for vendor-specific models and their capabilities, see ``Symfony\AI\Platform\Bridge\Anthropic\Claude`` or
 ``Symfony\AI\Platform\Bridge\OpenAi\Gpt``.
 
-**Capabilities** are a list of strings defined by ``Symfony\AI\Platform\Capability``, which can be used to check if a model
+Capabilities are a list of strings defined by ``Symfony\AI\Platform\Capability``, which can be used to check if a model
 supports a specific feature, like ``Capability::INPUT_AUDIO`` or ``Capability::OUTPUT_IMAGE``.
 
-**Options** are additional parameters that can be passed to the model, like ``temperature`` or ``max_tokens``, and are
+Options are additional parameters that can be passed to the model, like ``temperature`` or ``max_tokens``, and are
 usually defined by the specific models and their documentation.
 
-**Model Size Variants**
+Model Size Variants
+~~~~~~~~~~~~~~~~~~~
 
 For providers like Ollama, you can specify model size variants using a colon notation (e.g., ``qwen3:32b``, ``llama3:7b``).
 If the exact model name with size variant is not found in the catalog, the system will automatically fall back to the base
@@ -85,7 +86,8 @@ You can also combine size variants with query parameters::
     // Get model with size variant and query parameters
     $model = $catalog->getModel('qwen3:32b?temperature=0.5&top_p=0.9');
 
-**Supported Models & Platforms**
+Supported Models & Platforms
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 * **Language Models**
     * `OpenAI's GPT`_ with `OpenAI`_ and `Azure`_ as Platform
@@ -146,7 +148,8 @@ have different content types, like ``Text``, ``Image`` or ``Audio``, and can be 
         Message::ofUser('Please describe this picture?', Image::fromFile('/path/to/image.jpg')),
     );
 
-**Message Unique IDs**
+Message Unique IDs
+~~~~~~~~~~~~~~~~~~
 
 Each message automatically receives a unique identifier (UUID v7) upon creation.
 This provides several benefits:
@@ -200,7 +203,9 @@ Events. Symfony AI supports that by abstracting the conversion and returning a `
 In a terminal application this generator can be used directly, but with a web app an additional layer like `Mercure`_
 needs to be used.
 
-**Code Examples**
+Code Examples
+~~~~~~~~~~~~~
+
 * `Streaming Claude`_
 * `Streaming GPT`_
 * `Streaming Mistral`_
@@ -227,7 +232,9 @@ Some LLMs also support images as input, which Symfony AI supports as content typ
     );
     $result = $agent->call($messages);
 
-**Code Examples**
+Code Examples
+~~~~~~~~~~~~~
+
 * `Binary Image Input with GPT`_
 * `Image URL Input with GPT`_
 
@@ -251,7 +258,8 @@ Similar to images, some LLMs also support audio as input, which is just another 
     );
     $result = $agent->call($messages);
 
-**Code Examples**
+Code Examples
+~~~~~~~~~~~~~
 
 * `Audio Input with GPT`_
 
@@ -272,7 +280,8 @@ The standalone usage results in an ``Vector`` instance::
 
     dump($vectors[0]->getData()); // returns something like: [0.123, -0.456, 0.789, ...]
 
-**Code Examples**
+Code Examples
+~~~~~~~~~~~~~
 
 * `Embeddings with OpenAI`_
 * `Embeddings with Voyage`_
@@ -322,7 +331,10 @@ It supports returning either:
 
     echo $result->asText(); // "Fake result"
 
-**Dynamic Text Results**::
+Dynamic Text Results
+~~~~~~~~~~~~~~~~~~~~
+
+::
 
     $platform = new InMemoryPlatform(
         fn($model, $input, $options) => "Echo: {$input}"
@@ -331,7 +343,10 @@ It supports returning either:
     $result = $platform->invoke(new Model('test'), 'Hello AI');
     echo $result->asText(); // "Echo: Hello AI"
 
-**Vector Results**::
+Vector Results
+~~~~~~~~~~~~~~
+
+::
 
     use Symfony\AI\Platform\Result\VectorResult;
 
@@ -342,7 +357,10 @@ It supports returning either:
     $result = $platform->invoke(new Model('test'), 'vectorize this text');
     $vectors = $result->asVectors(); // Returns Vector object with [0.1, 0.2, 0.3, 0.4]
 
-**Binary Results**::
+Binary Results
+~~~~~~~~~~~~~~
+
+::
 
     use Symfony\AI\Platform\Result\BinaryResult;
 
@@ -353,8 +371,8 @@ It supports returning either:
     $result = $platform->invoke(new Model('test'), 'generate PDF document');
     $binary = $result->asBinary(); // Returns Binary object with content and MIME type
 
-
-**Raw Results**
+Raw Results
+~~~~~~~~~~~
 
 The platform automatically uses the ``getRawResult()`` from any ``ResultInterface`` returned by closures. For string results, it creates an ``InMemoryRawResult`` to simulate real API response metadata.
 
@@ -364,7 +382,8 @@ This allows fast and isolated testing of AI-powered features without relying on 
 
     This requires `cURL` and the `ext-curl` extension to be installed.
 
-**Code Examples**
+Code Examples
+~~~~~~~~~~~~~
 
 * `Parallel GPT Calls`_
 * `Parallel Embeddings Calls`_

@@ -17,7 +17,8 @@ Vertex AI provides several server-side tools that can be enabled when calling th
 Available Server Tools
 ----------------------
 
-**URL Context**
+URL Context
+~~~~~~~~~~~
 
 The URL Context tool allows the model to fetch and analyze content from specified web pages. This is useful for:
 
@@ -36,8 +37,9 @@ The URL Context tool allows the model to fetch and analyze content from specifie
 
     $result = $platform->invoke($model, $messages);
 
+Grounding with Google Search
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-**Grounding with Google Search**
 The Grounding tool allows the model to connect its responses to verifiable sources of information, enhancing the reliability
 of its outputs. More at https://cloud.google.com/vertex-ai/generative-ai/docs/grounding/overview
 Below is an example of grounding a model's responses using Google Search, which uses publicly-available web data.
@@ -61,7 +63,8 @@ More info can be found at https://cloud.google.com/vertex-ai/generative-ai/docs/
 
     $result = $platform->invoke($model, $messages);
 
-**Code Execution**
+Code Execution
+~~~~~~~~~~~~~~
 
 Executes code in a Google-managed sandbox environment and returns both the code and its output.
 More info can be found at https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/code-execution

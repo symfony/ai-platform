@@ -15,7 +15,8 @@ Gemini provides several server-side tools that can be enabled when calling the m
 Available Server Tools
 ----------------------
 
-**URL Context**
+URL Context
+~~~~~~~~~~~
 
 The URL Context tool allows Gemini to fetch and analyze content from web pages. This is useful for:
 
@@ -37,8 +38,8 @@ The URL Context tool allows Gemini to fetch and analyze content from web pages. 
 
     $result = $platform->invoke($model, $messages);
 
-
-**Google Search**
+Google Search
+~~~~~~~~~~~~~
 
 The Google Search tool enables the model to search the web and incorporate search results into its results::
 
@@ -54,7 +55,8 @@ The Google Search tool enables the model to search the web and incorporate searc
 
     $result = $platform->invoke($model, $messages);
 
-**Code Execution**
+Code Execution
+~~~~~~~~~~~~~~
 
 The Code Execution tool provides a sandboxed environment for running code::
 
