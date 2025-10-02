@@ -49,6 +49,21 @@ final class AbstractModelCatalogTest extends TestCase
         $this->assertSame(500, $options['max_tokens']);
     }
 
+    public function testGetModelWithBooleanQueryParameters()
+    {
+        $catalog = $this->createTestCatalog();
+        $model = $catalog->getModel('test-model?think=true&stream=false');
+
+        $this->assertSame('test-model', $model->getName());
+        $options = $model->getOptions();
+        $this->assertArrayHasKey('think', $options);
+        $this->assertIsBool($options['think']);
+        $this->assertTrue($options['think']);
+        $this->assertArrayHasKey('stream', $options);
+        $this->assertIsBool($options['stream']);
+        $this->assertFalse($options['stream']);
+    }
+
     public function testGetModelWithMultipleQueryParameters()
     {
         $catalog = $this->createTestCatalog();
@@ -66,7 +81,8 @@ final class AbstractModelCatalogTest extends TestCase
         $this->assertSame(0.7, $options['temperature']);
 
         $this->assertArrayHasKey('stream', $options);
-        $this->assertSame('true', $options['stream']);
+        $this->assertIsBool($options['stream']);
+        $this->assertTrue($options['stream']);
     }
 
     public function testGetModelWithNestedArrayQueryParameters()
@@ -123,6 +139,23 @@ final class AbstractModelCatalogTest extends TestCase
         $this->assertIsString($options['a']['b']['d']);
         $this->assertSame(456, $options['a']['e']);
         $this->assertIsInt($options['a']['e']);
+    }
+
+    public function testBooleanStringsAreConvertedRecursively()
+    {
+        $catalog = $this->createTestCatalog();
+        $model = $catalog->getModel('test-model?a[b][c]=true&a[b][d]=text&a[e]=false');
+
+        $options = $model->getOptions();
+
+        $this->assertIsArray($options['a']);
+        $this->assertIsArray($options['a']['b']);
+        $this->assertIsBool($options['a']['b']['c']);
+        $this->assertTrue($options['a']['b']['c']);
+        $this->assertIsString($options['a']['b']['d']);
+        $this->assertSame('text', $options['a']['b']['d']);
+        $this->assertIsBool($options['a']['e']);
+        $this->assertFalse($options['a']['e']);
     }
 
     private function createTestCatalog(): AbstractModelCatalog
