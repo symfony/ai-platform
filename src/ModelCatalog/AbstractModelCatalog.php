@@ -86,7 +86,7 @@ abstract class AbstractModelCatalog implements ModelCatalogInterface
 
             parse_str($queryString, $options);
 
-            $options = self::convertNumericStrings($options);
+            $options = self::convertScalarStrings($options);
         }
 
         // Determine catalog key: try exact match first, then fall back to base model
@@ -110,13 +110,17 @@ abstract class AbstractModelCatalog implements ModelCatalogInterface
      *
      * @param array<string, mixed> $data The array to process
      *
-     * @return array<string, mixed> The array with numeric strings converted to appropriate numeric types
+     * @return array<string, mixed> The array with numeric and boolean-like strings converted to appropriate numeric/boolean types
      */
-    private static function convertNumericStrings(array $data): array
+    private static function convertScalarStrings(array $data): array
     {
         foreach ($data as $key => $value) {
             if (\is_array($value)) {
-                $data[$key] = self::convertNumericStrings($value);
+                $data[$key] = self::convertScalarStrings($value);
+            } elseif ('true' === $value) {
+                $data[$key] = true;
+            } elseif ('false' === $value) {
+                $data[$key] = false;
             } elseif (is_numeric($value) && \is_string($value)) {
                 // Convert to int if it's a whole number, otherwise to float
                 $data[$key] = str_contains($value, '.') ? (float) $value : (int) $value;
