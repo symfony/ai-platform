@@ -16,7 +16,6 @@ use Symfony\AI\Agent\Output;
 use Symfony\AI\Platform\Bridge\Anthropic\TokenOutputProcessor;
 use Symfony\AI\Platform\Message\MessageBag;
 use Symfony\AI\Platform\Metadata\TokenUsage;
-use Symfony\AI\Platform\Model;
 use Symfony\AI\Platform\Result\RawHttpResult;
 use Symfony\AI\Platform\Result\ResultInterface;
 use Symfony\AI\Platform\Result\StreamResult;
@@ -33,7 +32,7 @@ final class TokenOutputProcessorTest extends TestCase
 
         $processor->processOutput($output);
 
-        $metadata = $output->result->getMetadata();
+        $metadata = $output->getResult()->getMetadata();
         $this->assertCount(0, $metadata);
     }
 
@@ -45,7 +44,7 @@ final class TokenOutputProcessorTest extends TestCase
 
         $processor->processOutput($output);
 
-        $metadata = $output->result->getMetadata();
+        $metadata = $output->getResult()->getMetadata();
         $this->assertCount(0, $metadata);
     }
 
@@ -60,7 +59,7 @@ final class TokenOutputProcessorTest extends TestCase
 
         $processor->processOutput($output);
 
-        $metadata = $output->result->getMetadata();
+        $metadata = $output->getResult()->getMetadata();
         $tokenUsage = $metadata->get('token_usage');
 
         $this->assertCount(1, $metadata);
@@ -91,7 +90,7 @@ final class TokenOutputProcessorTest extends TestCase
 
         $processor->processOutput($output);
 
-        $metadata = $output->result->getMetadata();
+        $metadata = $output->getResult()->getMetadata();
         $tokenUsage = $metadata->get('token_usage');
 
         $this->assertInstanceOf(TokenUsage::class, $tokenUsage);
@@ -122,7 +121,7 @@ final class TokenOutputProcessorTest extends TestCase
 
         $processor->processOutput($output);
 
-        $metadata = $output->result->getMetadata();
+        $metadata = $output->getResult()->getMetadata();
         $tokenUsage = $metadata->get('token_usage');
 
         $this->assertInstanceOf(TokenUsage::class, $tokenUsage);
@@ -142,11 +141,6 @@ final class TokenOutputProcessorTest extends TestCase
 
     private function createOutput(ResultInterface $result): Output
     {
-        return new Output(
-            $this->createStub(Model::class),
-            $result,
-            new MessageBag(),
-            [],
-        );
+        return new Output('claude-3-5-sonnet-latest', $result, new MessageBag(), []);
     }
 }
