@@ -75,7 +75,7 @@ final class ResultConverterTest extends TestCase
         $this->assertCount(1, $result->getContent());
         $toolCall = $result->getContent()[0];
         $this->assertInstanceOf(ToolCall::class, $toolCall);
-        $this->assertSame('1234', $toolCall->id);
+        $this->assertSame('1234', $toolCall->getId());
     }
 
     public function testConvertsInlineDataToBinaryResult()

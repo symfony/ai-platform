@@ -69,9 +69,9 @@ final class OllamaResultConverterTest extends TestCase
         $this->assertInstanceOf(ToolCallResult::class, $result);
         $toolCalls = $result->getContent();
         $this->assertCount(1, $toolCalls);
-        $this->assertSame('0', $toolCalls[0]->id); // ID is the array index as a string
-        $this->assertSame('test_function', $toolCalls[0]->name);
-        $this->assertSame(['arg1' => 'value1'], $toolCalls[0]->arguments);
+        $this->assertSame('0', $toolCalls[0]->getId()); // ID is the array index as a string
+        $this->assertSame('test_function', $toolCalls[0]->getName());
+        $this->assertSame(['arg1' => 'value1'], $toolCalls[0]->getArguments());
     }
 
     public function testConvertMultipleToolCallsResponse()
@@ -103,13 +103,13 @@ final class OllamaResultConverterTest extends TestCase
         $toolCalls = $result->getContent();
         $this->assertCount(2, $toolCalls);
 
-        $this->assertSame('0', $toolCalls[0]->id);
-        $this->assertSame('function1', $toolCalls[0]->name);
-        $this->assertSame(['param1' => 'value1'], $toolCalls[0]->arguments);
+        $this->assertSame('0', $toolCalls[0]->getId());
+        $this->assertSame('function1', $toolCalls[0]->getName());
+        $this->assertSame(['param1' => 'value1'], $toolCalls[0]->getArguments());
 
-        $this->assertSame('1', $toolCalls[1]->id);
-        $this->assertSame('function2', $toolCalls[1]->name);
-        $this->assertSame(['param2' => 'value2'], $toolCalls[1]->arguments);
+        $this->assertSame('1', $toolCalls[1]->getId());
+        $this->assertSame('function2', $toolCalls[1]->getName());
+        $this->assertSame(['param2' => 'value2'], $toolCalls[1]->getArguments());
     }
 
     public function testThrowsExceptionWhenNoMessage()

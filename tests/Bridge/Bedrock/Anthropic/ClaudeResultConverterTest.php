@@ -81,9 +81,9 @@ final class ClaudeResultConverterTest extends TestCase
         $this->assertInstanceOf(ToolCallResult::class, $result);
         $toolCalls = $result->getContent();
         $this->assertCount(1, $toolCalls);
-        $this->assertSame('toolu_01UM4PcTjC1UDiorSXVHSVFM', $toolCalls[0]->id);
-        $this->assertSame('get_weather', $toolCalls[0]->name);
-        $this->assertSame(['location' => 'Paris'], $toolCalls[0]->arguments);
+        $this->assertSame('toolu_01UM4PcTjC1UDiorSXVHSVFM', $toolCalls[0]->getId());
+        $this->assertSame('get_weather', $toolCalls[0]->getName());
+        $this->assertSame(['location' => 'Paris'], $toolCalls[0]->getArguments());
     }
 
     #[TestDox('Converts response with multiple tool calls to ToolCallResult')]
@@ -116,13 +116,13 @@ final class ClaudeResultConverterTest extends TestCase
         $toolCalls = $result->getContent();
         $this->assertCount(2, $toolCalls);
 
-        $this->assertSame('toolu_01', $toolCalls[0]->id);
-        $this->assertSame('get_weather', $toolCalls[0]->name);
-        $this->assertSame(['location' => 'Paris'], $toolCalls[0]->arguments);
+        $this->assertSame('toolu_01', $toolCalls[0]->getId());
+        $this->assertSame('get_weather', $toolCalls[0]->getName());
+        $this->assertSame(['location' => 'Paris'], $toolCalls[0]->getArguments());
 
-        $this->assertSame('toolu_02', $toolCalls[1]->id);
-        $this->assertSame('get_time', $toolCalls[1]->name);
-        $this->assertSame(['timezone' => 'UTC'], $toolCalls[1]->arguments);
+        $this->assertSame('toolu_02', $toolCalls[1]->getId());
+        $this->assertSame('get_time', $toolCalls[1]->getName());
+        $this->assertSame(['timezone' => 'UTC'], $toolCalls[1]->getArguments());
     }
 
     #[TestDox('Prioritizes tool calls over text in mixed content')]
@@ -153,7 +153,7 @@ final class ClaudeResultConverterTest extends TestCase
         $this->assertInstanceOf(ToolCallResult::class, $result);
         $toolCalls = $result->getContent();
         $this->assertCount(1, $toolCalls);
-        $this->assertSame('toolu_01', $toolCalls[0]->id);
+        $this->assertSame('toolu_01', $toolCalls[0]->getId());
     }
 
     #[TestDox('Throws RuntimeException when response has no content')]

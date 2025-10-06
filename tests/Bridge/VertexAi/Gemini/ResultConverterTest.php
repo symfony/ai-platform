@@ -93,7 +93,7 @@ final class ResultConverterTest extends TestCase
         $this->assertCount(1, $result->getContent());
         $toolCall = $result->getContent()[0];
         $this->assertInstanceOf(ToolCall::class, $toolCall);
-        $this->assertSame('some_tool', $toolCall->id);
+        $this->assertSame('some_tool', $toolCall->getId());
     }
 
     public function testItThrowsExceptionOnFailure()

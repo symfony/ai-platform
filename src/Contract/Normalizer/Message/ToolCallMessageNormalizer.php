@@ -47,7 +47,7 @@ final class ToolCallMessageNormalizer implements NormalizerInterface, Normalizer
         return [
             'role' => $data->getRole()->value,
             'content' => $this->normalizer->normalize($data->content, $format, $context),
-            'tool_call_id' => $data->toolCall->id,
+            'tool_call_id' => $data->toolCall->getId(),
         ];
     }
 }

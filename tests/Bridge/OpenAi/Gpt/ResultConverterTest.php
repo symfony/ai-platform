@@ -79,9 +79,9 @@ class ResultConverterTest extends TestCase
         $this->assertInstanceOf(ToolCallResult::class, $result);
         $toolCalls = $result->getContent();
         $this->assertCount(1, $toolCalls);
-        $this->assertSame('call_123', $toolCalls[0]->id);
-        $this->assertSame('test_function', $toolCalls[0]->name);
-        $this->assertSame(['arg1' => 'value1'], $toolCalls[0]->arguments);
+        $this->assertSame('call_123', $toolCalls[0]->getId());
+        $this->assertSame('test_function', $toolCalls[0]->getName());
+        $this->assertSame(['arg1' => 'value1'], $toolCalls[0]->getArguments());
     }
 
     public function testConvertMultipleChoices()

@@ -20,10 +20,28 @@ final readonly class ToolCall implements \JsonSerializable
      * @param array<string, mixed> $arguments
      */
     public function __construct(
-        public string $id,
-        public string $name,
-        public array $arguments = [],
+        private string $id,
+        private string $name,
+        private array $arguments = [],
     ) {
+    }
+
+    public function getId(): string
+    {
+        return $this->id;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getArguments(): array
+    {
+        return $this->arguments;
     }
 
     /**
