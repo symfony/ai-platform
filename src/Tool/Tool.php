@@ -24,10 +24,33 @@ final readonly class Tool
      * @param JsonSchema|null $parameters
      */
     public function __construct(
-        public ExecutionReference $reference,
-        public string $name,
-        public string $description,
-        public ?array $parameters = null,
+        private ExecutionReference $reference,
+        private string $name,
+        private string $description,
+        private ?array $parameters = null,
     ) {
+    }
+
+    public function getReference(): ExecutionReference
+    {
+        return $this->reference;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
+    /**
+     * @return JsonSchema|null
+     */
+    public function getParameters(): ?array
+    {
+        return $this->parameters;
     }
 }
