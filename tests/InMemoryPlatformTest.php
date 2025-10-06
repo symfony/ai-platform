@@ -10,9 +10,9 @@
  */
 
 use PHPUnit\Framework\TestCase;
-use Symfony\AI\Platform\InMemoryPlatform;
 use Symfony\AI\Platform\Model;
 use Symfony\AI\Platform\Result\VectorResult;
+use Symfony\AI\Platform\Test\InMemoryPlatform;
 use Symfony\AI\Platform\Vector\Vector;
 
 class InMemoryPlatformTest extends TestCase

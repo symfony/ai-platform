@@ -16,7 +16,7 @@ use Symfony\AI\Platform\Bridge\Mistral\Mistral;
 use Symfony\AI\Platform\Bridge\Mistral\ModelCatalog;
 use Symfony\AI\Platform\Capability;
 use Symfony\AI\Platform\ModelCatalog\ModelCatalogInterface;
-use Symfony\AI\Platform\Tests\ModelCatalogTestCase;
+use Symfony\AI\Platform\Test\ModelCatalogTestCase;
 
 /**
  * @author Oskar Stark <oskarstark@googlemail.com>

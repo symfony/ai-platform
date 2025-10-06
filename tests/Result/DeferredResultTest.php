@@ -13,15 +13,15 @@ namespace Symfony\AI\Platform\Tests\Result;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Result\BaseResult;
+use Symfony\AI\Platform\Result\DeferredResult;
 use Symfony\AI\Platform\Result\RawHttpResult;
 use Symfony\AI\Platform\Result\RawResultInterface;
 use Symfony\AI\Platform\Result\ResultInterface;
-use Symfony\AI\Platform\Result\ResultPromise;
 use Symfony\AI\Platform\Result\TextResult;
 use Symfony\AI\Platform\ResultConverterInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface as SymfonyHttpResponse;
 
-final class ResultPromiseTest extends TestCase
+final class DeferredResultTest extends TestCase
 {
     public function testItUnwrapsTheResultWhenGettingContent()
     {
@@ -35,9 +35,9 @@ final class ResultPromiseTest extends TestCase
             ->with($rawHttpResult, [])
             ->willReturn($textResult);
 
-        $resultPromise = new ResultPromise($resultConverter->convert(...), $rawHttpResult);
+        $deferredResult = new DeferredResult($resultConverter, $rawHttpResult);
 
-        $this->assertSame('test content', $resultPromise->getResult()->getContent());
+        $this->assertSame('test content', $deferredResult->getResult()->getContent());
     }
 
     public function testItConvertsTheResponseOnlyOnce()
@@ -52,12 +52,12 @@ final class ResultPromiseTest extends TestCase
             ->with($rawHttpResult, [])
             ->willReturn($textResult);
 
-        $resultPromise = new ResultPromise($resultConverter->convert(...), $rawHttpResult);
+        $deferredResult = new DeferredResult($resultConverter, $rawHttpResult);
 
         // Call unwrap multiple times, but the converter should only be called once
-        $resultPromise->await();
-        $resultPromise->await();
-        $resultPromise->getResult();
+        $deferredResult->getResult();
+        $deferredResult->getResult();
+        $deferredResult->getResult();
     }
 
     public function testItGetsRawResponseDirectly()
@@ -65,9 +65,9 @@ final class ResultPromiseTest extends TestCase
         $httpResponse = $this->createStub(SymfonyHttpResponse::class);
         $resultConverter = $this->createStub(ResultConverterInterface::class);
 
-        $resultPromise = new ResultPromise($resultConverter->convert(...), new RawHttpResult($httpResponse));
+        $deferredResult = new DeferredResult($resultConverter, new RawHttpResult($httpResponse));
 
-        $this->assertSame($httpResponse, $resultPromise->getRawResult()->getObject());
+        $this->assertSame($httpResponse, $deferredResult->getRawResult()->getObject());
     }
 
     public function testItSetsRawResponseOnUnwrappedResponseWhenNeeded()
@@ -79,8 +79,8 @@ final class ResultPromiseTest extends TestCase
         $resultConverter = $this->createStub(ResultConverterInterface::class);
         $resultConverter->method('convert')->willReturn($unwrappedResponse);
 
-        $resultPromise = new ResultPromise($resultConverter->convert(...), new RawHttpResult($httpResponse));
-        $resultPromise->await();
+        $deferredResult = new DeferredResult($resultConverter, new RawHttpResult($httpResponse));
+        $deferredResult->getResult();
 
         // The raw response in the model response is now set and not null anymore
         $this->assertSame($httpResponse, $unwrappedResponse->getRawResult()->getObject());
@@ -96,8 +96,8 @@ final class ResultPromiseTest extends TestCase
         $resultConverter = $this->createStub(ResultConverterInterface::class);
         $resultConverter->method('convert')->willReturn($unwrappedResult);
 
-        $resultPromise = new ResultPromise($resultConverter->convert(...), new RawHttpResult($originHttpResponse));
-        $resultPromise->await();
+        $deferredResult = new DeferredResult($resultConverter, new RawHttpResult($originHttpResponse));
+        $deferredResult->getResult();
 
         // It is still the same raw response as set initially and so not overwritten
         $this->assertSame($anotherHttpResponse, $unwrappedResult->getRawResult()->getObject());
@@ -115,8 +115,8 @@ final class ResultPromiseTest extends TestCase
             ->with($rawHttpResponse, $options)
             ->willReturn($this->createResult(null));
 
-        $resultPromise = new ResultPromise($resultConverter->convert(...), $rawHttpResponse, $options);
-        $resultPromise->await();
+        $deferredResult = new DeferredResult($resultConverter, $rawHttpResponse, $options);
+        $deferredResult->getResult();
     }
 
     /**

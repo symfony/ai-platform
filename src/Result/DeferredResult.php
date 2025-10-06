@@ -13,12 +13,13 @@ namespace Symfony\AI\Platform\Result;
 
 use Symfony\AI\Platform\Exception\ExceptionInterface;
 use Symfony\AI\Platform\Exception\UnexpectedResultTypeException;
+use Symfony\AI\Platform\ResultConverterInterface;
 use Symfony\AI\Platform\Vector\Vector;
 
 /**
  * @author Christopher Hertel <mail@christopher-hertel.de>
  */
-final class ResultPromise
+final class DeferredResult
 {
     private bool $isConverted = false;
     private ResultInterface $convertedResult;
@@ -27,7 +28,7 @@ final class ResultPromise
      * @param array<string, mixed> $options
      */
     public function __construct(
-        private readonly \Closure $resultConverter,
+        private readonly ResultConverterInterface $resultConverter,
         private readonly RawResultInterface $rawResult,
         private readonly array $options = [],
     ) {
@@ -38,21 +39,8 @@ final class ResultPromise
      */
     public function getResult(): ResultInterface
     {
-        return $this->await();
-    }
-
-    public function getRawResult(): RawResultInterface
-    {
-        return $this->rawResult;
-    }
-
-    /**
-     * @throws ExceptionInterface
-     */
-    public function await(): ResultInterface
-    {
         if (!$this->isConverted) {
-            $this->convertedResult = ($this->resultConverter)($this->rawResult, $this->options);
+            $this->convertedResult = $this->resultConverter->convert($this->rawResult, $this->options);
 
             if (null === $this->convertedResult->getRawResult()) {
                 // Fallback to set the raw result when it was not handled by the ResultConverter itself
@@ -63,6 +51,11 @@ final class ResultPromise
         }
 
         return $this->convertedResult;
+    }
+
+    public function getRawResult(): RawResultInterface
+    {
+        return $this->rawResult;
     }
 
     /**

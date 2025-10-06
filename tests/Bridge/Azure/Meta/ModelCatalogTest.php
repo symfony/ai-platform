@@ -15,7 +15,7 @@ use Symfony\AI\Platform\Bridge\Azure\Meta\ModelCatalog;
 use Symfony\AI\Platform\Bridge\Meta\Llama;
 use Symfony\AI\Platform\Capability;
 use Symfony\AI\Platform\ModelCatalog\ModelCatalogInterface;
-use Symfony\AI\Platform\Tests\ModelCatalogTestCase;
+use Symfony\AI\Platform\Test\ModelCatalogTestCase;
 
 /**
  * @author Oskar Stark <oskarstark@googlemail.com>

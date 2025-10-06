@@ -12,7 +12,7 @@
 namespace Symfony\AI\Platform;
 
 use Symfony\AI\Platform\ModelCatalog\ModelCatalogInterface;
-use Symfony\AI\Platform\Result\ResultPromise;
+use Symfony\AI\Platform\Result\DeferredResult;
 
 /**
  * @author Christopher Hertel <mail@christopher-hertel.de>
@@ -24,7 +24,7 @@ interface PlatformInterface
      * @param array<mixed>|string|object $input   The input data
      * @param array<string, mixed>       $options The options to customize the model invocation
      */
-    public function invoke(string $model, array|string|object $input, array $options = []): ResultPromise;
+    public function invoke(string $model, array|string|object $input, array $options = []): DeferredResult;
 
     public function getModelCatalog(): ModelCatalogInterface;
 }

@@ -9,13 +9,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\AI\Platform;
+namespace Symfony\AI\Platform\Test;
 
+use Symfony\AI\Platform\Model;
 use Symfony\AI\Platform\ModelCatalog\DynamicModelCatalog;
 use Symfony\AI\Platform\ModelCatalog\ModelCatalogInterface;
+use Symfony\AI\Platform\PlatformInterface;
+use Symfony\AI\Platform\Result\DeferredResult;
 use Symfony\AI\Platform\Result\InMemoryRawResult;
 use Symfony\AI\Platform\Result\ResultInterface;
-use Symfony\AI\Platform\Result\ResultPromise;
 use Symfony\AI\Platform\Result\TextResult;
 
 /**
@@ -38,7 +40,7 @@ class InMemoryPlatform implements PlatformInterface
         $this->modelCatalog = new DynamicModelCatalog();
     }
 
-    public function invoke(string $model, array|string|object $input, array $options = []): ResultPromise
+    public function invoke(string $model, array|string|object $input, array $options = []): DeferredResult
     {
         $model = new class($model) extends Model {
             public function __construct(string $name)
@@ -66,13 +68,13 @@ class InMemoryPlatform implements PlatformInterface
      * @param ResultInterface      $result  The result to wrap in a promise
      * @param array<string, mixed> $options Additional options for the promise
      */
-    private function createPromise(ResultInterface $result, array $options): ResultPromise
+    private function createPromise(ResultInterface $result, array $options): DeferredResult
     {
         $rawResult = $result->getRawResult() ?? new InMemoryRawResult(
             ['text' => $result->getContent()],
             (object) ['text' => $result->getContent()],
         );
 
-        return new ResultPromise(static fn () => $result, $rawResult, $options);
+        return new DeferredResult(new PlainConverter($result), $rawResult, $options);
     }
 }

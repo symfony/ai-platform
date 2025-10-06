@@ -13,8 +13,8 @@ namespace Symfony\AI\Platform;
 
 use Symfony\AI\Platform\Exception\RuntimeException;
 use Symfony\AI\Platform\ModelCatalog\ModelCatalogInterface;
+use Symfony\AI\Platform\Result\DeferredResult;
 use Symfony\AI\Platform\Result\RawResultInterface;
-use Symfony\AI\Platform\Result\ResultPromise;
 
 /**
  * @author Christopher Hertel <mail@christopher-hertel.de>
@@ -46,7 +46,7 @@ final class Platform implements PlatformInterface
         $this->resultConverters = $resultConverters instanceof \Traversable ? iterator_to_array($resultConverters) : $resultConverters;
     }
 
-    public function invoke(string $model, array|string|object $input, array $options = []): ResultPromise
+    public function invoke(string $model, array|string|object $input, array $options = []): DeferredResult
     {
         $model = $this->modelCatalog->getModel($model);
         $payload = $this->contract->createRequestPayload($model, $input);
@@ -84,11 +84,11 @@ final class Platform implements PlatformInterface
     /**
      * @param array<string, mixed> $options
      */
-    private function convertResult(Model $model, RawResultInterface $result, array $options): ResultPromise
+    private function convertResult(Model $model, RawResultInterface $result, array $options): DeferredResult
     {
         foreach ($this->resultConverters as $resultConverter) {
             if ($resultConverter->supports($model)) {
-                return new ResultPromise($resultConverter->convert(...), $result, $options);
+                return new DeferredResult($resultConverter, $result, $options);
             }
         }
 

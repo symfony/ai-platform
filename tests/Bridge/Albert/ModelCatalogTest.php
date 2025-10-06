@@ -15,7 +15,7 @@ use Symfony\AI\Platform\Bridge\Albert\ModelCatalog;
 use Symfony\AI\Platform\Bridge\OpenAi\Gpt;
 use Symfony\AI\Platform\Capability;
 use Symfony\AI\Platform\ModelCatalog\ModelCatalogInterface;
-use Symfony\AI\Platform\Tests\ModelCatalogTestCase;
+use Symfony\AI\Platform\Test\ModelCatalogTestCase;
 
 /**
  * @author Oskar Stark <oskarstark@googlemail.com>

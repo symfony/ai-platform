@@ -15,7 +15,7 @@ use Symfony\AI\Platform\Bridge\Voyage\ModelCatalog;
 use Symfony\AI\Platform\Bridge\Voyage\Voyage;
 use Symfony\AI\Platform\Capability;
 use Symfony\AI\Platform\ModelCatalog\ModelCatalogInterface;
-use Symfony\AI\Platform\Tests\ModelCatalogTestCase;
+use Symfony\AI\Platform\Test\ModelCatalogTestCase;
 
 final class ModelCatalogTest extends ModelCatalogTestCase
 {
