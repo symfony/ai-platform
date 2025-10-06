@@ -230,6 +230,6 @@ final class ResultConverterTest extends TestCase
 
         $this->assertInstanceOf(BinaryResult::class, $convertedResult);
         $this->assertSame($binaryContent, $convertedResult->getContent());
-        $this->assertSame('image/png', $convertedResult->mimeType);
+        $this->assertSame('image/png', $convertedResult->getMimeType());
     }
 }

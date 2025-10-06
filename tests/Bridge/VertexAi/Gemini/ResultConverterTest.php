@@ -154,7 +154,7 @@ final class ResultConverterTest extends TestCase
 
         $this->assertInstanceOf(BinaryResult::class, $result);
         $this->assertSame('base64EncodedImageData', $result->getContent());
-        $this->assertSame('image/png', $result->mimeType);
+        $this->assertSame('image/png', $result->getMimeType());
     }
 
     public function testConvertsInlineDataWithoutMimeTypeToBinaryResult()
@@ -184,6 +184,6 @@ final class ResultConverterTest extends TestCase
 
         $this->assertInstanceOf(BinaryResult::class, $result);
         $this->assertSame('base64EncodedData', $result->getContent());
-        $this->assertNull($result->mimeType);
+        $this->assertNull($result->getMimeType());
     }
 }

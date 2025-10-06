@@ -19,9 +19,14 @@ use Symfony\AI\Platform\Exception\RuntimeException;
 final class BinaryResult extends BaseResult
 {
     public function __construct(
-        public string $data,
-        public ?string $mimeType = null,
+        private string $data,
+        private ?string $mimeType = null,
     ) {
+    }
+
+    public function getMimeType(): ?string
+    {
+        return $this->mimeType;
     }
 
     public function getContent(): string

@@ -66,6 +66,6 @@ final class ElevenLabsConverterTest extends TestCase
         $result = $converter->convert($rawResult);
 
         $this->assertInstanceOf(BinaryResult::class, $result);
-        $this->assertSame('audio/mpeg', $result->mimeType);
+        $this->assertSame('audio/mpeg', $result->getMimeType());
     }
 }
