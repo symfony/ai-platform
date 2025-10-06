@@ -51,10 +51,10 @@ class InMemoryPlatform implements PlatformInterface
         $result = \is_string($this->mockResult) ? $this->mockResult : ($this->mockResult)($model, $input, $options);
 
         if ($result instanceof ResultInterface) {
-            return $this->createPromise($result, $options);
+            return $this->createDeferredResult($result, $options);
         }
 
-        return $this->createPromise(new TextResult($result), $options);
+        return $this->createDeferredResult(new TextResult($result), $options);
     }
 
     public function getModelCatalog(): ModelCatalogInterface
@@ -68,10 +68,11 @@ class InMemoryPlatform implements PlatformInterface
      * @param ResultInterface      $result  The result to wrap in a promise
      * @param array<string, mixed> $options Additional options for the promise
      */
-    private function createPromise(ResultInterface $result, array $options): DeferredResult
+    private function createDeferredResult(ResultInterface $result, array $options): DeferredResult
     {
         $rawResult = $result->getRawResult() ?? new InMemoryRawResult(
             ['text' => $result->getContent()],
+            [],
             (object) ['text' => $result->getContent()],
         );
 
