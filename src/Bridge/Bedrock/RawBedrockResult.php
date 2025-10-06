@@ -12,6 +12,7 @@
 namespace Symfony\AI\Platform\Bridge\Bedrock;
 
 use AsyncAws\BedrockRuntime\Result\InvokeModelResponse;
+use Symfony\AI\Platform\Exception\RuntimeException;
 use Symfony\AI\Platform\Result\RawResultInterface;
 
 /**
@@ -27,6 +28,11 @@ final readonly class RawBedrockResult implements RawResultInterface
     public function getData(): array
     {
         return json_decode($this->invokeModelResponse->getBody(), true, 512, \JSON_THROW_ON_ERROR);
+    }
+
+    public function getDataStream(): iterable
+    {
+        throw new RuntimeException('Streaming is not implemented yet.');
     }
 
     public function getObject(): InvokeModelResponse

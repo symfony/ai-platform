@@ -11,6 +11,7 @@
 
 namespace Symfony\AI\Platform\Bridge\TransformersPhp;
 
+use Symfony\AI\Platform\Exception\RuntimeException;
 use Symfony\AI\Platform\Result\RawResultInterface;
 
 /**
@@ -26,6 +27,11 @@ final readonly class RawPipelineResult implements RawResultInterface
     public function getData(): array
     {
         return $this->pipelineExecution->getResult();
+    }
+
+    public function getDataStream(): iterable
+    {
+        throw new RuntimeException('Streaming is not implemented yet.');
     }
 
     public function getObject(): PipelineExecution

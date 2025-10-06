@@ -26,9 +26,6 @@ use Symfony\AI\Platform\Result\TextResult;
 use Symfony\AI\Platform\Result\ToolCall;
 use Symfony\AI\Platform\Result\ToolCallResult;
 use Symfony\AI\Platform\ResultConverterInterface;
-use Symfony\Component\HttpClient\Chunk\ServerSentEvent;
-use Symfony\Component\HttpClient\EventSourceHttpClient;
-use Symfony\Contracts\HttpClient\ResponseInterface as HttpResponse;
 
 /**
  * @author Mathieu Santostefano <msantostefano@proton.me>
@@ -43,7 +40,7 @@ final class ResultConverter implements ResultConverterInterface
     public function convert(RawResultInterface|RawHttpResult $result, array $options = []): ResultInterface
     {
         if ($options['stream'] ?? false) {
-            return new StreamResult($this->convertStream($result->getObject()));
+            return new StreamResult($this->convertStream($result));
         }
 
         if (404 === $result->getObject()->getStatusCode()
@@ -70,16 +67,10 @@ final class ResultConverter implements ResultConverterInterface
         return 1 === \count($choices) ? $choices[0] : new ChoiceResult(...$choices);
     }
 
-    private function convertStream(HttpResponse $result): \Generator
+    private function convertStream(RawResultInterface $result): \Generator
     {
         $toolCalls = [];
-        foreach ((new EventSourceHttpClient())->stream($result) as $chunk) {
-            if (!$chunk instanceof ServerSentEvent || '[DONE]' === $chunk->getData()) {
-                continue;
-            }
-
-            $data = $chunk->getArrayData();
-
+        foreach ($result->getDataStream() as $data) {
             if ($this->streamIsToolCall($data)) {
                 $toolCalls = $this->convertStreamToToolCalls($toolCalls, $data);
             }

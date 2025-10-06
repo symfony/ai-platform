@@ -19,10 +19,12 @@ namespace Symfony\AI\Platform\Result;
 final readonly class InMemoryRawResult implements RawResultInterface
 {
     /**
-     * @param array<string, mixed> $data
+     * @param array<string, mixed>           $data
+     * @param iterable<array<string, mixed>> $dataStream
      */
     public function __construct(
         private array $data = [],
+        private iterable $dataStream = [],
         private object $object = new \stdClass(),
     ) {
     }
@@ -30,6 +32,11 @@ final readonly class InMemoryRawResult implements RawResultInterface
     public function getData(): array
     {
         return $this->data;
+    }
+
+    public function getDataStream(): iterable
+    {
+        yield from $this->dataStream;
     }
 
     public function getObject(): object

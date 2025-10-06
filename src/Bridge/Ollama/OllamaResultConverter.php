@@ -22,10 +22,6 @@ use Symfony\AI\Platform\Result\ToolCallResult;
 use Symfony\AI\Platform\Result\VectorResult;
 use Symfony\AI\Platform\ResultConverterInterface;
 use Symfony\AI\Platform\Vector\Vector;
-use Symfony\Component\HttpClient\Chunk\FirstChunk;
-use Symfony\Component\HttpClient\Chunk\LastChunk;
-use Symfony\Component\HttpClient\EventSourceHttpClient;
-use Symfony\Contracts\HttpClient\ResponseInterface;
 
 /**
  * @author Christopher Hertel <mail@christopher-hertel.de>
@@ -40,7 +36,7 @@ final readonly class OllamaResultConverter implements ResultConverterInterface
     public function convert(RawResultInterface $result, array $options = []): ResultInterface
     {
         if ($options['stream'] ?? false) {
-            return new StreamResult($this->convertStream($result->getObject()));
+            return new StreamResult($this->convertStream($result));
         }
 
         $data = $result->getData();
@@ -93,20 +89,10 @@ final readonly class OllamaResultConverter implements ResultConverterInterface
         );
     }
 
-    private function convertStream(ResponseInterface $result): \Generator
+    private function convertStream(RawResultInterface $result): \Generator
     {
         $toolCalls = [];
-        foreach ((new EventSourceHttpClient())->stream($result) as $chunk) {
-            if ($chunk instanceof FirstChunk || $chunk instanceof LastChunk) {
-                continue;
-            }
-
-            try {
-                $data = json_decode($chunk->getContent(), true, 512, \JSON_THROW_ON_ERROR);
-            } catch (\JsonException $e) {
-                throw new RuntimeException('Failed to decode JSON: '.$e->getMessage());
-            }
-
+        foreach ($result->getDataStream() as $data) {
             if ($this->streamIsToolCall($data)) {
                 $toolCalls = $this->convertStreamToToolCalls($toolCalls, $data);
             }

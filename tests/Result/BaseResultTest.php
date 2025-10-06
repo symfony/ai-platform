@@ -64,6 +64,11 @@ final class BaseResultTest extends TestCase
                 return ['key' => 'value'];
             }
 
+            public function getDataStream(): iterable
+            {
+                return $this->getData();
+            }
+
             public function getObject(): object
             {
                 return new \stdClass();

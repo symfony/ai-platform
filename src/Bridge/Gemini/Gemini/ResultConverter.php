@@ -25,8 +25,6 @@ use Symfony\AI\Platform\Result\TextResult;
 use Symfony\AI\Platform\Result\ToolCall;
 use Symfony\AI\Platform\Result\ToolCallResult;
 use Symfony\AI\Platform\ResultConverterInterface;
-use Symfony\Component\HttpClient\EventSourceHttpClient;
-use Symfony\Contracts\HttpClient\ResponseInterface as HttpResponse;
 
 /**
  * @author Roy Garrido
@@ -51,7 +49,7 @@ final readonly class ResultConverter implements ResultConverterInterface
         }
 
         if ($options['stream'] ?? false) {
-            return new StreamResult($this->convertStream($response));
+            return new StreamResult($this->convertStream($result));
         }
 
         $data = $result->getData();
@@ -69,50 +67,21 @@ final readonly class ResultConverter implements ResultConverterInterface
         return 1 === \count($choices) ? $choices[0] : new ChoiceResult(...$choices);
     }
 
-    private function convertStream(HttpResponse $result): \Generator
+    private function convertStream(RawResultInterface $result): \Generator
     {
-        foreach ((new EventSourceHttpClient())->stream($result) as $chunk) {
-            if ($chunk->isFirst() || $chunk->isLast()) {
+        foreach ($result->getDataStream() as $data) {
+            $choices = array_map($this->convertChoice(...), $data['candidates'] ?? []);
+
+            if (!$choices) {
                 continue;
             }
 
-            $jsonDelta = trim($chunk->getContent());
-
-            // Remove leading/trailing brackets
-            if (str_starts_with($jsonDelta, '[') || str_starts_with($jsonDelta, ',')) {
-                $jsonDelta = substr($jsonDelta, 1);
-            }
-            if (str_ends_with($jsonDelta, ']')) {
-                $jsonDelta = substr($jsonDelta, 0, -1);
+            if (1 !== \count($choices)) {
+                yield new ChoiceResult(...$choices);
+                continue;
             }
 
-            // Split in case of multiple JSON objects
-            $deltas = explode(",\r\n", $jsonDelta);
-
-            foreach ($deltas as $delta) {
-                if ('' === $delta) {
-                    continue;
-                }
-
-                try {
-                    $data = json_decode($delta, true, 512, \JSON_THROW_ON_ERROR);
-                } catch (\JsonException $e) {
-                    throw new RuntimeException('Failed to decode JSON response.', previous: $e);
-                }
-
-                $choices = array_map($this->convertChoice(...), $data['candidates'] ?? []);
-
-                if (!$choices) {
-                    continue;
-                }
-
-                if (1 !== \count($choices)) {
-                    yield new ChoiceResult(...$choices);
-                    continue;
-                }
-
-                yield $choices[0]->getContent();
-            }
+            yield $choices[0]->getContent();
         }
     }
 

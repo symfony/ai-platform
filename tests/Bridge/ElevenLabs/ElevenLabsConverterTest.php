@@ -35,7 +35,7 @@ final class ElevenLabsConverterTest extends TestCase
         $converter = new ElevenLabsResultConverter(new MockHttpClient());
         $rawResult = new InMemoryRawResult([
             'text' => 'Hello there',
-        ], new class {
+        ], [], new class {
             public function getInfo(): string
             {
                 return 'speech-to-text';
@@ -51,7 +51,7 @@ final class ElevenLabsConverterTest extends TestCase
     public function testConvertTextToSpeechResponse()
     {
         $converter = new ElevenLabsResultConverter(new MockHttpClient());
-        $rawResult = new InMemoryRawResult([], new class {
+        $rawResult = new InMemoryRawResult([], [], new class {
             public function getInfo(): string
             {
                 return 'text-to-speech';
