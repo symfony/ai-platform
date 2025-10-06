@@ -14,6 +14,7 @@ namespace Symfony\AI\Platform\Tests\Bridge\Gemini\Gemini;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Bridge\Gemini\Gemini\ResultConverter;
 use Symfony\AI\Platform\Exception\RuntimeException;
+use Symfony\AI\Platform\Result\BinaryResult;
 use Symfony\AI\Platform\Result\RawHttpResult;
 use Symfony\AI\Platform\Result\ToolCall;
 use Symfony\AI\Platform\Result\ToolCallResult;
@@ -75,5 +76,60 @@ final class ResultConverterTest extends TestCase
         $toolCall = $result->getContent()[0];
         $this->assertInstanceOf(ToolCall::class, $toolCall);
         $this->assertSame('1234', $toolCall->id);
+    }
+
+    public function testConvertsInlineDataToBinaryResult()
+    {
+        $converter = new ResultConverter();
+        $httpResponse = self::createMock(ResponseInterface::class);
+        $httpResponse->method('getStatusCode')->willReturn(200);
+        $httpResponse->method('toArray')->willReturn([
+            'candidates' => [
+                [
+                    'content' => [
+                        'parts' => [
+                            [
+                                'inlineData' => [
+                                    'mimeType' => 'image/png',
+                                    'data' => 'base64EncodedImageData',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+
+        $result = $converter->convert(new RawHttpResult($httpResponse));
+        $this->assertInstanceOf(BinaryResult::class, $result);
+        $this->assertSame('base64EncodedImageData', $result->getContent());
+        $this->assertSame('image/png', $result->mimeType);
+    }
+
+    public function testConvertsInlineDataWithoutMimeTypeToBinaryResult()
+    {
+        $converter = new ResultConverter();
+        $httpResponse = self::createMock(ResponseInterface::class);
+        $httpResponse->method('getStatusCode')->willReturn(200);
+        $httpResponse->method('toArray')->willReturn([
+            'candidates' => [
+                [
+                    'content' => [
+                        'parts' => [
+                            [
+                                'inlineData' => [
+                                    'data' => 'base64EncodedData',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+
+        $result = $converter->convert(new RawHttpResult($httpResponse));
+        $this->assertInstanceOf(BinaryResult::class, $result);
+        $this->assertSame('base64EncodedData', $result->getContent());
+        $this->assertNull($result->mimeType);
     }
 }
