@@ -31,16 +31,16 @@ final class UserMessageTest extends TestCase
         $obj = new UserMessage(new Text('foo'));
 
         $this->assertSame(Role::User, $obj->getRole());
-        $this->assertCount(1, $obj->content);
-        $this->assertInstanceOf(Text::class, $obj->content[0]);
-        $this->assertSame('foo', $obj->content[0]->text);
+        $this->assertCount(1, $obj->getContent());
+        $this->assertInstanceOf(Text::class, $obj->getContent()[0]);
+        $this->assertSame('foo', $obj->getContent()[0]->getText());
     }
 
     public function testConstructionIsPossibleWithMultipleContent()
     {
         $message = new UserMessage(new Text('foo'), new ImageUrl('https://foo.com/bar.jpg'));
 
-        $this->assertCount(2, $message->content);
+        $this->assertCount(2, $message->getContent());
     }
 
     public function testHasAudioContentWithoutAudio()
@@ -75,9 +75,7 @@ final class UserMessageTest extends TestCase
     {
         $message = new UserMessage(new Text('foo'));
 
-        $this->assertInstanceOf(UuidV7::class, $message->id);
         $this->assertInstanceOf(UuidV7::class, $message->getId());
-        $this->assertSame($message->id, $message->getId());
     }
 
     public function testDifferentMessagesHaveDifferentUids()

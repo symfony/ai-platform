@@ -17,7 +17,12 @@ namespace Symfony\AI\Platform\Message\Content;
 final readonly class DocumentUrl implements ContentInterface
 {
     public function __construct(
-        public string $url,
+        private string $url,
     ) {
+    }
+
+    public function getUrl(): string
+    {
+        return $this->url;
     }
 }

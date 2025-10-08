@@ -17,7 +17,12 @@ namespace Symfony\AI\Platform\Message\Content;
 final readonly class Text implements ContentInterface
 {
     public function __construct(
-        public string $text,
+        private string $text,
     ) {
+    }
+
+    public function getText(): string
+    {
+        return $this->text;
     }
 }

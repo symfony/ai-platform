@@ -16,6 +16,7 @@ use Symfony\AI\Platform\Message\Content\ContentInterface;
 use Symfony\AI\Platform\Message\Content\Image;
 use Symfony\AI\Platform\Message\Content\ImageUrl;
 use Symfony\AI\Platform\Message\Content\Text;
+use Symfony\AI\Platform\Metadata\MetadataAwareTrait;
 use Symfony\Component\Uid\AbstractUid;
 use Symfony\Component\Uid\TimeBasedUidInterface;
 use Symfony\Component\Uid\Uuid;
@@ -23,14 +24,16 @@ use Symfony\Component\Uid\Uuid;
 /**
  * @author Denis Zunke <denis.zunke@gmail.com>
  */
-final readonly class UserMessage implements MessageInterface
+final class UserMessage implements MessageInterface
 {
-    /**
-     * @var list<ContentInterface>
-     */
-    public array $content;
+    use MetadataAwareTrait;
 
-    public AbstractUid&TimeBasedUidInterface $id;
+    /**
+     * @var ContentInterface[]
+     */
+    private readonly array $content;
+
+    private readonly AbstractUid&TimeBasedUidInterface $id;
 
     public function __construct(
         ContentInterface ...$content,
@@ -47,6 +50,14 @@ final readonly class UserMessage implements MessageInterface
     public function getId(): AbstractUid&TimeBasedUidInterface
     {
         return $this->id;
+    }
+
+    /**
+     * @return ContentInterface[]
+     */
+    public function getContent(): array
+    {
+        return $this->content;
     }
 
     public function hasAudioContent(): bool
@@ -76,7 +87,7 @@ final readonly class UserMessage implements MessageInterface
         $textParts = [];
         foreach ($this->content as $content) {
             if ($content instanceof Text) {
-                $textParts[] = $content->text;
+                $textParts[] = $content->getText();
             }
         }
 

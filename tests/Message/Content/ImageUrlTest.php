@@ -20,6 +20,6 @@ final class ImageUrlTest extends TestCase
     {
         $image = new ImageUrl('https://foo.com/test.png');
 
-        $this->assertSame('https://foo.com/test.png', $image->url);
+        $this->assertSame('https://foo.com/test.png', $image->getUrl());
     }
 }

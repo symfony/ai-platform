@@ -48,7 +48,7 @@ final class ToolCallMessageNormalizerTest extends TestCase
         $innerNormalizer = $this->createMock(NormalizerInterface::class);
         $innerNormalizer->expects($this->once())
             ->method('normalize')
-            ->with($message->content, null, [])
+            ->with($message->getContent(), null, [])
             ->willReturn($expectedContent);
 
         $this->normalizer->setNormalizer($innerNormalizer);

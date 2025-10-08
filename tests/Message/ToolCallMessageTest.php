@@ -28,8 +28,8 @@ final class ToolCallMessageTest extends TestCase
         $toolCall = new ToolCall('foo', 'bar');
         $obj = new ToolCallMessage($toolCall, 'bar');
 
-        $this->assertSame($toolCall, $obj->toolCall);
-        $this->assertSame('bar', $obj->content);
+        $this->assertSame($toolCall, $obj->getToolCall());
+        $this->assertSame('bar', $obj->getContent());
     }
 
     public function testMessageHasUid()
@@ -37,9 +37,7 @@ final class ToolCallMessageTest extends TestCase
         $toolCall = new ToolCall('foo', 'bar');
         $message = new ToolCallMessage($toolCall, 'bar');
 
-        $this->assertInstanceOf(UuidV7::class, $message->id);
         $this->assertInstanceOf(UuidV7::class, $message->getId());
-        $this->assertSame($message->id, $message->getId());
     }
 
     public function testDifferentMessagesHaveDifferentUids()

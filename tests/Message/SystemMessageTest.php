@@ -28,16 +28,14 @@ final class SystemMessageTest extends TestCase
         $message = new SystemMessage('foo');
 
         $this->assertSame(Role::System, $message->getRole());
-        $this->assertSame('foo', $message->content);
+        $this->assertSame('foo', $message->getContent());
     }
 
     public function testMessageHasUid()
     {
         $message = new SystemMessage('foo');
 
-        $this->assertInstanceOf(UuidV7::class, $message->id);
         $this->assertInstanceOf(UuidV7::class, $message->getId());
-        $this->assertSame($message->id, $message->getId());
     }
 
     public function testDifferentMessagesHaveDifferentUids()

@@ -65,7 +65,7 @@ final class AssistantMessageNormalizerTest extends TestCase
         $innerNormalizer = $this->createMock(NormalizerInterface::class);
         $innerNormalizer->expects($this->once())
             ->method('normalize')
-            ->with($message->toolCalls, null, [])
+            ->with($message->getToolCalls(), null, [])
             ->willReturn($expectedToolCalls);
 
         $this->normalizer->setNormalizer($innerNormalizer);
@@ -89,7 +89,7 @@ final class AssistantMessageNormalizerTest extends TestCase
         $innerNormalizer = $this->createMock(NormalizerInterface::class);
         $innerNormalizer->expects($this->once())
             ->method('normalize')
-            ->with($message->toolCalls, null, [])
+            ->with($message->getToolCalls(), null, [])
             ->willReturn($expectedToolCalls);
 
         $this->normalizer->setNormalizer($innerNormalizer);

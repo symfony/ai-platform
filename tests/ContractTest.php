@@ -22,10 +22,12 @@ use Symfony\AI\Platform\Message\AssistantMessage;
 use Symfony\AI\Platform\Message\Content\Audio;
 use Symfony\AI\Platform\Message\Content\Image;
 use Symfony\AI\Platform\Message\Content\ImageUrl;
+use Symfony\AI\Platform\Message\Content\Text;
 use Symfony\AI\Platform\Message\Message;
 use Symfony\AI\Platform\Message\MessageBag;
 use Symfony\AI\Platform\Message\MessageInterface;
 use Symfony\AI\Platform\Message\Role;
+use Symfony\AI\Platform\Metadata\MetadataAwareTrait;
 use Symfony\AI\Platform\Model;
 use Symfony\Component\Uid\AbstractUid;
 use Symfony\Component\Uid\TimeBasedUidInterface;
@@ -172,6 +174,8 @@ final class ContractTest extends TestCase
         ];
 
         $customSerializableMessage = new class implements MessageInterface, \JsonSerializable {
+            use MetadataAwareTrait;
+
             public function getRole(): Role
             {
                 return Role::User;
@@ -180,6 +184,11 @@ final class ContractTest extends TestCase
             public function getId(): AbstractUid&TimeBasedUidInterface
             {
                 return Uuid::v7();
+            }
+
+            public function getContent(): array
+            {
+                return [new Text('This is a custom serializable message.')];
             }
 
             public function jsonSerialize(): array

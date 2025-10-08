@@ -20,6 +20,6 @@ final class TextTest extends TestCase
     {
         $obj = new Text('foo');
 
-        $this->assertSame('foo', $obj->text);
+        $this->assertSame('foo', $obj->getText());
     }
 }

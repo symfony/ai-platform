@@ -33,8 +33,8 @@ final class AssistantMessageTest extends TestCase
     {
         $message = new AssistantMessage('foo');
 
-        $this->assertSame('foo', $message->content);
-        $this->assertNull($message->toolCalls);
+        $this->assertSame('foo', $message->getContent());
+        $this->assertNull($message->getToolCalls());
     }
 
     public function testConstructionWithoutContentIsPossible()
@@ -42,8 +42,8 @@ final class AssistantMessageTest extends TestCase
         $toolCall = new ToolCall('foo', 'foo');
         $message = new AssistantMessage(toolCalls: [$toolCall]);
 
-        $this->assertNull($message->content);
-        $this->assertSame([$toolCall], $message->toolCalls);
+        $this->assertNull($message->getContent());
+        $this->assertSame([$toolCall], $message->getToolCalls());
         $this->assertTrue($message->hasToolCalls());
     }
 
@@ -51,9 +51,7 @@ final class AssistantMessageTest extends TestCase
     {
         $message = new AssistantMessage('foo');
 
-        $this->assertInstanceOf(UuidV7::class, $message->id);
         $this->assertInstanceOf(UuidV7::class, $message->getId());
-        $this->assertSame($message->id, $message->getId());
     }
 
     public function testDifferentMessagesHaveDifferentUids()

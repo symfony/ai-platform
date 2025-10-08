@@ -34,7 +34,7 @@ final class MessageBagTest extends TestCase
 
         $systemMessage = $messageBag->getSystemMessage();
 
-        $this->assertSame('My amazing system prompt.', $systemMessage->content);
+        $this->assertSame('My amazing system prompt.', $systemMessage->getContent());
     }
 
     public function testGetSystemMessageWithoutSystemMessage()
@@ -65,7 +65,7 @@ final class MessageBagTest extends TestCase
         $newMessageFromBag = $newMessageBag->getMessages()[3];
 
         $this->assertInstanceOf(AssistantMessage::class, $newMessageFromBag);
-        $this->assertSame('It is time to wake up.', $newMessageFromBag->content);
+        $this->assertSame('It is time to wake up.', $newMessageFromBag->getContent());
     }
 
     public function testMerge()
@@ -85,7 +85,7 @@ final class MessageBagTest extends TestCase
         $messageFromBag = $messageBag->getMessages()[3];
 
         $this->assertInstanceOf(AssistantMessage::class, $messageFromBag);
-        $this->assertSame('It is time to wake up.', $messageFromBag->content);
+        $this->assertSame('It is time to wake up.', $messageFromBag->getContent());
     }
 
     public function testWithoutSystemMessage()
@@ -105,12 +105,12 @@ final class MessageBagTest extends TestCase
 
         $assistantMessage = $newMessageBag->getMessages()[0];
         $this->assertInstanceOf(AssistantMessage::class, $assistantMessage);
-        $this->assertSame('It is time to sleep.', $assistantMessage->content);
+        $this->assertSame('It is time to sleep.', $assistantMessage->getContent());
 
         $userMessage = $newMessageBag->getMessages()[1];
         $this->assertInstanceOf(UserMessage::class, $userMessage);
-        $this->assertInstanceOf(Text::class, $userMessage->content[0]);
-        $this->assertSame('Hello, world!', $userMessage->content[0]->text);
+        $this->assertInstanceOf(Text::class, $userMessage->getContent()[0]);
+        $this->assertSame('Hello, world!', $userMessage->getContent()[0]->getText());
     }
 
     public function testPrepend()
@@ -129,7 +129,7 @@ final class MessageBagTest extends TestCase
         $newMessageBagMessage = $newMessageBag->getMessages()[0];
 
         $this->assertInstanceOf(SystemMessage::class, $newMessageBagMessage);
-        $this->assertSame('My amazing system prompt.', $newMessageBagMessage->content);
+        $this->assertSame('My amazing system prompt.', $newMessageBagMessage->getContent());
     }
 
     public function testContainsImageReturnsFalseWithoutImage()
@@ -178,8 +178,8 @@ final class MessageBagTest extends TestCase
         $userMessage = $messageBag->getUserMessage();
 
         $this->assertInstanceOf(UserMessage::class, $userMessage);
-        $this->assertInstanceOf(Text::class, $userMessage->content[0]);
-        $this->assertSame('Hello, world!', $userMessage->content[0]->text);
+        $this->assertInstanceOf(Text::class, $userMessage->getContent()[0]);
+        $this->assertSame('Hello, world!', $userMessage->getContent()[0]->getText());
     }
 
     public function testGetUserMessageReturnsNullWithoutUserMessage()
@@ -204,8 +204,8 @@ final class MessageBagTest extends TestCase
         $userMessage = $messageBag->getUserMessage();
 
         $this->assertInstanceOf(UserMessage::class, $userMessage);
-        $this->assertInstanceOf(Text::class, $userMessage->content[0]);
-        $this->assertSame('First user message', $userMessage->content[0]->text);
+        $this->assertInstanceOf(Text::class, $userMessage->getContent()[0]);
+        $this->assertSame('First user message', $userMessage->getContent()[0]->getText());
     }
 
     public function testGetUserMessageText()
