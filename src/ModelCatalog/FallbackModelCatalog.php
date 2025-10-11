@@ -11,8 +11,11 @@
 
 namespace Symfony\AI\Platform\ModelCatalog;
 
-/*
- * A dynamic model catalog that accepts any model name and creates models with all capabilities.
+use Symfony\AI\Platform\Capability;
+use Symfony\AI\Platform\Model;
+
+/**
+ * A fallback model catalog that accepts any model name and creates models with all capabilities.
  *
  * This class is useful for platforms that support a wide range of models dynamically
  * without needing to predefine them in a static catalog. Since we don't know what specific
@@ -20,10 +23,7 @@ namespace Symfony\AI\Platform\ModelCatalog;
  *
  * @author Oskar Stark <oskarstark@googlemail.com>
  */
-use Symfony\AI\Platform\Capability;
-use Symfony\AI\Platform\Model;
-
-class DynamicModelCatalog extends AbstractModelCatalog
+class FallbackModelCatalog extends AbstractModelCatalog
 {
     public function __construct()
     {

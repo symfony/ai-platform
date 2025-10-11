@@ -12,7 +12,7 @@
 namespace Symfony\AI\Platform\Test;
 
 use Symfony\AI\Platform\Model;
-use Symfony\AI\Platform\ModelCatalog\DynamicModelCatalog;
+use Symfony\AI\Platform\ModelCatalog\FallbackModelCatalog;
 use Symfony\AI\Platform\ModelCatalog\ModelCatalogInterface;
 use Symfony\AI\Platform\PlatformInterface;
 use Symfony\AI\Platform\Result\DeferredResult;
@@ -37,7 +37,7 @@ class InMemoryPlatform implements PlatformInterface
      */
     public function __construct(private readonly \Closure|string $mockResult)
     {
-        $this->modelCatalog = new DynamicModelCatalog();
+        $this->modelCatalog = new FallbackModelCatalog();
     }
 
     public function invoke(string $model, array|string|object $input, array $options = []): DeferredResult

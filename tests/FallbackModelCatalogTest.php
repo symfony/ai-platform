@@ -15,16 +15,16 @@ use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Capability;
 use Symfony\AI\Platform\Model;
-use Symfony\AI\Platform\ModelCatalog\DynamicModelCatalog;
+use Symfony\AI\Platform\ModelCatalog\FallbackModelCatalog;
 
 /**
  * @author Oskar Stark <oskarstark@googlemail.com>
  */
-final class DynamicModelCatalogTest extends TestCase
+final class FallbackModelCatalogTest extends TestCase
 {
     public function testGetModelReturnsModelWithAllCapabilities()
     {
-        $catalog = new DynamicModelCatalog();
+        $catalog = new FallbackModelCatalog();
         $model = $catalog->getModel('test-model');
 
         $this->assertInstanceOf(Model::class, $model);
@@ -38,7 +38,7 @@ final class DynamicModelCatalogTest extends TestCase
 
     public function testGetModelWithOptions()
     {
-        $catalog = new DynamicModelCatalog();
+        $catalog = new FallbackModelCatalog();
         $model = $catalog->getModel('test-model?temperature=0.7&max_tokens=1000');
 
         $this->assertInstanceOf(Model::class, $model);
@@ -59,7 +59,7 @@ final class DynamicModelCatalogTest extends TestCase
     #[TestWith(['custom-local-model'])]
     public function testGetModelAcceptsAnyModelName(string $modelName)
     {
-        $catalog = new DynamicModelCatalog();
+        $catalog = new FallbackModelCatalog();
         $model = $catalog->getModel($modelName);
 
         $this->assertInstanceOf(Model::class, $model);
