@@ -25,7 +25,7 @@ final class ModelCatalogTest extends ModelCatalogTestCase
     public static function modelsProvider(): iterable
     {
         // TransformersPhp can use various models from HuggingFace, so we test with example model names
-        // Since it extends DynamicModelCatalog, all capabilities are provided
+        // Since it extends FallbackModelCatalog, all capabilities are provided
         yield 'microsoft/DialoGPT-medium' => ['microsoft/DialoGPT-medium', Model::class, Capability::cases()];
         yield 'sentence-transformers/all-MiniLM-L6-v2' => ['sentence-transformers/all-MiniLM-L6-v2', Model::class, Capability::cases()];
         yield 'xenova/text-generation-webui' => ['xenova/text-generation-webui', Model::class, Capability::cases()];

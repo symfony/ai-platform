@@ -16,7 +16,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Capability;
 use Symfony\AI\Platform\Exception\ModelNotFoundException;
 use Symfony\AI\Platform\Model;
-use Symfony\AI\Platform\ModelCatalog\DynamicModelCatalog;
+use Symfony\AI\Platform\ModelCatalog\FallbackModelCatalog;
 use Symfony\AI\Platform\ModelCatalog\ModelCatalogInterface;
 
 /**
@@ -61,8 +61,8 @@ abstract class ModelCatalogTestCase extends TestCase
     {
         $catalog = $this->createModelCatalog();
 
-        // Skip this test for catalogs that accept any model (like DynamicModelCatalog)
-        if ($catalog instanceof DynamicModelCatalog) {
+        // Skip this test for catalogs that accept any model (like FallbackModelCatalog)
+        if ($catalog instanceof FallbackModelCatalog) {
             $this->markTestSkipped('This catalog accepts any model name');
         }
 
@@ -77,8 +77,8 @@ abstract class ModelCatalogTestCase extends TestCase
         $catalog = $this->createModelCatalog();
         $models = $catalog->getModels();
 
-        // Skip this test for catalogs that accept any model (like DynamicModelCatalog)
-        if ($catalog instanceof DynamicModelCatalog) {
+        // Skip this test for catalogs that accept any model (like FallbackModelCatalog)
+        if ($catalog instanceof FallbackModelCatalog) {
             $this->markTestSkipped('This catalog accepts any model name');
         }
 
@@ -99,8 +99,8 @@ abstract class ModelCatalogTestCase extends TestCase
     {
         $catalog = $this->createModelCatalog();
 
-        // Skip this test for catalogs that accept any model (like DynamicModelCatalog)
-        if ($catalog instanceof DynamicModelCatalog) {
+        // Skip this test for catalogs that accept any model (like FallbackModelCatalog)
+        if ($catalog instanceof FallbackModelCatalog) {
             $this->markTestSkipped('This catalog accepts any model name');
         }
 
