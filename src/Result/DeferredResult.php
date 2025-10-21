@@ -53,6 +53,11 @@ final class DeferredResult
         return $this->convertedResult;
     }
 
+    public function getResultConverter(): ResultConverterInterface
+    {
+        return $this->resultConverter;
+    }
+
     public function getRawResult(): RawResultInterface
     {
         return $this->rawResult;
