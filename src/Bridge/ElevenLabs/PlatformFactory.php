@@ -11,6 +11,7 @@
 
 namespace Symfony\AI\Platform\Bridge\ElevenLabs;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\AI\Platform\Bridge\ElevenLabs\Contract\ElevenLabsContract;
 use Symfony\AI\Platform\Contract;
 use Symfony\AI\Platform\ModelCatalog\ModelCatalogInterface;
@@ -29,6 +30,7 @@ final readonly class PlatformFactory
         ?HttpClientInterface $httpClient = null,
         ModelCatalogInterface $modelCatalog = new ModelCatalog(),
         ?Contract $contract = null,
+        ?EventDispatcherInterface $eventDispatcher = null,
     ): Platform {
         $httpClient = $httpClient instanceof EventSourceHttpClient ? $httpClient : new EventSourceHttpClient($httpClient);
 
@@ -37,6 +39,7 @@ final readonly class PlatformFactory
             [new ElevenLabsResultConverter($httpClient)],
             $modelCatalog,
             $contract ?? ElevenLabsContract::create(),
+            $eventDispatcher,
         );
     }
 }

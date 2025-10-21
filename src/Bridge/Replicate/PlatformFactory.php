@@ -11,6 +11,7 @@
 
 namespace Symfony\AI\Platform\Bridge\Replicate;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\AI\Platform\Bridge\Replicate\Contract\LlamaMessageBagNormalizer;
 use Symfony\AI\Platform\Contract;
 use Symfony\AI\Platform\ModelCatalog\ModelCatalogInterface;
@@ -29,12 +30,14 @@ final class PlatformFactory
         ?HttpClientInterface $httpClient = null,
         ModelCatalogInterface $modelCatalog = new ModelCatalog(),
         ?Contract $contract = null,
+        ?EventDispatcherInterface $eventDispatcher = null,
     ): Platform {
         return new Platform(
             [new LlamaModelClient(new Client($httpClient ?? HttpClient::create(), new Clock(), $apiKey))],
             [new LlamaResultConverter()],
             $modelCatalog,
             $contract ?? Contract::create(new LlamaMessageBagNormalizer()),
+            $eventDispatcher,
         );
     }
 }

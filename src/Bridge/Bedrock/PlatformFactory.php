@@ -12,6 +12,7 @@
 namespace Symfony\AI\Platform\Bridge\Bedrock;
 
 use AsyncAws\BedrockRuntime\BedrockRuntimeClient;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\AI\Platform\Bridge\Anthropic\Contract as AnthropicContract;
 use Symfony\AI\Platform\Bridge\Bedrock\Anthropic\ClaudeModelClient;
 use Symfony\AI\Platform\Bridge\Bedrock\Anthropic\ClaudeResultConverter;
@@ -35,6 +36,7 @@ final readonly class PlatformFactory
         BedrockRuntimeClient $bedrockRuntimeClient = new BedrockRuntimeClient(),
         ModelCatalogInterface $modelCatalog = new ModelCatalog(),
         ?Contract $contract = null,
+        ?EventDispatcherInterface $eventDispatcher = null,
     ): Platform {
         if (!class_exists(BedrockRuntimeClient::class)) {
             throw new RuntimeException('For using the Bedrock platform, the async-aws/bedrock-runtime package is required. Try running "composer require async-aws/bedrock-runtime".');
@@ -67,7 +69,8 @@ final readonly class PlatformFactory
                 new NovaContract\ToolCallMessageNormalizer(),
                 new NovaContract\ToolNormalizer(),
                 new NovaContract\UserMessageNormalizer(),
-            )
+            ),
+            $eventDispatcher,
         );
     }
 }

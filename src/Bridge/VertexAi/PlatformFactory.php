@@ -12,6 +12,7 @@
 namespace Symfony\AI\Platform\Bridge\VertexAi;
 
 use Google\Auth\ApplicationDefaultCredentials;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\AI\Platform\Bridge\VertexAi\Contract\GeminiContract;
 use Symfony\AI\Platform\Bridge\VertexAi\Embeddings\ModelClient as EmbeddingsModelClient;
 use Symfony\AI\Platform\Bridge\VertexAi\Embeddings\ResultConverter as EmbeddingsResultConverter;
@@ -35,6 +36,7 @@ final readonly class PlatformFactory
         ?HttpClientInterface $httpClient = null,
         ModelCatalogInterface $modelCatalog = new ModelCatalog(),
         ?Contract $contract = null,
+        ?EventDispatcherInterface $eventDispatcher = null,
     ): Platform {
         if (!class_exists(ApplicationDefaultCredentials::class)) {
             throw new RuntimeException('For using the Vertex AI platform, google/auth package is required for authentication via application default credentials. Try running "composer require google/auth".');
@@ -47,6 +49,7 @@ final readonly class PlatformFactory
             [new GeminiResultConverter(), new EmbeddingsResultConverter()],
             $modelCatalog,
             $contract ?? GeminiContract::create(),
+            $eventDispatcher,
         );
     }
 }

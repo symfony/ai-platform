@@ -11,6 +11,7 @@
 
 namespace Symfony\AI\Platform\Bridge\Azure\OpenAi;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\AI\Platform\Bridge\OpenAi\Embeddings;
 use Symfony\AI\Platform\Bridge\OpenAi\Gpt;
 use Symfony\AI\Platform\Bridge\OpenAi\ModelCatalog;
@@ -35,6 +36,7 @@ final readonly class PlatformFactory
         ?HttpClientInterface $httpClient = null,
         ModelCatalogInterface $modelCatalog = new ModelCatalog(),
         ?Contract $contract = null,
+        ?EventDispatcherInterface $eventDispatcher = null,
     ): Platform {
         $httpClient = $httpClient instanceof EventSourceHttpClient ? $httpClient : new EventSourceHttpClient($httpClient);
         $embeddingsModelClient = new EmbeddingsModelClient($httpClient, $baseUrl, $deployment, $apiVersion, $apiKey);
@@ -46,6 +48,7 @@ final readonly class PlatformFactory
             [new Gpt\ResultConverter(), new Embeddings\ResultConverter(), new Whisper\ResultConverter()],
             $modelCatalog,
             $contract ?? Contract::create(new AudioNormalizer()),
+            $eventDispatcher,
         );
     }
 }
