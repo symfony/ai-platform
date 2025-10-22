@@ -9,9 +9,8 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\AI\Platform\Bridge\Azure\Meta;
+namespace Symfony\AI\Platform\Bridge\Meta;
 
-use Symfony\AI\Platform\Bridge\Meta\Llama;
 use Symfony\AI\Platform\Capability;
 use Symfony\AI\Platform\ModelCatalog\AbstractModelCatalog;
 

@@ -11,6 +11,7 @@
 
 namespace Symfony\AI\Platform\Bridge\Azure\Meta;
 
+use Symfony\AI\Platform\Bridge\Meta\ModelCatalog;
 use Symfony\AI\Platform\Contract;
 use Symfony\AI\Platform\ModelCatalog\ModelCatalogInterface;
 use Symfony\AI\Platform\Platform;
