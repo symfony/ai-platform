@@ -12,6 +12,7 @@
 namespace Symfony\AI\Platform\Bridge\Voyage;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Symfony\AI\Platform\Bridge\Voyage\Contract\VoyageContract;
 use Symfony\AI\Platform\Contract;
 use Symfony\AI\Platform\ModelCatalog\ModelCatalogInterface;
 use Symfony\AI\Platform\Platform;
@@ -36,7 +37,7 @@ final class PlatformFactory
             [new ModelClient($httpClient, $apiKey)],
             [new ResultConverter()],
             $modelCatalog,
-            $contract,
+            $contract ?? VoyageContract::create(),
             $eventDispatcher,
         );
     }
