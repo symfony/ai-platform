@@ -183,7 +183,7 @@ final class FactoryTest extends TestCase
                 'isActive' => ['type' => 'boolean'],
                 'age' => ['type' => ['integer', 'null']],
             ],
-            'required' => ['id', 'name', 'createdAt', 'isActive'],
+            'required' => ['id', 'name', 'createdAt', 'isActive', 'age'],
             'additionalProperties' => false,
         ];
 
@@ -304,7 +304,7 @@ final class FactoryTest extends TestCase
                     ],
                 ],
             ],
-            'required' => [],
+            'required' => ['time'],
             'additionalProperties' => false,
         ];
 
@@ -347,7 +347,7 @@ final class FactoryTest extends TestCase
                     'enum' => ['Foo', 'Bar', null],
                 ],
             ],
-            'required' => ['name', 'taxRate'],
+            'required' => ['name', 'taxRate', 'category'],
             'additionalProperties' => false,
         ];
 

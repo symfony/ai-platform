@@ -4,6 +4,7 @@ CHANGELOG
 0.1
 ---
 
+ * Add nullables as required in structured outputs
  * Add support for Albert API for French/EU data sovereignty
  * Add unified abstraction layer for interacting with various AI models and providers
  * Add support for 16+ AI providers:
