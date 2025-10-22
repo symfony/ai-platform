@@ -117,7 +117,9 @@ final readonly class Factory
                 if (!isset($schema['anyOf'])) {
                     $schema['type'] = [$schema['type'], 'null'];
                 }
-            } elseif (!($element instanceof \ReflectionParameter && $element->isOptional())) {
+            }
+
+            if (!($element instanceof \ReflectionParameter && $element->isOptional())) {
                 $result['required'][] = $name;
             }
 
