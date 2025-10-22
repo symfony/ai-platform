@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\AI\Platform\Tests\Bridge\Azure\Meta;
+namespace Symfony\AI\Platform\Tests\Bridge\Meta;
 
-use Symfony\AI\Platform\Bridge\Azure\Meta\ModelCatalog;
 use Symfony\AI\Platform\Bridge\Meta\Llama;
+use Symfony\AI\Platform\Bridge\Meta\ModelCatalog;
 use Symfony\AI\Platform\Capability;
 use Symfony\AI\Platform\ModelCatalog\ModelCatalogInterface;
 use Symfony\AI\Platform\Test\ModelCatalogTestCase;
