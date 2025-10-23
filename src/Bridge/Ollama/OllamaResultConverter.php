@@ -95,6 +95,7 @@ final readonly class OllamaResultConverter implements ResultConverterInterface
 
     private function convertStream(ResponseInterface $result): \Generator
     {
+        $toolCalls = [];
         foreach ((new EventSourceHttpClient())->stream($result) as $chunk) {
             if ($chunk instanceof FirstChunk || $chunk instanceof LastChunk) {
                 continue;
@@ -106,6 +107,14 @@ final readonly class OllamaResultConverter implements ResultConverterInterface
                 throw new RuntimeException('Failed to decode JSON: '.$e->getMessage());
             }
 
+            if ($this->streamIsToolCall($data)) {
+                $toolCalls = $this->convertStreamToToolCalls($toolCalls, $data);
+            }
+
+            if ([] !== $toolCalls && $this->isToolCallsStreamFinished($data)) {
+                yield new ToolCallResult(...$toolCalls);
+            }
+
             yield new OllamaMessageChunk(
                 $data['model'],
                 new \DateTimeImmutable($data['created_at']),
@@ -113,5 +122,40 @@ final readonly class OllamaResultConverter implements ResultConverterInterface
                 $data['done'],
             );
         }
+    }
+
+    /**
+     * @param array<string, mixed> $toolCalls
+     * @param array<string, mixed> $data
+     *
+     * @return array<ToolCall>
+     */
+    private function convertStreamToToolCalls(array $toolCalls, array $data): array
+    {
+        if (!isset($data['message']['tool_calls'])) {
+            return $toolCalls;
+        }
+
+        foreach ($data['message']['tool_calls'] ?? [] as $id => $toolCall) {
+            $toolCalls[] = new ToolCall($id, $toolCall['function']['name'], $toolCall['function']['arguments']);
+        }
+
+        return $toolCalls;
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     */
+    private function streamIsToolCall(array $data): bool
+    {
+        return isset($data['message']['tool_calls']);
+    }
+
+    /**
+     * @param array<string, mixed> $data^
+     */
+    private function isToolCallsStreamFinished(array $data): bool
+    {
+        return isset($data['done']) && true === $data['done'];
     }
 }
