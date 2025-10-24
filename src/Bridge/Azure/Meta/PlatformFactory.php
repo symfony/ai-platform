@@ -11,6 +11,7 @@
 
 namespace Symfony\AI\Platform\Bridge\Azure\Meta;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\AI\Platform\Bridge\Meta\ModelCatalog;
 use Symfony\AI\Platform\Contract;
 use Symfony\AI\Platform\ModelCatalog\ModelCatalogInterface;
@@ -29,9 +30,10 @@ final readonly class PlatformFactory
         ?HttpClientInterface $httpClient = null,
         ModelCatalogInterface $modelCatalog = new ModelCatalog(),
         ?Contract $contract = null,
+        ?EventDispatcherInterface $eventDispatcher = null,
     ): Platform {
         $modelClient = new LlamaModelClient($httpClient ?? HttpClient::create(), $baseUrl, $apiKey);
 
-        return new Platform([$modelClient], [new LlamaResultConverter()], $modelCatalog, $contract);
+        return new Platform([$modelClient], [new LlamaResultConverter()], $modelCatalog, $contract, $eventDispatcher);
     }
 }

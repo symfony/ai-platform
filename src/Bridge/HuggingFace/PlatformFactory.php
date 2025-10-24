@@ -11,6 +11,7 @@
 
 namespace Symfony\AI\Platform\Bridge\HuggingFace;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\AI\Platform\Bridge\HuggingFace\Contract\FileNormalizer;
 use Symfony\AI\Platform\Bridge\HuggingFace\Contract\MessageBagNormalizer;
 use Symfony\AI\Platform\Contract;
@@ -28,6 +29,7 @@ final readonly class PlatformFactory
         string $provider = Provider::HF_INFERENCE,
         ?HttpClientInterface $httpClient = null,
         ?Contract $contract = null,
+        ?EventDispatcherInterface $eventDispatcher = null,
     ): Platform {
         $httpClient = $httpClient instanceof EventSourceHttpClient ? $httpClient : new EventSourceHttpClient($httpClient);
 
@@ -39,6 +41,7 @@ final readonly class PlatformFactory
                 new FileNormalizer(),
                 new MessageBagNormalizer(),
             ),
+            $eventDispatcher,
         );
     }
 }

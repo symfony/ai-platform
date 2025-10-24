@@ -11,6 +11,7 @@
 
 namespace Symfony\AI\Platform\Bridge\OpenAi;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\AI\Platform\Bridge\OpenAi\Contract\OpenAiContract;
 use Symfony\AI\Platform\Contract;
 use Symfony\AI\Platform\ModelCatalog\ModelCatalogInterface;
@@ -32,6 +33,7 @@ final readonly class PlatformFactory
         ModelCatalogInterface $modelCatalog = new ModelCatalog(),
         ?Contract $contract = null,
         ?string $region = null,
+        ?EventDispatcherInterface $eventDispatcher = null,
     ): Platform {
         $httpClient = $httpClient instanceof EventSourceHttpClient ? $httpClient : new EventSourceHttpClient($httpClient);
 
@@ -50,6 +52,7 @@ final readonly class PlatformFactory
             ],
             $modelCatalog,
             $contract ?? OpenAiContract::create(),
+            $eventDispatcher,
         );
     }
 }

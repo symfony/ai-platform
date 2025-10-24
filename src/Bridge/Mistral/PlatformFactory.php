@@ -11,6 +11,7 @@
 
 namespace Symfony\AI\Platform\Bridge\Mistral;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\AI\Platform\Bridge\Mistral\Contract\DocumentNormalizer;
 use Symfony\AI\Platform\Bridge\Mistral\Contract\DocumentUrlNormalizer;
 use Symfony\AI\Platform\Bridge\Mistral\Contract\ImageUrlNormalizer;
@@ -31,6 +32,7 @@ final class PlatformFactory
         ?HttpClientInterface $httpClient = null,
         ModelCatalogInterface $modelCatalog = new ModelCatalog(),
         ?Contract $contract = null,
+        ?EventDispatcherInterface $eventDispatcher = null,
     ): Platform {
         $httpClient = $httpClient instanceof EventSourceHttpClient ? $httpClient : new EventSourceHttpClient($httpClient);
 
@@ -44,6 +46,7 @@ final class PlatformFactory
                 new DocumentUrlNormalizer(),
                 new ImageUrlNormalizer(),
             ),
+            $eventDispatcher,
         );
     }
 }

@@ -11,6 +11,7 @@
 
 namespace Symfony\AI\Platform\Bridge\Gemini;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\AI\Platform\Bridge\Gemini\Contract\GeminiContract;
 use Symfony\AI\Platform\Bridge\Gemini\Embeddings\ModelClient as EmbeddingsModelClient;
 use Symfony\AI\Platform\Bridge\Gemini\Embeddings\ResultConverter as EmbeddingsResultConverter;
@@ -32,6 +33,7 @@ final readonly class PlatformFactory
         ?HttpClientInterface $httpClient = null,
         ModelCatalogInterface $modelCatalog = new ModelCatalog(),
         ?Contract $contract = null,
+        ?EventDispatcherInterface $eventDispatcher = null,
     ): Platform {
         $httpClient = $httpClient instanceof EventSourceHttpClient ? $httpClient : new EventSourceHttpClient($httpClient);
 
@@ -40,6 +42,7 @@ final readonly class PlatformFactory
             [new EmbeddingsResultConverter(), new GeminiResultConverter()],
             $modelCatalog,
             $contract ?? GeminiContract::create(),
+            $eventDispatcher,
         );
     }
 }

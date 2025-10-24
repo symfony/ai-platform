@@ -11,6 +11,7 @@
 
 namespace Symfony\AI\Platform\Bridge\Albert;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\AI\Platform\Bridge\OpenAi\Embeddings;
 use Symfony\AI\Platform\Bridge\OpenAi\Gpt;
 use Symfony\AI\Platform\Contract;
@@ -28,6 +29,7 @@ final class PlatformFactory
         #[\SensitiveParameter] string $apiKey,
         string $baseUrl,
         ?HttpClientInterface $httpClient = null,
+        ?EventDispatcherInterface $eventDispatcher = null,
     ): Platform {
         if (!str_starts_with($baseUrl, 'https://')) {
             throw new InvalidArgumentException('The Albert URL must start with "https://".');
@@ -52,6 +54,7 @@ final class PlatformFactory
             [new Gpt\ResultConverter(), new Embeddings\ResultConverter()],
             new ModelCatalog(),
             Contract::create(),
+            $eventDispatcher,
         );
     }
 }

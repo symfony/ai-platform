@@ -11,6 +11,7 @@
 
 namespace Symfony\AI\Platform\Bridge\LmStudio;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\AI\Platform\Bridge\LmStudio\Embeddings\ModelClient;
 use Symfony\AI\Platform\Contract;
 use Symfony\AI\Platform\ModelCatalog\ModelCatalogInterface;
@@ -28,6 +29,7 @@ class PlatformFactory
         ?HttpClientInterface $httpClient = null,
         ModelCatalogInterface $modelCatalog = new ModelCatalog(),
         ?Contract $contract = null,
+        ?EventDispatcherInterface $eventDispatcher = null,
     ): Platform {
         $httpClient = $httpClient instanceof EventSourceHttpClient ? $httpClient : new EventSourceHttpClient($httpClient);
 
@@ -41,7 +43,8 @@ class PlatformFactory
                 new Completions\ResultConverter(),
             ],
             $modelCatalog,
-            $contract
+            $contract,
+            $eventDispatcher,
         );
     }
 }

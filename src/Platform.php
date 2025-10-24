@@ -13,6 +13,7 @@ namespace Symfony\AI\Platform;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\AI\Platform\Event\InvocationEvent;
+use Symfony\AI\Platform\Event\ResultEvent;
 use Symfony\AI\Platform\Exception\RuntimeException;
 use Symfony\AI\Platform\ModelCatalog\ModelCatalogInterface;
 use Symfony\AI\Platform\Result\DeferredResult;
@@ -63,9 +64,12 @@ final class Platform implements PlatformInterface
             $options['tools'] = $this->contract->createToolOption($options['tools'], $model);
         }
 
-        $result = $this->doInvoke($model, $payload, $options);
+        $result = $this->convertResult($model, $this->doInvoke($model, $payload, $options), $options);
 
-        return $this->convertResult($model, $result, $options);
+        $event = new ResultEvent($model, $result, $options);
+        $this->eventDispatcher?->dispatch($event);
+
+        return $event->getDeferredResult();
     }
 
     public function getModelCatalog(): ModelCatalogInterface

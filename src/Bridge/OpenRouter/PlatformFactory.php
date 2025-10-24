@@ -11,6 +11,7 @@
 
 namespace Symfony\AI\Platform\Bridge\OpenRouter;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\AI\Platform\Bridge\Gemini\Contract\AssistantMessageNormalizer;
 use Symfony\AI\Platform\Bridge\Gemini\Contract\MessageBagNormalizer;
 use Symfony\AI\Platform\Bridge\Gemini\Contract\UserMessageNormalizer;
@@ -30,6 +31,7 @@ final class PlatformFactory
         ?HttpClientInterface $httpClient = null,
         ModelCatalogInterface $modelCatalog = new ModelCatalog(),
         ?Contract $contract = null,
+        ?EventDispatcherInterface $eventDispatcher = null,
     ): Platform {
         $httpClient = $httpClient instanceof EventSourceHttpClient ? $httpClient : new EventSourceHttpClient($httpClient);
 
@@ -42,6 +44,7 @@ final class PlatformFactory
                 new MessageBagNormalizer(),
                 new UserMessageNormalizer(),
             ),
+            $eventDispatcher,
         );
     }
 }

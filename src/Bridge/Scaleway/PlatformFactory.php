@@ -11,6 +11,7 @@
 
 namespace Symfony\AI\Platform\Bridge\Scaleway;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\AI\Platform\Bridge\Scaleway\Embeddings\ModelClient as ScalewayEmbeddingsModelClient;
 use Symfony\AI\Platform\Bridge\Scaleway\Embeddings\ResultConverter as ScalewayEmbeddingsResponseConverter;
 use Symfony\AI\Platform\Bridge\Scaleway\Llm\ModelClient as ScalewayModelClient;
@@ -31,6 +32,7 @@ final class PlatformFactory
         ?HttpClientInterface $httpClient = null,
         ModelCatalogInterface $modelCatalog = new ModelCatalog(),
         ?Contract $contract = null,
+        ?EventDispatcherInterface $eventDispatcher = null,
     ): Platform {
         $httpClient = $httpClient instanceof EventSourceHttpClient ? $httpClient : new EventSourceHttpClient($httpClient);
 
@@ -45,6 +47,7 @@ final class PlatformFactory
             ],
             $modelCatalog,
             $contract,
+            $eventDispatcher,
         );
     }
 }
