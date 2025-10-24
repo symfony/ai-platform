@@ -11,12 +11,14 @@
 
 namespace Symfony\AI\Platform\StructuredOutput;
 
+use Symfony\AI\Platform\Exception\RuntimeException;
 use Symfony\AI\Platform\Model;
 use Symfony\AI\Platform\Result\ObjectResult;
 use Symfony\AI\Platform\Result\RawResultInterface;
 use Symfony\AI\Platform\Result\ResultInterface;
 use Symfony\AI\Platform\Result\TextResult;
 use Symfony\AI\Platform\ResultConverterInterface;
+use Symfony\Component\Serializer\Exception\ExceptionInterface as SerializerExceptionInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
 final readonly class ResultConverter implements ResultConverterInterface
@@ -41,8 +43,14 @@ final readonly class ResultConverter implements ResultConverterInterface
             return $innerResult;
         }
 
-        $structure = null === $this->outputClass ? json_decode($innerResult->getContent(), true)
-            : $this->serializer->deserialize($innerResult->getContent(), $this->outputClass, 'json');
+        try {
+            $structure = null === $this->outputClass ? json_decode($innerResult->getContent(), true, flags: \JSON_THROW_ON_ERROR)
+                : $this->serializer->deserialize($innerResult->getContent(), $this->outputClass, 'json');
+        } catch (\JsonException $e) {
+            throw new RuntimeException('Cannot json decode the content.', previous: $e);
+        } catch (SerializerExceptionInterface $e) {
+            throw new RuntimeException(\sprintf('Cannot deserialize the content into the "%s" class.', $this->outputClass), previous: $e);
+        }
 
         $objectResult = new ObjectResult($structure);
         $objectResult->setRawResult($result);
