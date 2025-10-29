@@ -106,6 +106,7 @@ final class OllamaResultConverter implements ResultConverterInterface
                 new \DateTimeImmutable($data['created_at']),
                 $data['message'],
                 $data['done'],
+                $data,
             );
         }
     }

@@ -18,12 +18,14 @@ final class OllamaMessageChunk
 {
     /**
      * @param array<string, mixed> $message
+     * @param array<string, mixed> $raw
      */
     public function __construct(
         public readonly string $model,
         public readonly \DateTimeImmutable $created_at,
         public readonly array $message,
         public readonly bool $done,
+        public readonly array $raw,
     ) {
     }
 
@@ -38,8 +40,18 @@ final class OllamaMessageChunk
         return $this->message['content'] ?? null;
     }
 
+    public function getThinking(): ?string
+    {
+        return $this->message['thinking'] ?? null;
+    }
+
     public function getRole(): ?string
     {
         return $this->message['role'] ?? null;
+    }
+
+    public function isDone(): bool
+    {
+        return $this->done;
     }
 }
