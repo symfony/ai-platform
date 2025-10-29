@@ -25,6 +25,7 @@ final class ModelCatalogTest extends ModelCatalogTestCase
     public static function modelsProvider(): iterable
     {
         yield 'deepseek-r1' => ['deepseek-r1', Ollama::class, [Capability::INPUT_MESSAGES, Capability::OUTPUT_TEXT, Capability::OUTPUT_STRUCTURED, Capability::TOOL_CALLING]];
+        yield 'gpt-oss' => ['gpt-oss', Ollama::class, [Capability::INPUT_MESSAGES, Capability::OUTPUT_TEXT, Capability::OUTPUT_STRUCTURED, Capability::TOOL_CALLING]];
         yield 'llama3.1' => ['llama3.1', Ollama::class, [Capability::INPUT_MESSAGES, Capability::OUTPUT_TEXT, Capability::OUTPUT_STRUCTURED, Capability::TOOL_CALLING]];
         yield 'llama3.2' => ['llama3.2', Ollama::class, [Capability::INPUT_MESSAGES, Capability::OUTPUT_TEXT, Capability::OUTPUT_STRUCTURED, Capability::TOOL_CALLING]];
         yield 'llama3' => ['llama3', Ollama::class, [Capability::INPUT_MESSAGES, Capability::OUTPUT_TEXT, Capability::OUTPUT_STRUCTURED, Capability::TOOL_CALLING]];
