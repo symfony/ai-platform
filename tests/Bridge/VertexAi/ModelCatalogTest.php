@@ -28,9 +28,9 @@ final class ModelCatalogTest extends ModelCatalogTestCase
         // Gemini models
         yield 'gemini-2.5-pro' => ['gemini-2.5-pro', GeminiModel::class, [Capability::INPUT_MESSAGES, Capability::INPUT_IMAGE, Capability::INPUT_AUDIO, Capability::INPUT_PDF, Capability::OUTPUT_TEXT, Capability::OUTPUT_STREAMING, Capability::OUTPUT_STRUCTURED, Capability::TOOL_CALLING]];
         yield 'gemini-2.5-flash' => ['gemini-2.5-flash', GeminiModel::class, [Capability::INPUT_MESSAGES, Capability::INPUT_IMAGE, Capability::INPUT_AUDIO, Capability::INPUT_PDF, Capability::OUTPUT_TEXT, Capability::OUTPUT_STREAMING, Capability::OUTPUT_STRUCTURED, Capability::TOOL_CALLING]];
-        yield 'gemini-2.0-flash' => ['gemini-2.0-flash', GeminiModel::class, [Capability::INPUT_MESSAGES, Capability::INPUT_IMAGE, Capability::INPUT_AUDIO, Capability::INPUT_PDF, Capability::OUTPUT_TEXT, Capability::OUTPUT_STREAMING, Capability::OUTPUT_STRUCTURED, Capability::TOOL_CALLING]];
+        yield 'gemini-2.0-flash' => ['gemini-2.0-flash', GeminiModel::class, [Capability::INPUT_MESSAGES, Capability::INPUT_IMAGE, Capability::INPUT_AUDIO, Capability::INPUT_PDF, Capability::OUTPUT_TEXT, Capability::OUTPUT_STREAMING, Capability::TOOL_CALLING]];
         yield 'gemini-2.5-flash-lite' => ['gemini-2.5-flash-lite', GeminiModel::class, [Capability::INPUT_MESSAGES, Capability::INPUT_IMAGE, Capability::INPUT_AUDIO, Capability::INPUT_PDF, Capability::OUTPUT_TEXT, Capability::OUTPUT_STREAMING, Capability::OUTPUT_STRUCTURED, Capability::TOOL_CALLING]];
-        yield 'gemini-2.0-flash-lite' => ['gemini-2.0-flash-lite', GeminiModel::class, [Capability::INPUT_MESSAGES, Capability::INPUT_IMAGE, Capability::INPUT_AUDIO, Capability::INPUT_PDF, Capability::OUTPUT_TEXT, Capability::OUTPUT_STREAMING, Capability::OUTPUT_STRUCTURED, Capability::TOOL_CALLING]];
+        yield 'gemini-2.0-flash-lite' => ['gemini-2.0-flash-lite', GeminiModel::class, [Capability::INPUT_MESSAGES, Capability::INPUT_IMAGE, Capability::INPUT_AUDIO, Capability::INPUT_PDF, Capability::OUTPUT_TEXT, Capability::OUTPUT_STREAMING, Capability::TOOL_CALLING]];
 
         // Embeddings models
         yield 'gemini-embedding-001' => ['gemini-embedding-001', EmbeddingsModel::class, [Capability::INPUT_TEXT, Capability::INPUT_MULTIPLE]];
