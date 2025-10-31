@@ -18,16 +18,16 @@ use Symfony\AI\Platform\Contract\JsonSchema\Factory;
  *
  * @author Christopher Hertel <mail@christopher-hertel.de>
  */
-final readonly class Tool
+final class Tool
 {
     /**
      * @param JsonSchema|null $parameters
      */
     public function __construct(
-        private ExecutionReference $reference,
-        private string $name,
-        private string $description,
-        private ?array $parameters = null,
+        private readonly ExecutionReference $reference,
+        private readonly string $name,
+        private readonly string $description,
+        private readonly ?array $parameters = null,
     ) {
     }
 

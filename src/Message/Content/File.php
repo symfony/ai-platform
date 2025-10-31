@@ -19,12 +19,12 @@ use function Symfony\Component\String\u;
 /**
  * @author Christopher Hertel <mail@christopher-hertel.de>
  */
-readonly class File implements ContentInterface
+class File implements ContentInterface
 {
     final public function __construct(
-        private string|\Closure $data,
-        private string $format,
-        private ?string $path = null,
+        private readonly string|\Closure $data,
+        private readonly string $format,
+        private readonly ?string $path = null,
     ) {
     }
 

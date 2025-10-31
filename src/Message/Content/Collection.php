@@ -11,12 +11,12 @@
 
 namespace Symfony\AI\Platform\Message\Content;
 
-final readonly class Collection implements ContentInterface
+final class Collection implements ContentInterface
 {
     /**
      * @var ContentInterface[]
      */
-    private array $content;
+    private readonly array $content;
 
     public function __construct(ContentInterface ...$content)
     {

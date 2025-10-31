@@ -18,10 +18,10 @@ use function Symfony\Component\String\u;
 /**
  * @author Christopher Hertel <mail@christopher-hertel.de>
  */
-final readonly class ResponseFormatFactory implements ResponseFormatFactoryInterface
+final class ResponseFormatFactory implements ResponseFormatFactoryInterface
 {
     public function __construct(
-        private Factory $schemaFactory = new Factory(),
+        private readonly Factory $schemaFactory = new Factory(),
     ) {
     }
 

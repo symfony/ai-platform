@@ -21,12 +21,12 @@ use Symfony\AI\Platform\ResultConverterInterface;
 use Symfony\Component\Serializer\Exception\ExceptionInterface as SerializerExceptionInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
-final readonly class ResultConverter implements ResultConverterInterface
+final class ResultConverter implements ResultConverterInterface
 {
     public function __construct(
-        private ResultConverterInterface $innerConverter,
-        private SerializerInterface $serializer,
-        private ?string $outputClass = null,
+        private readonly ResultConverterInterface $innerConverter,
+        private readonly SerializerInterface $serializer,
+        private readonly ?string $outputClass = null,
     ) {
     }
 

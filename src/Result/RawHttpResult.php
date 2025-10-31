@@ -18,10 +18,10 @@ use Symfony\Contracts\HttpClient\ResponseInterface;
 /**
  * @author Christopher Hertel <mail@christopher-hertel.de>
  */
-final readonly class RawHttpResult implements RawResultInterface
+final class RawHttpResult implements RawResultInterface
 {
     public function __construct(
-        private ResponseInterface $response,
+        private readonly ResponseInterface $response,
     ) {
     }
 

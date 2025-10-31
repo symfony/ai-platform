@@ -58,12 +58,12 @@ use Symfony\Component\TypeInfo\TypeResolver\TypeResolver;
  * @author Christopher Hertel <mail@christopher-hertel.de>
  * @author Oskar Stark <oskarstark@googlemail.com>
  */
-final readonly class Factory
+final class Factory
 {
-    private TypeResolver $typeResolver;
+    private readonly TypeResolver $typeResolver;
 
     public function __construct(
-        private DescriptionParser $descriptionParser = new DescriptionParser(),
+        private readonly DescriptionParser $descriptionParser = new DescriptionParser(),
         ?TypeResolver $typeResolver = null,
     ) {
         $this->typeResolver = $typeResolver ?? TypeResolver::create();
