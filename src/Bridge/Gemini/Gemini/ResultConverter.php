@@ -29,7 +29,7 @@ use Symfony\AI\Platform\ResultConverterInterface;
 /**
  * @author Roy Garrido
  */
-final readonly class ResultConverter implements ResultConverterInterface
+final class ResultConverter implements ResultConverterInterface
 {
     public const OUTCOME_OK = 'OUTCOME_OK';
     public const OUTCOME_FAILED = 'OUTCOME_FAILED';

@@ -16,7 +16,7 @@ use Symfony\AI\Platform\Exception\InvalidArgumentException;
 /**
  * @author Oskar Stark <oskar.stark@sensiolabs.de>
  */
-abstract readonly class AbstractModelClient
+abstract class AbstractModelClient
 {
     protected static function getBaseUrl(?string $region): string
     {

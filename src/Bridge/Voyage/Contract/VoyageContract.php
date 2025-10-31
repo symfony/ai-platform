@@ -19,7 +19,7 @@ use Symfony\AI\Platform\Bridge\Voyage\Contract\Multimodal\TextNormalizer;
 use Symfony\AI\Platform\Contract;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-final readonly class VoyageContract extends Contract
+final class VoyageContract extends Contract
 {
     public static function create(NormalizerInterface ...$normalizer): Contract
     {

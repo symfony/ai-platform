@@ -18,7 +18,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 /**
  * @author Guillermo Lengemann <guillermo.lengemann@gmail.com>
  */
-final readonly class OpenAiContract extends Contract
+final class OpenAiContract extends Contract
 {
     public static function create(NormalizerInterface ...$normalizer): Contract
     {

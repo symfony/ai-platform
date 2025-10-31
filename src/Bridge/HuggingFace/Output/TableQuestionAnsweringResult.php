@@ -14,16 +14,16 @@ namespace Symfony\AI\Platform\Bridge\HuggingFace\Output;
 /**
  * @author Christopher Hertel <mail@christopher-hertel.de>
  */
-final readonly class TableQuestionAnsweringResult
+final class TableQuestionAnsweringResult
 {
     /**
      * @param array<int, string|int> $cells
      * @param array<string>          $aggregator
      */
     public function __construct(
-        public string $answer,
-        public array $cells = [],
-        public array $aggregator = [],
+        public readonly string $answer,
+        public readonly array $cells = [],
+        public readonly array $aggregator = [],
     ) {
     }
 

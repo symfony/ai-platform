@@ -22,7 +22,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 /**
  * @author Guillaume Loulier <personal@guillaumeloulier.fr>
  */
-final readonly class PlatformFactory
+final class PlatformFactory
 {
     public static function create(
         string $apiKey,

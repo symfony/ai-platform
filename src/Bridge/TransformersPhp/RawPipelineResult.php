@@ -17,10 +17,10 @@ use Symfony\AI\Platform\Result\RawResultInterface;
 /**
  * @author Christopher Hertel <mail@christopher-hertel.de>
  */
-final readonly class RawPipelineResult implements RawResultInterface
+final class RawPipelineResult implements RawResultInterface
 {
     public function __construct(
-        private PipelineExecution $pipelineExecution,
+        private readonly PipelineExecution $pipelineExecution,
     ) {
     }
 

@@ -29,7 +29,7 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 /**
  * @author Junaid Farooq <ulislam.junaid125@gmail.com>
  */
-final readonly class ResultConverter implements ResultConverterInterface
+final class ResultConverter implements ResultConverterInterface
 {
     public const OUTCOME_OK = 'OUTCOME_OK';
     public const OUTCOME_FAILED = 'OUTCOME_FAILED';

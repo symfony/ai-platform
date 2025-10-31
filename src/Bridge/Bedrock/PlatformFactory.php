@@ -30,7 +30,7 @@ use Symfony\AI\Platform\Platform;
 /**
  * @author Björn Altmann
  */
-final readonly class PlatformFactory
+final class PlatformFactory
 {
     public static function create(
         BedrockRuntimeClient $bedrockRuntimeClient = new BedrockRuntimeClient(),

@@ -22,7 +22,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 /**
  * @author Christopher Hertel <mail@christopher-hertel.de>
  */
-final readonly class PlatformFactory
+final class PlatformFactory
 {
     public const REGION_EU = 'EU';
     public const REGION_US = 'US';

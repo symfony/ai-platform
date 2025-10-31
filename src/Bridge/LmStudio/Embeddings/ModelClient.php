@@ -21,11 +21,11 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
  * @author Christopher Hertel <mail@christopher-hertel.de>
  * @author André Lubian <lubiana123@gmail.com>
  */
-final readonly class ModelClient implements ModelClientInterface
+final class ModelClient implements ModelClientInterface
 {
     public function __construct(
-        private HttpClientInterface $httpClient,
-        private string $hostUrl,
+        private readonly HttpClientInterface $httpClient,
+        private readonly string $hostUrl,
     ) {
     }
 

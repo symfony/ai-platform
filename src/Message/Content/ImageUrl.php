@@ -14,10 +14,10 @@ namespace Symfony\AI\Platform\Message\Content;
 /**
  * @author Christopher Hertel <mail@christopher-hertel.de>
  */
-final readonly class ImageUrl implements ContentInterface
+final class ImageUrl implements ContentInterface
 {
     public function __construct(
-        private string $url,
+        private readonly string $url,
     ) {
     }
 

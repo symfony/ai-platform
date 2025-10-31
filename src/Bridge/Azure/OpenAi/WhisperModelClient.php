@@ -23,16 +23,16 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 /**
  * @author Christopher Hertel <mail@christopher-hertel.de>
  */
-final readonly class WhisperModelClient implements ModelClientInterface
+final class WhisperModelClient implements ModelClientInterface
 {
-    private EventSourceHttpClient $httpClient;
+    private readonly EventSourceHttpClient $httpClient;
 
     public function __construct(
         HttpClientInterface $httpClient,
-        private string $baseUrl,
-        private string $deployment,
-        private string $apiVersion,
-        #[\SensitiveParameter] private string $apiKey,
+        private readonly string $baseUrl,
+        private readonly string $deployment,
+        private readonly string $apiVersion,
+        #[\SensitiveParameter] private readonly string $apiKey,
     ) {
         $this->httpClient = $httpClient instanceof EventSourceHttpClient ? $httpClient : new EventSourceHttpClient($httpClient);
         if (str_starts_with($this->baseUrl, 'http://')) {

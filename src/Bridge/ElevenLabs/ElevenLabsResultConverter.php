@@ -26,10 +26,10 @@ use Symfony\Contracts\HttpClient\ResponseInterface;
 /**
  * @author Guillaume Loulier <personal@guillaumeloulier.fr>
  */
-final readonly class ElevenLabsResultConverter implements ResultConverterInterface
+final class ElevenLabsResultConverter implements ResultConverterInterface
 {
     public function __construct(
-        private HttpClientInterface $httpClient,
+        private readonly HttpClientInterface $httpClient,
     ) {
     }
 

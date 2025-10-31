@@ -18,10 +18,10 @@ use Symfony\AI\Platform\Result\RawResultInterface;
 /**
  * @author Christopher Hertel <mail@christopher-hertel.de>
  */
-final readonly class RawBedrockResult implements RawResultInterface
+final class RawBedrockResult implements RawResultInterface
 {
     public function __construct(
-        private InvokeModelResponse $invokeModelResponse,
+        private readonly InvokeModelResponse $invokeModelResponse,
     ) {
     }
 

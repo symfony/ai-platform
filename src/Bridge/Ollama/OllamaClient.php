@@ -20,11 +20,11 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 /**
  * @author Christopher Hertel <mail@christopher-hertel.de>
  */
-final readonly class OllamaClient implements ModelClientInterface
+final class OllamaClient implements ModelClientInterface
 {
     public function __construct(
-        private HttpClientInterface $httpClient,
-        private string $hostUrl,
+        private readonly HttpClientInterface $httpClient,
+        private readonly string $hostUrl,
     ) {
     }
 

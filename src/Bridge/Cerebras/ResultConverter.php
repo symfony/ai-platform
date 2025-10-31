@@ -22,7 +22,7 @@ use Symfony\AI\Platform\ResultConverterInterface;
 /**
  * @author Junaid Farooq <ulislam.junaid125@gmail.com>
  */
-final readonly class ResultConverter implements ResultConverterInterface
+final class ResultConverter implements ResultConverterInterface
 {
     public function supports(BaseModel $model): bool
     {

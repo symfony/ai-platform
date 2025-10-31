@@ -20,10 +20,10 @@ use Symfony\AI\Platform\Result\RawHttpResult;
 /**
  * @author Christopher Hertel <mail@christopher-hertel.de>
  */
-final readonly class LlamaModelClient implements ModelClientInterface
+final class LlamaModelClient implements ModelClientInterface
 {
     public function __construct(
-        private Client $client,
+        private readonly Client $client,
     ) {
     }
 

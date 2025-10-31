@@ -21,7 +21,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 /**
  * @author Junaid Farooq <ulislam.junaid125@gmail.com>
  */
-final readonly class PlatformFactory
+final class PlatformFactory
 {
     public static function create(
         #[\SensitiveParameter] string $apiKey,

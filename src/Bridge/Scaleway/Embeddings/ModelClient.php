@@ -21,11 +21,11 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 /**
  * @author Marcus Stöhr <marcus@fischteich.net>
  */
-final readonly class ModelClient implements ModelClientInterface
+final class ModelClient implements ModelClientInterface
 {
     public function __construct(
-        private HttpClientInterface $httpClient,
-        #[\SensitiveParameter] private string $apiKey,
+        private readonly HttpClientInterface $httpClient,
+        #[\SensitiveParameter] private readonly string $apiKey,
     ) {
         if ('' === $apiKey) {
             throw new InvalidArgumentException('The API key must not be empty.');

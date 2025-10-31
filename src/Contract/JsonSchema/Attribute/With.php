@@ -17,7 +17,7 @@ use Symfony\AI\Platform\Exception\InvalidArgumentException;
  * @author Oskar Stark <oskarstark@googlemail.com>
  */
 #[\Attribute(\Attribute::TARGET_PARAMETER | \Attribute::TARGET_PROPERTY)]
-final readonly class With
+final class With
 {
     /**
      * @param list<int|float|string|null>|null $enum
@@ -25,32 +25,32 @@ final readonly class With
      */
     public function __construct(
         // can be used by many types
-        public ?array $enum = null,
-        public string|int|array|null $const = null,
+        public readonly ?array $enum = null,
+        public readonly string|int|array|null $const = null,
 
         // string
-        public ?string $pattern = null,
-        public ?int $minLength = null,
-        public ?int $maxLength = null,
+        public readonly ?string $pattern = null,
+        public readonly ?int $minLength = null,
+        public readonly ?int $maxLength = null,
 
         // integer
-        public ?int $minimum = null,
-        public ?int $maximum = null,
-        public ?int $multipleOf = null,
-        public ?int $exclusiveMinimum = null,
-        public ?int $exclusiveMaximum = null,
+        public readonly ?int $minimum = null,
+        public readonly ?int $maximum = null,
+        public readonly ?int $multipleOf = null,
+        public readonly ?int $exclusiveMinimum = null,
+        public readonly ?int $exclusiveMaximum = null,
 
         // array
-        public ?int $minItems = null,
-        public ?int $maxItems = null,
-        public ?bool $uniqueItems = null,
-        public ?int $minContains = null,
-        public ?int $maxContains = null,
+        public readonly ?int $minItems = null,
+        public readonly ?int $maxItems = null,
+        public readonly ?bool $uniqueItems = null,
+        public readonly ?int $minContains = null,
+        public readonly ?int $maxContains = null,
 
         // object
-        public ?int $minProperties = null,
-        public ?int $maxProperties = null,
-        public ?bool $dependentRequired = null,
+        public readonly ?int $minProperties = null,
+        public readonly ?int $maxProperties = null,
+        public readonly ?bool $dependentRequired = null,
     ) {
         if (\is_array($enum)) {
             /* @phpstan-ignore-next-line function.alreadyNarrowedType */

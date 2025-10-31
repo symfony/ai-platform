@@ -14,10 +14,10 @@ namespace Symfony\AI\Platform\Message\Content;
 /**
  * @author Denis Zunke <denis.zunke@gmail.com>
  */
-final readonly class Text implements ContentInterface
+final class Text implements ContentInterface
 {
     public function __construct(
-        private string $text,
+        private readonly string $text,
     ) {
     }
 

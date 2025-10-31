@@ -22,12 +22,12 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 /**
  * @author Guillaume Loulier <personal@guillaumeloulier.fr>
  */
-final readonly class ElevenLabsClient implements ModelClientInterface
+final class ElevenLabsClient implements ModelClientInterface
 {
     public function __construct(
-        private HttpClientInterface $httpClient,
-        #[\SensitiveParameter] private string $apiKey,
-        private string $hostUrl = 'https://api.elevenlabs.io/v1',
+        private readonly HttpClientInterface $httpClient,
+        #[\SensitiveParameter] private readonly string $apiKey,
+        private readonly string $hostUrl = 'https://api.elevenlabs.io/v1',
     ) {
     }
 

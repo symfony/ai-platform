@@ -16,10 +16,10 @@ use Symfony\AI\Platform\Result\RawResultInterface;
 use Symfony\AI\Platform\Result\ResultInterface;
 use Symfony\AI\Platform\ResultConverterInterface;
 
-final readonly class PlainConverter implements ResultConverterInterface
+final class PlainConverter implements ResultConverterInterface
 {
     public function __construct(
-        private ResultInterface $result,
+        private readonly ResultInterface $result,
     ) {
     }
 
