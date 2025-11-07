@@ -27,14 +27,26 @@ final class ModelCatalog extends AbstractModelCatalog
     public function __construct(array $additionalModels = [])
     {
         $defaultModels = [
-            'gpt-4o' => [
+            'albert-small' => [
                 'class' => Gpt::class,
                 'capabilities' => [
                     Capability::INPUT_MESSAGES,
                     Capability::OUTPUT_TEXT,
                     Capability::OUTPUT_STREAMING,
-                    Capability::TOOL_CALLING,
-                    Capability::INPUT_IMAGE,
+                ],
+            ],
+            'albert-large' => [
+                'class' => Gpt::class,
+                'capabilities' => [
+                    Capability::INPUT_MESSAGES,
+                    Capability::OUTPUT_TEXT,
+                    Capability::OUTPUT_STREAMING,
+                ],
+            ],
+            'embeddings-small' => [
+                'class' => Gpt::class,
+                'capabilities' => [
+                    Capability::INPUT_MESSAGES,
                     Capability::OUTPUT_STRUCTURED,
                 ],
             ],
