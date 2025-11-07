@@ -11,6 +11,7 @@
 
 namespace Symfony\AI\Platform\Bridge\Albert;
 
+use Symfony\AI\Platform\Bridge\OpenAi\Embeddings;
 use Symfony\AI\Platform\Bridge\OpenAi\Gpt;
 use Symfony\AI\Platform\Capability;
 use Symfony\AI\Platform\Model;
@@ -44,11 +45,8 @@ final class ModelCatalog extends AbstractModelCatalog
                 ],
             ],
             'embeddings-small' => [
-                'class' => Gpt::class,
-                'capabilities' => [
-                    Capability::INPUT_MESSAGES,
-                    Capability::OUTPUT_STRUCTURED,
-                ],
+                'class' => Embeddings::class,
+                'capabilities' => [Capability::INPUT_TEXT],
             ],
         ];
 
