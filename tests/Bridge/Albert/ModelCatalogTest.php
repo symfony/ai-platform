@@ -24,7 +24,9 @@ final class ModelCatalogTest extends ModelCatalogTestCase
 {
     public static function modelsProvider(): iterable
     {
-        yield 'gpt-4o' => ['gpt-4o', Gpt::class, [Capability::INPUT_MESSAGES, Capability::OUTPUT_TEXT, Capability::OUTPUT_STREAMING, Capability::TOOL_CALLING, Capability::INPUT_IMAGE, Capability::OUTPUT_STRUCTURED]];
+        yield 'albert-small' => ['albert-small', Gpt::class, [Capability::INPUT_MESSAGES, Capability::OUTPUT_TEXT, Capability::OUTPUT_STREAMING]];
+        yield 'albert-large' => ['albert-large', Gpt::class, [Capability::INPUT_MESSAGES, Capability::OUTPUT_TEXT, Capability::OUTPUT_STREAMING]];
+        yield 'embeddings-small' => ['embeddings-small', Gpt::class, [Capability::INPUT_MESSAGES, Capability::OUTPUT_STRUCTURED]];
     }
 
     protected function createModelCatalog(): ModelCatalogInterface
