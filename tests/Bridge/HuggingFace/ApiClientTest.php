@@ -35,7 +35,7 @@ final class ApiClientTest extends TestCase
         $httpClient = new MockHttpClient(new JsonMockResponse($responseData));
         $apiClient = new ApiClient($httpClient);
 
-        $models = $apiClient->models('test-provider', 'text-generation');
+        $models = $apiClient->getModels('test-provider', 'text-generation');
 
         $this->assertCount(3, $models);
         $this->assertInstanceOf(Model::class, $models[0]);
@@ -55,7 +55,7 @@ final class ApiClientTest extends TestCase
         $httpClient = new MockHttpClient(new JsonMockResponse($responseData));
         $apiClient = new ApiClient($httpClient);
 
-        $models = $apiClient->models(null, null);
+        $models = $apiClient->getModels();
 
         $this->assertCount(2, $models);
         $this->assertInstanceOf(Model::class, $models[0]);
@@ -71,7 +71,7 @@ final class ApiClientTest extends TestCase
         $httpClient = new MockHttpClient(new JsonMockResponse($responseData));
         $apiClient = new ApiClient($httpClient);
 
-        $models = $apiClient->models('test-provider', 'text-generation');
+        $models = $apiClient->getModels('test-provider', 'text-generation');
 
         $this->assertCount(0, $models);
     }
@@ -90,7 +90,7 @@ final class ApiClientTest extends TestCase
         });
 
         $apiClient = new ApiClient($httpClient);
-        $apiClient->models('test-provider', 'text-generation');
+        $apiClient->getModels('test-provider', 'text-generation');
     }
 
     #[TestDox('Sends correct HTTP request with null provider and task parameters')]
@@ -107,6 +107,6 @@ final class ApiClientTest extends TestCase
         });
 
         $apiClient = new ApiClient($httpClient);
-        $apiClient->models(null, null);
+        $apiClient->getModels();
     }
 }

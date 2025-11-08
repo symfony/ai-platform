@@ -17,25 +17,33 @@ namespace Symfony\AI\Platform\Bridge\HuggingFace\Output;
 final class TableQuestionAnsweringResult
 {
     /**
-     * @param array<int, string|int> $cells
-     * @param array<string>          $aggregator
+     * @param array{0: int, 1: int}[]   $coordinates
+     * @param array<int, string|int>    $cells
+     * @param array<string>|string|null $aggregator
      */
     public function __construct(
         public readonly string $answer,
+        public readonly array $coordinates = [],
         public readonly array $cells = [],
-        public readonly array $aggregator = [],
+        public readonly array|string|null $aggregator = null,
     ) {
     }
 
     /**
-     * @param array{answer: string, cells?: array<int, string|int>, aggregator?: array<string>} $data
+     * @param array{
+     *     answer: string,
+     *     coordinates?: array{0: int, 1: int}[],
+     *     cells?: array<int, string|int>,
+     *     aggregator?: array<string>
+     * } $data
      */
     public static function fromArray(array $data): self
     {
         return new self(
             $data['answer'],
+            $data['coordinates'] ?? [],
             $data['cells'] ?? [],
-            $data['aggregator'] ?? [],
+            $data['aggregator'] ?? null,
         );
     }
 }
