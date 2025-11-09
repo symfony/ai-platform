@@ -16,6 +16,7 @@ use Symfony\AI\Platform\Bridge\OpenAi\Embeddings;
 use Symfony\AI\Platform\Bridge\OpenAi\Gpt;
 use Symfony\AI\Platform\Contract;
 use Symfony\AI\Platform\Exception\InvalidArgumentException;
+use Symfony\AI\Platform\ModelCatalog\ModelCatalogInterface;
 use Symfony\AI\Platform\Platform;
 use Symfony\Component\HttpClient\EventSourceHttpClient;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
@@ -29,6 +30,7 @@ final class PlatformFactory
         #[\SensitiveParameter] string $apiKey,
         string $baseUrl,
         ?HttpClientInterface $httpClient = null,
+        ModelCatalogInterface $modelCatalog = new ModelCatalog(),
         ?EventDispatcherInterface $eventDispatcher = null,
     ): Platform {
         if (!str_starts_with($baseUrl, 'https://')) {
@@ -52,7 +54,7 @@ final class PlatformFactory
                 new EmbeddingsModelClient($httpClient, $apiKey, $baseUrl),
             ],
             [new Gpt\ResultConverter(), new Embeddings\ResultConverter()],
-            new ModelCatalog(),
+            $modelCatalog,
             Contract::create(),
             $eventDispatcher,
         );
