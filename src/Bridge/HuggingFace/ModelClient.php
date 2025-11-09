@@ -42,20 +42,20 @@ final class ModelClient implements ModelClientInterface
      */
     public function request(Model $model, array|string $payload, array $options = []): RawHttpResult
     {
-        // Extract task from options if provided
+        $provider = $options['provider'] ?? $this->provider;
         $task = $options['task'] ?? null;
-        unset($options['task']);
+        unset($options['task'], $options['provider']);
 
-        return new RawHttpResult($this->httpClient->request('POST', $this->getUrl($model, $task), [
+        return new RawHttpResult($this->httpClient->request('POST', $this->getUrl($model, $provider, $task), [
             'auth_bearer' => $this->apiKey,
             ...$this->getPayload($payload, $options),
         ]));
     }
 
-    private function getUrl(Model $model, ?string $task): string
+    private function getUrl(Model $model, string $provider, ?string $task): string
     {
         $endpoint = Task::FEATURE_EXTRACTION === $task ? 'pipeline/feature-extraction' : 'models';
-        $url = \sprintf('https://router.huggingface.co/%s/%s/%s', $this->provider, $endpoint, $model->getName());
+        $url = \sprintf('https://router.huggingface.co/%s/%s/%s', $provider, $endpoint, $model->getName());
 
         if (Task::CHAT_COMPLETION === $task) {
             $url .= '/v1/chat/completions';

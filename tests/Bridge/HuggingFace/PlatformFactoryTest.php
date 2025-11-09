@@ -54,14 +54,21 @@ final class PlatformFactoryTest extends TestCase
     #[TestWith([Provider::CEREBRAS])]
     #[TestWith([Provider::COHERE])]
     #[TestWith([Provider::FAL_AI])]
+    #[TestWith([Provider::FEATHERLESS_AI])]
     #[TestWith([Provider::FIREWORKS])]
-    #[TestWith([Provider::HYPERBOLIC])]
+    #[TestWith([Provider::GROQ])]
     #[TestWith([Provider::HF_INFERENCE])]
+    #[TestWith([Provider::HYPERBOLIC])]
     #[TestWith([Provider::NEBIUS])]
     #[TestWith([Provider::NOVITA])]
+    #[TestWith([Provider::NSCALE])]
+    #[TestWith([Provider::PUBLIC_AI])]
     #[TestWith([Provider::REPLICATE])]
     #[TestWith([Provider::SAMBA_NOVA])]
+    #[TestWith([Provider::SCALEWAY])]
     #[TestWith([Provider::TOGETHER])]
+    #[TestWith([Provider::WAVE_SPEED_AI])]
+    #[TestWith([Provider::Z_AI])]
     public function testCreateWithDifferentProviders(string $provider)
     {
         $platform = PlatformFactory::create('test-api-key', $provider);

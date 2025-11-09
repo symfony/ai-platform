@@ -27,34 +27,38 @@ final class TableQuestionAnsweringResultTest extends TestCase
         $result = new TableQuestionAnsweringResult('Paris');
 
         $this->assertSame('Paris', $result->answer);
+        $this->assertSame([], $result->coordinates);
         $this->assertSame([], $result->cells);
-        $this->assertSame([], $result->aggregator);
+        $this->assertNull($result->aggregator);
     }
 
     #[TestDox('Construction with all parameters creates valid instance')]
     public function testConstructionWithAllParameters()
     {
+        $coordinates = [[0, 1]];
         $cells = ['cell1', 'cell2', 42];
         $aggregator = ['SUM', 'AVERAGE'];
 
-        $result = new TableQuestionAnsweringResult('Total is 100', $cells, $aggregator);
+        $result = new TableQuestionAnsweringResult('Total is 100', $coordinates, $cells, $aggregator);
 
         $this->assertSame('Total is 100', $result->answer);
+        $this->assertSame($coordinates, $result->coordinates);
         $this->assertSame($cells, $result->cells);
         $this->assertSame($aggregator, $result->aggregator);
     }
 
     #[TestDox('Constructor accepts various parameter combinations')]
-    #[TestWith(['Yes', [], []])]
-    #[TestWith(['No', ['A1'], ['COUNT']])]
-    #[TestWith(['42.5', ['A1', 'B1', 42], ['SUM', 'AVERAGE']])]
-    #[TestWith(['', [], []])]
-    #[TestWith(['Complex answer with multiple words', [1, 2, 3], ['NONE']])]
-    public function testConstructorWithDifferentValues(string $answer, array $cells, array $aggregator)
+    #[TestWith(['Yes', [], [], []])]
+    #[TestWith(['No', [[0, 1]], ['A1'], ['COUNT']])]
+    #[TestWith(['42.5', [[0, 1]], ['A1', 'B1', 42], ['SUM', 'AVERAGE']])]
+    #[TestWith(['', [[0, 1]], [], []])]
+    #[TestWith(['Complex answer with multiple words', [[0, 1]], [1, 2, 3], ['NONE']])]
+    public function testConstructorWithDifferentValues(string $answer, array $coordinates, array $cells, array $aggregator)
     {
-        $result = new TableQuestionAnsweringResult($answer, $cells, $aggregator);
+        $result = new TableQuestionAnsweringResult($answer, $coordinates, $cells, $aggregator);
 
         $this->assertSame($answer, $result->answer);
+        $this->assertSame($coordinates, $result->coordinates);
         $this->assertSame($cells, $result->cells);
         $this->assertSame($aggregator, $result->aggregator);
     }
@@ -67,8 +71,9 @@ final class TableQuestionAnsweringResultTest extends TestCase
         $result = TableQuestionAnsweringResult::fromArray($data);
 
         $this->assertSame('Berlin', $result->answer);
+        $this->assertSame([], $result->coordinates);
         $this->assertSame([], $result->cells);
-        $this->assertSame([], $result->aggregator);
+        $this->assertNull($result->aggregator);
     }
 
     #[TestDox('fromArray creates instance with all fields')]
@@ -76,6 +81,7 @@ final class TableQuestionAnsweringResultTest extends TestCase
     {
         $data = [
             'answer' => 'The result is 150',
+            'coordinates' => [[0, 0], [1, 1]],
             'cells' => ['A1', 'B2', 100, 50],
             'aggregator' => ['SUM'],
         ];
@@ -83,11 +89,13 @@ final class TableQuestionAnsweringResultTest extends TestCase
         $result = TableQuestionAnsweringResult::fromArray($data);
 
         $this->assertSame('The result is 150', $result->answer);
+        $this->assertSame([[0, 0], [1, 1]], $result->coordinates);
         $this->assertSame(['A1', 'B2', 100, 50], $result->cells);
         $this->assertSame(['SUM'], $result->aggregator);
     }
 
     #[TestDox('fromArray handles optional fields with default values')]
+    #[TestWith([['answer' => 'Test', 'coordinates' => [[0, 0], [1, 1]]]])]
     #[TestWith([['answer' => 'Test', 'cells' => ['A1', 'B1']]])]
     #[TestWith([['answer' => 'Test', 'aggregator' => ['COUNT']]])]
     #[TestWith([['answer' => 'Test', 'cells' => [1, 2], 'aggregator' => ['SUM', 'AVG']]])]
@@ -96,8 +104,9 @@ final class TableQuestionAnsweringResultTest extends TestCase
         $result = TableQuestionAnsweringResult::fromArray($data);
 
         $this->assertSame($data['answer'], $result->answer);
+        $this->assertSame($data['coordinates'] ?? [], $result->coordinates);
         $this->assertSame($data['cells'] ?? [], $result->cells);
-        $this->assertSame($data['aggregator'] ?? [], $result->aggregator);
+        $this->assertSame($data['aggregator'] ?? null, $result->aggregator);
     }
 
     #[TestDox('fromArray handles various cell data types')]
@@ -137,13 +146,15 @@ final class TableQuestionAnsweringResultTest extends TestCase
     #[TestDox('Empty arrays are handled correctly')]
     public function testEmptyArrays()
     {
-        $result1 = new TableQuestionAnsweringResult('answer', [], []);
+        $result1 = new TableQuestionAnsweringResult('answer', [], [], []);
         $result2 = TableQuestionAnsweringResult::fromArray(['answer' => 'test']);
 
+        $this->assertSame([], $result1->coordinates);
         $this->assertSame([], $result1->cells);
         $this->assertSame([], $result1->aggregator);
+        $this->assertSame([], $result2->coordinates);
         $this->assertSame([], $result2->cells);
-        $this->assertSame([], $result2->aggregator);
+        $this->assertNull($result2->aggregator);
     }
 
     #[TestDox('Large cell arrays are handled correctly')]
@@ -155,7 +166,7 @@ final class TableQuestionAnsweringResultTest extends TestCase
             $largeCells[] = $i;
         }
 
-        $result = new TableQuestionAnsweringResult('Large table result', $largeCells, ['COUNT']);
+        $result = new TableQuestionAnsweringResult('Large table result', [], $largeCells, ['COUNT']);
 
         $this->assertCount(200, $result->cells);
         $this->assertSame('cell_0', $result->cells[0]);
