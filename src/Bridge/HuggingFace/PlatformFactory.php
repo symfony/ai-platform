@@ -12,9 +12,9 @@
 namespace Symfony\AI\Platform\Bridge\HuggingFace;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Symfony\AI\Platform\Bridge\HuggingFace\Contract\FileNormalizer;
-use Symfony\AI\Platform\Bridge\HuggingFace\Contract\MessageBagNormalizer;
+use Symfony\AI\Platform\Bridge\HuggingFace\Contract\HuggingFaceContract;
 use Symfony\AI\Platform\Contract;
+use Symfony\AI\Platform\ModelCatalog\ModelCatalogInterface;
 use Symfony\AI\Platform\Platform;
 use Symfony\Component\HttpClient\EventSourceHttpClient;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
@@ -28,6 +28,7 @@ final class PlatformFactory
         #[\SensitiveParameter] string $apiKey,
         string $provider = Provider::HF_INFERENCE,
         ?HttpClientInterface $httpClient = null,
+        ModelCatalogInterface $modelCatalog = new ModelCatalog(),
         ?Contract $contract = null,
         ?EventDispatcherInterface $eventDispatcher = null,
     ): Platform {
@@ -36,11 +37,8 @@ final class PlatformFactory
         return new Platform(
             [new ModelClient($httpClient, $provider, $apiKey)],
             [new ResultConverter()],
-            new ModelCatalog(),
-            $contract ?? Contract::create(
-                new FileNormalizer(),
-                new MessageBagNormalizer(),
-            ),
+            $modelCatalog,
+            $contract ?? HuggingFaceContract::create(),
             $eventDispatcher,
         );
     }
