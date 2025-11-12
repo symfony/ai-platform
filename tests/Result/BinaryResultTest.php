@@ -58,4 +58,13 @@ final class BinaryResultTest extends TestCase
 
         $result->toDataUri();
     }
+
+    public function testToDataUriWithMimeTypeExplicitlySet()
+    {
+        $result = new BinaryResult('binary data');
+        $actual = $result->toDataUri('image/jpeg');
+        $expected = 'data:image/jpeg;base64,'.base64_encode('binary data');
+
+        $this->assertSame($expected, $actual);
+    }
 }
