@@ -15,6 +15,7 @@ use Symfony\AI\Platform\Bridge\OpenAi\DallE;
 use Symfony\AI\Platform\Bridge\OpenAi\Embeddings;
 use Symfony\AI\Platform\Bridge\OpenAi\Gpt;
 use Symfony\AI\Platform\Bridge\OpenAi\ModelCatalog;
+use Symfony\AI\Platform\Bridge\OpenAi\TextToSpeech;
 use Symfony\AI\Platform\Bridge\OpenAi\Whisper;
 use Symfony\AI\Platform\Capability;
 use Symfony\AI\Platform\ModelCatalog\ModelCatalogInterface;
@@ -52,6 +53,11 @@ final class ModelCatalogTest extends ModelCatalogTestCase
         yield 'text-embedding-ada-002' => ['text-embedding-ada-002', Embeddings::class, [Capability::INPUT_TEXT]];
         yield 'text-embedding-3-large' => ['text-embedding-3-large', Embeddings::class, [Capability::INPUT_TEXT]];
         yield 'text-embedding-3-small' => ['text-embedding-3-small', Embeddings::class, [Capability::INPUT_TEXT]];
+
+        // Text-to-speech models
+        yield 'tts-1' => ['tts-1', TextToSpeech::class, [Capability::INPUT_TEXT, Capability::OUTPUT_AUDIO]];
+        yield 'tts-1-hd' => ['tts-1-hd', TextToSpeech::class, [Capability::INPUT_TEXT, Capability::OUTPUT_AUDIO]];
+        yield 'gpt-4o-mini-tts' => ['gpt-4o-mini-tts', TextToSpeech::class, [Capability::INPUT_TEXT, Capability::OUTPUT_AUDIO]];
 
         // Whisper models
         yield 'whisper-1' => ['whisper-1', Whisper::class, [Capability::INPUT_AUDIO, Capability::OUTPUT_TEXT]];

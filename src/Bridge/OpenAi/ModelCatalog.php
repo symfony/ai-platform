@@ -234,6 +234,27 @@ final class ModelCatalog extends AbstractModelCatalog
                 'class' => Embeddings::class,
                 'capabilities' => [Capability::INPUT_TEXT],
             ],
+            'tts-1' => [
+                'class' => TextToSpeech::class,
+                'capabilities' => [
+                    Capability::INPUT_TEXT,
+                    Capability::OUTPUT_AUDIO,
+                ],
+            ],
+            'tts-1-hd' => [
+                'class' => TextToSpeech::class,
+                'capabilities' => [
+                    Capability::INPUT_TEXT,
+                    Capability::OUTPUT_AUDIO,
+                ],
+            ],
+            'gpt-4o-mini-tts' => [
+                'class' => TextToSpeech::class,
+                'capabilities' => [
+                    Capability::INPUT_TEXT,
+                    Capability::OUTPUT_AUDIO,
+                ],
+            ],
             'whisper-1' => [
                 'class' => Whisper::class,
                 'capabilities' => [
