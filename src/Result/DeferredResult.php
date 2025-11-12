@@ -90,13 +90,13 @@ final class DeferredResult
     /**
      * @throws ExceptionInterface
      */
-    public function asBase64(): string
+    public function asDataUri(?string $mimeType = null): string
     {
         $result = $this->as(BinaryResult::class);
 
         \assert($result instanceof BinaryResult);
 
-        return $result->toDataUri();
+        return $result->toDataUri($mimeType);
     }
 
     /**

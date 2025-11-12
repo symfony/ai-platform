@@ -39,12 +39,12 @@ final class BinaryResult extends BaseResult
         return base64_encode($this->data);
     }
 
-    public function toDataUri(): string
+    public function toDataUri(?string $mimeType = null): string
     {
-        if (null === $this->mimeType) {
+        if (null === ($mimeType ?? $this->mimeType)) {
             throw new RuntimeException('Mime type is not set.');
         }
 
-        return 'data:'.$this->mimeType.';base64,'.$this->toBase64();
+        return 'data:'.($mimeType ?? $this->mimeType).';base64,'.$this->toBase64();
     }
 }
