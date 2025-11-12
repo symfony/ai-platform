@@ -9,27 +9,24 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\AI\Platform\Bridge\OpenRouter;
+namespace Symfony\AI\Platform\Bridge\OpenRouter\Embeddings;
 
+use Symfony\AI\Platform\Bridge\OpenRouter\Embeddings;
 use Symfony\AI\Platform\Exception\InvalidArgumentException;
 use Symfony\AI\Platform\Model;
 use Symfony\AI\Platform\ModelClientInterface;
 use Symfony\AI\Platform\Result\RawHttpResult;
-use Symfony\Component\HttpClient\EventSourceHttpClient;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
- * @author rglozman
+ * @author Tim Lochmüller <tim@fruit-lab.de>
  */
 final class ModelClient implements ModelClientInterface
 {
-    private readonly EventSourceHttpClient $httpClient;
-
     public function __construct(
-        HttpClientInterface $httpClient,
+        private readonly HttpClientInterface $httpClient,
         #[\SensitiveParameter] private readonly string $apiKey,
     ) {
-        $this->httpClient = $httpClient instanceof EventSourceHttpClient ? $httpClient : new EventSourceHttpClient($httpClient);
         if ('' === $apiKey) {
             throw new InvalidArgumentException('The API key must not be empty.');
         }
@@ -40,14 +37,17 @@ final class ModelClient implements ModelClientInterface
 
     public function supports(Model $model): bool
     {
-        return true;
+        return $model instanceof Embeddings;
     }
 
     public function request(Model $model, array|string $payload, array $options = []): RawHttpResult
     {
-        return new RawHttpResult($this->httpClient->request('POST', 'https://openrouter.ai/api/v1/chat/completions', [
+        return new RawHttpResult($this->httpClient->request('POST', 'https://openrouter.ai/api/v1/embeddings', [
             'auth_bearer' => $this->apiKey,
-            'json' => array_merge($options, $payload),
+            'json' => [
+                'model' => $model->getName(),
+                'input' => $payload,
+            ],
         ]));
     }
 }
