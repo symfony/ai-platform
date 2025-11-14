@@ -42,7 +42,9 @@ final class PlatformSubscriberTest extends TestCase
     public function testProcessInputWithOutputStructure()
     {
         $processor = new PlatformSubscriber(new ConfigurableResponseFormatFactory(['some' => 'format']));
-        $event = new InvocationEvent(new Model('gpt-4', [Capability::OUTPUT_STRUCTURED]), new MessageBag(), ['output_structure' => 'SomeStructure']);
+        $event = new InvocationEvent(new Model('gpt-4', [Capability::OUTPUT_STRUCTURED]), new MessageBag(), [
+            'response_format' => SomeStructure::class,
+        ]);
 
         $processor->processInput($event);
 
@@ -66,7 +68,7 @@ final class PlatformSubscriberTest extends TestCase
         $processor = new PlatformSubscriber(new ConfigurableResponseFormatFactory());
 
         $model = new Model('gpt-3');
-        $event = new InvocationEvent($model, new MessageBag(), ['output_structure' => 'SomeStructure']);
+        $event = new InvocationEvent($model, new MessageBag(), ['response_format' => 'SomeStructure']);
 
         $processor->processInput($event);
     }
@@ -76,7 +78,7 @@ final class PlatformSubscriberTest extends TestCase
         $processor = new PlatformSubscriber(new ConfigurableResponseFormatFactory(['some' => 'format']));
 
         $model = new Model('gpt-4', [Capability::OUTPUT_STRUCTURED]);
-        $options = ['output_structure' => SomeStructure::class];
+        $options = ['response_format' => SomeStructure::class];
         $invocationEvent = new InvocationEvent($model, new MessageBag(), $options);
         $processor->processInput($invocationEvent);
 
@@ -98,7 +100,7 @@ final class PlatformSubscriberTest extends TestCase
         $processor = new PlatformSubscriber(new ConfigurableResponseFormatFactory(['some' => 'format']));
 
         $model = new Model('gpt-4', [Capability::OUTPUT_STRUCTURED]);
-        $options = ['output_structure' => MathReasoning::class];
+        $options = ['response_format' => MathReasoning::class];
         $invocationEvent = new InvocationEvent($model, new MessageBag(), $options);
         $processor->processInput($invocationEvent);
 
@@ -158,7 +160,7 @@ final class PlatformSubscriberTest extends TestCase
         $processor = new PlatformSubscriber(new ConfigurableResponseFormatFactory(['some' => 'format']));
 
         $model = new Model('gpt-4', [Capability::OUTPUT_STRUCTURED]);
-        $options = ['output_structure' => UnionTypeDto::class];
+        $options = ['response_format' => UnionTypeDto::class];
         $invocationEvent = new InvocationEvent($model, new MessageBag(), $options);
         $processor->processInput($invocationEvent);
 
@@ -205,7 +207,7 @@ final class PlatformSubscriberTest extends TestCase
         $processor = new PlatformSubscriber(new ConfigurableResponseFormatFactory(['some' => 'format']));
 
         $model = new Model('gpt-4', [Capability::OUTPUT_STRUCTURED]);
-        $options = ['output_structure' => ListOfPolymorphicTypesDto::class];
+        $options = ['response_format' => ListOfPolymorphicTypesDto::class];
         $invocationEvent = new InvocationEvent($model, new MessageBag(), $options);
         $processor->processInput($invocationEvent);
 

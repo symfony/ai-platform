@@ -36,7 +36,9 @@ use Symfony\Component\Serializer\SerializerInterface;
  */
 final class PlatformSubscriber implements EventSubscriberInterface
 {
-    private string $outputStructure;
+    public const RESPONSE_FORMAT = 'response_format';
+
+    private string $outputType;
 
     public function __construct(
         private readonly ResponseFormatFactoryInterface $responseFormatFactory = new ResponseFormatFactory(),
@@ -79,22 +81,27 @@ final class PlatformSubscriber implements EventSubscriberInterface
     {
         $options = $event->getOptions();
 
-        if (!isset($options['output_structure'])) {
+        if (!isset($options[self::RESPONSE_FORMAT])) {
             return;
-        }
-
-        if (!$event->getModel()->supports(Capability::OUTPUT_STRUCTURED)) {
-            throw MissingModelSupportException::forStructuredOutput($event->getModel()::class);
         }
 
         if (true === ($options['stream'] ?? false)) {
             throw new InvalidArgumentException('Streamed responses are not supported for structured output.');
         }
 
-        $options['response_format'] = $this->responseFormatFactory->create($options['output_structure']);
+        if (\is_string($options[self::RESPONSE_FORMAT])) {
+            if (!$event->getModel()->supports(Capability::OUTPUT_STRUCTURED)) {
+                throw MissingModelSupportException::forStructuredOutput($event->getModel()::class);
+            }
 
-        $this->outputStructure = $options['output_structure'];
-        unset($options['output_structure']);
+            if (!class_exists($options[self::RESPONSE_FORMAT])) {
+                throw new InvalidArgumentException(\sprintf('The specified response format class "%s" does not exist.', $options[self::RESPONSE_FORMAT]));
+            }
+
+            $this->outputType = $options[self::RESPONSE_FORMAT];
+
+            $options[self::RESPONSE_FORMAT] = $this->responseFormatFactory->create($options[self::RESPONSE_FORMAT]);
+        }
 
         $event->setOptions($options);
     }
@@ -103,12 +110,12 @@ final class PlatformSubscriber implements EventSubscriberInterface
     {
         $options = $event->getOptions();
 
-        if (!isset($options['response_format'])) {
+        if (!isset($options[self::RESPONSE_FORMAT])) {
             return;
         }
 
         $deferred = $event->getDeferredResult();
-        $converter = new ResultConverter($deferred->getResultConverter(), $this->serializer, $this->outputStructure ?? null);
+        $converter = new ResultConverter($deferred->getResultConverter(), $this->serializer, $this->outputType ?? null);
 
         $event->setDeferredResult(new DeferredResult($converter, $deferred->getRawResult(), $options));
     }
