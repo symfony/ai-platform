@@ -11,14 +11,10 @@
 
 namespace Symfony\AI\Platform\Bridge\OpenRouter\Completions;
 
-use Symfony\AI\Platform\Exception\AuthenticationException;
-use Symfony\AI\Platform\Exception\BadRequestException;
-use Symfony\AI\Platform\Exception\RateLimitExceededException;
-use Symfony\AI\Platform\Exception\RuntimeException;
+use Symfony\AI\Platform\Bridge\OpenAi\Gpt\ResultConverter as OpenAiResponseConverter;
 use Symfony\AI\Platform\Model;
 use Symfony\AI\Platform\Result\RawResultInterface;
 use Symfony\AI\Platform\Result\ResultInterface;
-use Symfony\AI\Platform\Result\TextResult;
 use Symfony\AI\Platform\ResultConverterInterface;
 
 /**
@@ -26,6 +22,11 @@ use Symfony\AI\Platform\ResultConverterInterface;
  */
 final class ResultConverter implements ResultConverterInterface
 {
+    public function __construct(
+        private readonly OpenAiResponseConverter $gptResponseConverter = new OpenAiResponseConverter(),
+    ) {
+    }
+
     public function supports(Model $model): bool
     {
         return true;
@@ -33,32 +34,6 @@ final class ResultConverter implements ResultConverterInterface
 
     public function convert(RawResultInterface $result, array $options = []): ResultInterface
     {
-        $response = $result->getObject();
-        $data = $result->getData();
-
-        if (401 === $response->getStatusCode()) {
-            $errorMessage = json_decode($response->getContent(false), true)['error']['message'];
-            throw new AuthenticationException($errorMessage);
-        }
-
-        if (400 === $response->getStatusCode() || 404 === $response->getStatusCode()) {
-            $errorMessage = json_decode($response->getContent(false), true)['error']['message'] ?? 'Bad Request';
-            throw new BadRequestException($errorMessage);
-        }
-
-        if (429 === $response->getStatusCode()) {
-            $errorMessage = json_decode($response->getContent(false), true)['error']['message'] ?? 'Bad Request';
-            throw new RateLimitExceededException($errorMessage);
-        }
-
-        if (!isset($data['choices'][0]['message'])) {
-            throw new RuntimeException('Response does not contain message.');
-        }
-
-        if (!isset($data['choices'][0]['message']['content'])) {
-            throw new RuntimeException('Message does not contain content.');
-        }
-
-        return new TextResult($data['choices'][0]['message']['content']);
+        return $this->gptResponseConverter->convert($result, $options);
     }
 }
