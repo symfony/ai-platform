@@ -15,6 +15,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Fixtures\SomeStructure;
 use Symfony\AI\Fixtures\StructuredOutput\MathReasoning;
+use Symfony\AI\Fixtures\StructuredOutput\MathReasoningWithAttributes;
 use Symfony\AI\Fixtures\StructuredOutput\PolymorphicType\ListItemAge;
 use Symfony\AI\Fixtures\StructuredOutput\PolymorphicType\ListItemName;
 use Symfony\AI\Fixtures\StructuredOutput\PolymorphicType\ListOfPolymorphicTypesDto;
@@ -35,7 +36,6 @@ use Symfony\AI\Platform\Result\ObjectResult;
 use Symfony\AI\Platform\Result\TextResult;
 use Symfony\AI\Platform\StructuredOutput\PlatformSubscriber;
 use Symfony\AI\Platform\Test\PlainConverter;
-use Symfony\Component\Serializer\SerializerInterface;
 
 final class PlatformSubscriberTest extends TestCase
 {
@@ -95,12 +95,16 @@ final class PlatformSubscriberTest extends TestCase
         $this->assertSame('data', $deferredResult->asObject()->some);
     }
 
-    public function testProcessOutputWithComplexResponseFormat()
+    /**
+     * @param class-string $class
+     */
+    #[DataProvider('complexFormatDataProvider')]
+    public function testProcessOutputWithComplexResponseFormat(string $class)
     {
         $processor = new PlatformSubscriber(new ConfigurableResponseFormatFactory(['some' => 'format']));
 
         $model = new Model('gpt-4', [Capability::OUTPUT_STRUCTURED]);
-        $options = ['response_format' => MathReasoning::class];
+        $options = ['response_format' => $class];
         $invocationEvent = new InvocationEvent($model, new MessageBag(), $options);
         $processor->processInput($invocationEvent);
 
@@ -139,7 +143,7 @@ final class PlatformSubscriberTest extends TestCase
 
         $deferredResult = $resultEvent->getDeferredResult();
         $this->assertInstanceOf(ObjectResult::class, $result = $deferredResult->getResult());
-        $this->assertInstanceOf(MathReasoning::class, $structure = $deferredResult->asObject());
+        $this->assertInstanceOf($class, $structure = $deferredResult->asObject());
         $this->assertInstanceOf(Metadata::class, $result->getMetadata());
         $this->assertCount(5, $structure->steps);
         $this->assertInstanceOf(Step::class, $structure->steps[0]);
@@ -149,6 +153,14 @@ final class PlatformSubscriberTest extends TestCase
         $this->assertInstanceOf(Step::class, $structure->steps[4]);
         $this->assertSame('x = -3.75', $structure->finalAnswer);
         $this->assertSame(-3.75, $structure->result);
+    }
+
+    public static function complexFormatDataProvider(): iterable
+    {
+        return [
+            [MathReasoning::class],
+            [MathReasoningWithAttributes::class],
+        ];
     }
 
     /**
@@ -254,8 +266,7 @@ final class PlatformSubscriberTest extends TestCase
     public function testProcessOutputWithoutResponseFormat()
     {
         $resultFormatFactory = new ConfigurableResponseFormatFactory();
-        $serializer = self::createMock(SerializerInterface::class);
-        $processor = new PlatformSubscriber($resultFormatFactory, $serializer);
+        $processor = new PlatformSubscriber($resultFormatFactory);
 
         $converter = new PlainConverter($result = new TextResult('{"some": "data"}'));
         $deferred = new DeferredResult($converter, new InMemoryRawResult());
