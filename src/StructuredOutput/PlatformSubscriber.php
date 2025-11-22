@@ -17,18 +17,8 @@ use Symfony\AI\Platform\Event\ResultEvent;
 use Symfony\AI\Platform\Exception\InvalidArgumentException;
 use Symfony\AI\Platform\Exception\MissingModelSupportException;
 use Symfony\AI\Platform\Result\DeferredResult;
+use Symfony\AI\Platform\Serializer\StructuredOutputSerializer;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor;
-use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
-use Symfony\Component\PropertyInfo\PropertyInfoExtractor;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Mapping\ClassDiscriminatorFromClassMetadata;
-use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
-use Symfony\Component\Serializer\Mapping\Loader\AttributeLoader;
-use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
-use Symfony\Component\Serializer\Normalizer\BackedEnumNormalizer;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
 
 /**
@@ -40,29 +30,13 @@ final class PlatformSubscriber implements EventSubscriberInterface
 
     private string $outputType;
 
+    private SerializerInterface $serializer;
+
     public function __construct(
         private readonly ResponseFormatFactoryInterface $responseFormatFactory = new ResponseFormatFactory(),
-        private ?SerializerInterface $serializer = null,
+        ?SerializerInterface $serializer = null,
     ) {
-        if (null !== $this->serializer) {
-            return;
-        }
-
-        $classMetadataFactory = new ClassMetadataFactory(new AttributeLoader());
-        $discriminator = new ClassDiscriminatorFromClassMetadata($classMetadataFactory);
-        $propertyInfo = new PropertyInfoExtractor([], [new PhpDocExtractor(), new ReflectionExtractor()]);
-
-        $normalizers = [
-            new BackedEnumNormalizer(),
-            new ObjectNormalizer(
-                classMetadataFactory: $classMetadataFactory,
-                propertyTypeExtractor: $propertyInfo,
-                classDiscriminatorResolver: $discriminator,
-            ),
-            new ArrayDenormalizer(),
-        ];
-
-        $this->serializer = new Serializer($normalizers, [new JsonEncoder()]);
+        $this->serializer = $serializer ?? new StructuredOutputSerializer();
     }
 
     public static function getSubscribedEvents(): array
