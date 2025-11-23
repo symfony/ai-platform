@@ -27,6 +27,7 @@ final class ModelClient implements ModelClientInterface
     public function __construct(
         HttpClientInterface $httpClient,
         private readonly string $hostUrl,
+        private readonly ?string $apiKey = null,
     ) {
         $this->httpClient = $httpClient instanceof EventSourceHttpClient ? $httpClient : new EventSourceHttpClient($httpClient);
     }
@@ -38,8 +39,13 @@ final class ModelClient implements ModelClientInterface
 
     public function request(Model $model, array|string $payload, array $options = []): RawHttpResult
     {
+        $authorizationHeader = null !== $this->apiKey ? ['Authorization' => 'Bearer '.$this->apiKey] : [];
+
         return new RawHttpResult($this->httpClient->request('POST', \sprintf('%s/v1/chat/completions', $this->hostUrl), [
             'json' => array_merge($options, $payload),
+            'headers' => [
+                ...$authorizationHeader,
+            ],
         ]));
     }
 }

@@ -25,6 +25,7 @@ class PlatformFactory
 {
     public static function create(
         string $hostUrl = 'http://localhost:4000',
+        ?string $apiKey = null,
         ?HttpClientInterface $httpClient = null,
         ModelCatalogInterface $modelCatalog = new ModelCatalog(),
         ?Contract $contract = null,
@@ -34,7 +35,7 @@ class PlatformFactory
 
         return new Platform(
             [
-                new ModelClient($httpClient, $hostUrl),
+                new ModelClient($httpClient, $hostUrl, $apiKey),
             ],
             [
                 new ResultConverter(),
