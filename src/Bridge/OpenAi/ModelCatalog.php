@@ -96,17 +96,7 @@ final class ModelCatalog extends AbstractModelCatalog
                     Capability::OUTPUT_STRUCTURED,
                 ],
             ],
-            'o1-mini' => [
-                'class' => Gpt::class,
-                'capabilities' => [
-                    Capability::INPUT_MESSAGES,
-                    Capability::OUTPUT_TEXT,
-                    Capability::OUTPUT_STREAMING,
-                    Capability::TOOL_CALLING,
-                    Capability::INPUT_IMAGE,
-                ],
-            ],
-            'o1-preview' => [
+            'o3' => [
                 'class' => Gpt::class,
                 'capabilities' => [
                     Capability::INPUT_MESSAGES,
