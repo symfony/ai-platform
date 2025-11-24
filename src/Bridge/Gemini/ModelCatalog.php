@@ -25,7 +25,7 @@ final class ModelCatalog extends AbstractModelCatalog
     public function __construct(array $additionalModels = [])
     {
         $defaultModels = [
-            'gemini-3.0-pro-preview' => [
+            'gemini-3-pro-preview' => [
                 'class' => Gemini::class,
                 'capabilities' => [
                     Capability::INPUT_MESSAGES,
