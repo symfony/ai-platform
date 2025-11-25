@@ -73,6 +73,7 @@
         "symfony/process": "^7.3|^8.0",
         "symfony/var-dumper": "^7.3|^8.0"
     },
+    "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
             "Symfony\\AI\\Platform\\": "src/"
@@ -100,6 +101,5 @@
             "name": "symfony/ai",
             "url": "https://github.com/symfony/ai"
         }
-    },
-    "minimum-stability": "dev"
+    }
 }
