@@ -47,9 +47,9 @@ final class OllamaResultConverter implements ResultConverterInterface
             : $this->doConvertCompletion($data);
     }
 
-    public function getTokenUsageExtractor(): ?TokenUsageExtractorInterface
+    public function getTokenUsageExtractor(): TokenUsageExtractorInterface
     {
-        return null;
+        return new TokenUsageExtractor();
     }
 
     /**
