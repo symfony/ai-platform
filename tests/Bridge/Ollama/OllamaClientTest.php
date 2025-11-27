@@ -28,7 +28,7 @@ final class OllamaClientTest extends TestCase
 {
     public function testSupportsModel()
     {
-        $client = new OllamaClient(new MockHttpClient(), 'http://localhost:1234');
+        $client = new OllamaClient(new MockHttpClient(), 'http://127.0.0.1:1234');
 
         $this->assertTrue($client->supports(new Ollama('llama3.2')));
         $this->assertFalse($client->supports(new Model('any-model')));
@@ -97,6 +97,8 @@ final class OllamaClientTest extends TestCase
                 'created_at' => '2025-08-23T10:00:00Z',
                 'message' => ['role' => 'assistant', 'content' => 'Hello world'],
                 'done' => true,
+                'prompt_eval_count' => 10,
+                'eval_count' => 10,
             ])."\n\n", [
                 'response_headers' => [
                     'content-type' => 'text/event-stream',
