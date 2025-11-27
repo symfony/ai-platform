@@ -58,7 +58,7 @@ final class OllamaApiCatalog implements ModelCatalogInterface
 
     public function getModels(): array
     {
-        $response = $this->httpClient->request('POST', \sprintf('%s/api/tags', $this->host));
+        $response = $this->httpClient->request('GET', \sprintf('%s/api/tags', $this->host));
 
         $models = $response->toArray();
 
