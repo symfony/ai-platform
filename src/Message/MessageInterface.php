@@ -25,6 +25,8 @@ interface MessageInterface
 
     public function getId(): AbstractUid&TimeBasedUidInterface;
 
+    public function withId(AbstractUid&TimeBasedUidInterface $id): self;
+
     /**
      * @return string|Template|ContentInterface[]|null
      */

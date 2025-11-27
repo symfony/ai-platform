@@ -12,8 +12,6 @@
 namespace Symfony\AI\Platform\Message;
 
 use Symfony\AI\Platform\Metadata\MetadataAwareTrait;
-use Symfony\Component\Uid\AbstractUid;
-use Symfony\Component\Uid\TimeBasedUidInterface;
 use Symfony\Component\Uid\Uuid;
 
 /**
@@ -21,9 +19,8 @@ use Symfony\Component\Uid\Uuid;
  */
 final class SystemMessage implements MessageInterface
 {
+    use IdentifierAwareTrait;
     use MetadataAwareTrait;
-
-    private readonly AbstractUid&TimeBasedUidInterface $id;
 
     public function __construct(
         private readonly string|Template $content,
@@ -34,11 +31,6 @@ final class SystemMessage implements MessageInterface
     public function getRole(): Role
     {
         return Role::System;
-    }
-
-    public function getId(): AbstractUid&TimeBasedUidInterface
-    {
-        return $this->id;
     }
 
     public function getContent(): string|Template
