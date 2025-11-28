@@ -73,6 +73,7 @@
         "symfony/cache": "^7.3|^8.0",
         "symfony/console": "^7.3|^8.0",
         "symfony/dotenv": "^7.3|^8.0",
+        "symfony/expression-language": "^7.3|^8.0",
         "symfony/finder": "^7.3|^8.0",
         "symfony/process": "^7.3|^8.0",
         "symfony/var-dumper": "^7.3|^8.0"

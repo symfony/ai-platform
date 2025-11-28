@@ -26,7 +26,7 @@ final class SystemMessage implements MessageInterface
     private readonly AbstractUid&TimeBasedUidInterface $id;
 
     public function __construct(
-        private readonly string $content,
+        private readonly string|Template $content,
     ) {
         $this->id = Uuid::v7();
     }
@@ -41,7 +41,7 @@ final class SystemMessage implements MessageInterface
         return $this->id;
     }
 
-    public function getContent(): string
+    public function getContent(): string|Template
     {
         return $this->content;
     }
