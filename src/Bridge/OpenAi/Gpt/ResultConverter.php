@@ -156,14 +156,14 @@ final class ResultConverter implements ResultConverterInterface
      *     message: array{
      *         role: 'assistant',
      *         content: ?string,
-     *         tool_calls: array{
+     *         tool_calls: list<array{
      *             id: string,
      *             type: 'function',
      *             function: array{
      *                 name: string,
      *                 arguments: string
      *             },
-     *         },
+     *         }>,
      *         refusal: ?mixed
      *     },
      *     logprobs: string,
