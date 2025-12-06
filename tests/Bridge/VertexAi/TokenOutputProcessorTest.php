@@ -59,10 +59,10 @@ final class TokenOutputProcessorTest extends TestCase
 
         $this->assertCount(1, $metadata);
         $this->assertInstanceOf(TokenUsage::class, $tokenUsage);
-        $this->assertSame(10, $tokenUsage->promptTokens);
-        $this->assertSame(20, $tokenUsage->completionTokens);
-        $this->assertSame(20, $tokenUsage->thinkingTokens);
-        $this->assertSame(50, $tokenUsage->totalTokens);
+        $this->assertSame(10, $tokenUsage->getPromptTokens());
+        $this->assertSame(20, $tokenUsage->getCompletionTokens());
+        $this->assertSame(20, $tokenUsage->getThinkingTokens());
+        $this->assertSame(50, $tokenUsage->getTotalTokens());
     }
 
     public function testItHandlesMissingUsageFields()
@@ -86,10 +86,10 @@ final class TokenOutputProcessorTest extends TestCase
 
         $this->assertCount(1, $metadata);
         $this->assertInstanceOf(TokenUsage::class, $tokenUsage);
-        $this->assertSame(10, $tokenUsage->promptTokens);
-        $this->assertNull($tokenUsage->completionTokens);
-        $this->assertNull($tokenUsage->thinkingTokens);
-        $this->assertNull($tokenUsage->totalTokens);
+        $this->assertSame(10, $tokenUsage->getPromptTokens());
+        $this->assertNull($tokenUsage->getCompletionTokens());
+        $this->assertNull($tokenUsage->getThinkingTokens());
+        $this->assertNull($tokenUsage->getTotalTokens());
     }
 
     public function testItAddsEmptyTokenUsageWhenUsageMetadataNotPresent()
@@ -107,10 +107,10 @@ final class TokenOutputProcessorTest extends TestCase
 
         $this->assertCount(1, $metadata);
         $this->assertInstanceOf(TokenUsage::class, $tokenUsage);
-        $this->assertNull($tokenUsage->promptTokens);
-        $this->assertNull($tokenUsage->completionTokens);
-        $this->assertNull($tokenUsage->thinkingTokens);
-        $this->assertNull($tokenUsage->totalTokens);
+        $this->assertNull($tokenUsage->getPromptTokens());
+        $this->assertNull($tokenUsage->getCompletionTokens());
+        $this->assertNull($tokenUsage->getThinkingTokens());
+        $this->assertNull($tokenUsage->getTotalTokens());
     }
 
     public function testItHandlesStreamResults()
@@ -140,10 +140,10 @@ final class TokenOutputProcessorTest extends TestCase
 
         $this->assertCount(1, $metadata);
         $this->assertInstanceOf(TokenUsage::class, $tokenUsage);
-        $this->assertSame(15, $tokenUsage->promptTokens);
-        $this->assertSame(25, $tokenUsage->completionTokens);
-        $this->assertNull($tokenUsage->thinkingTokens);
-        $this->assertSame(40, $tokenUsage->totalTokens);
+        $this->assertSame(15, $tokenUsage->getPromptTokens());
+        $this->assertSame(25, $tokenUsage->getCompletionTokens());
+        $this->assertNull($tokenUsage->getThinkingTokens());
+        $this->assertSame(40, $tokenUsage->getTotalTokens());
     }
 
     private function createRawResponse(array $data = []): RawHttpResult

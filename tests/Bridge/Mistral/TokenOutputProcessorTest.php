@@ -64,8 +64,8 @@ final class TokenOutputProcessorTest extends TestCase
 
         $this->assertCount(1, $metadata);
         $this->assertInstanceOf(TokenUsage::class, $tokenUsage);
-        $this->assertSame(1000, $tokenUsage->remainingTokensMinute);
-        $this->assertSame(1000000, $tokenUsage->remainingTokensMonth);
+        $this->assertSame(1000, $tokenUsage->getRemainingTokensMinute());
+        $this->assertSame(1000000, $tokenUsage->getRemainingTokensMonth());
     }
 
     public function testItAddsUsageTokensToMetadata()
@@ -91,11 +91,11 @@ final class TokenOutputProcessorTest extends TestCase
         $tokenUsage = $metadata->get('token_usage');
 
         $this->assertInstanceOf(TokenUsage::class, $tokenUsage);
-        $this->assertSame(1000, $tokenUsage->remainingTokensMinute);
-        $this->assertSame(1000000, $tokenUsage->remainingTokensMonth);
-        $this->assertSame(10, $tokenUsage->promptTokens);
-        $this->assertSame(20, $tokenUsage->completionTokens);
-        $this->assertSame(30, $tokenUsage->totalTokens);
+        $this->assertSame(1000, $tokenUsage->getRemainingTokensMinute());
+        $this->assertSame(1000000, $tokenUsage->getRemainingTokensMonth());
+        $this->assertSame(10, $tokenUsage->getPromptTokens());
+        $this->assertSame(20, $tokenUsage->getCompletionTokens());
+        $this->assertSame(30, $tokenUsage->getTotalTokens());
     }
 
     public function testItHandlesMissingUsageFields()
@@ -120,11 +120,11 @@ final class TokenOutputProcessorTest extends TestCase
         $tokenUsage = $metadata->get('token_usage');
 
         $this->assertInstanceOf(TokenUsage::class, $tokenUsage);
-        $this->assertSame(1000, $tokenUsage->remainingTokensMinute);
-        $this->assertSame(1000000, $tokenUsage->remainingTokensMonth);
-        $this->assertSame(10, $tokenUsage->promptTokens);
-        $this->assertNull($tokenUsage->completionTokens);
-        $this->assertNull($tokenUsage->totalTokens);
+        $this->assertSame(1000, $tokenUsage->getRemainingTokensMinute());
+        $this->assertSame(1000000, $tokenUsage->getRemainingTokensMonth());
+        $this->assertSame(10, $tokenUsage->getPromptTokens());
+        $this->assertNull($tokenUsage->getCompletionTokens());
+        $this->assertNull($tokenUsage->getTotalTokens());
     }
 
     private function createRawResponse(array $data = []): RawHttpResult

@@ -75,10 +75,10 @@ final class TokenOutputProcessorTest extends TestCase
         $tokenUsage = $metadata->get('token_usage');
 
         $this->assertInstanceOf(TokenUsage::class, $tokenUsage);
-        $this->assertSame(10, $tokenUsage->promptTokens);
-        $this->assertSame(20, $tokenUsage->completionTokens);
-        $this->assertSame(20, $tokenUsage->thinkingTokens);
-        $this->assertSame(50, $tokenUsage->totalTokens);
+        $this->assertSame(10, $tokenUsage->getPromptTokens());
+        $this->assertSame(20, $tokenUsage->getCompletionTokens());
+        $this->assertSame(20, $tokenUsage->getThinkingTokens());
+        $this->assertSame(50, $tokenUsage->getTotalTokens());
     }
 
     public function testItHandlesMissingUsageFields()
@@ -103,10 +103,10 @@ final class TokenOutputProcessorTest extends TestCase
         $tokenUsage = $metadata->get('token_usage');
 
         $this->assertInstanceOf(TokenUsage::class, $tokenUsage);
-        $this->assertSame(10, $tokenUsage->promptTokens);
-        $this->assertNull($tokenUsage->completionTokens);
-        $this->assertNull($tokenUsage->thinkingTokens);
-        $this->assertNull($tokenUsage->totalTokens);
+        $this->assertSame(10, $tokenUsage->getPromptTokens());
+        $this->assertNull($tokenUsage->getCompletionTokens());
+        $this->assertNull($tokenUsage->getThinkingTokens());
+        $this->assertNull($tokenUsage->getTotalTokens());
     }
 
     private function createRawResult(array $data = []): RawHttpResult
