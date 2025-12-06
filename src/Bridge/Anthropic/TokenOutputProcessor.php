@@ -32,28 +32,25 @@ final class TokenOutputProcessor implements OutputProcessorInterface
         }
 
         $metadata = $output->getResult()->getMetadata();
-
-        $tokenUsage = new TokenUsage();
-
         $content = $rawResponse->toArray(false);
+
         if (!\array_key_exists('usage', $content)) {
-            $metadata->add('token_usage', $tokenUsage);
+            $metadata->add('token_usage', new TokenUsage());
 
             return;
         }
 
         $usage = $content['usage'];
-
-        $tokenUsage->promptTokens = $usage['input_tokens'] ?? null;
-        $tokenUsage->completionTokens = $usage['output_tokens'] ?? null;
-        $tokenUsage->toolTokens = $usage['server_tool_use']['web_search_requests'] ?? null;
-
         $cachedTokens = null;
         if (\array_key_exists('cache_creation_input_tokens', $usage) || \array_key_exists('cache_read_input_tokens', $usage)) {
             $cachedTokens = ($usage['cache_creation_input_tokens'] ?? 0) + ($usage['cache_read_input_tokens'] ?? 0);
         }
-        $tokenUsage->cachedTokens = $cachedTokens;
 
-        $metadata->add('token_usage', $tokenUsage);
+        $metadata->add('token_usage', new TokenUsage(
+            promptTokens: $usage['input_tokens'] ?? null,
+            completionTokens: $usage['output_tokens'] ?? null,
+            toolTokens: $usage['server_tool_use']['web_search_requests'] ?? null,
+            cachedTokens: $cachedTokens,
+        ));
     }
 }

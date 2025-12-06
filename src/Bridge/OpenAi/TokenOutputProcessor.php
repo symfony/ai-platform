@@ -35,27 +35,17 @@ final class TokenOutputProcessor implements OutputProcessorInterface
         }
 
         $metadata = $output->getResult()->getMetadata();
+        $content = $rawResponse->toArray(false);
 
         $remainingTokens = $rawResponse->getHeaders(false)['x-ratelimit-remaining-tokens'][0] ?? null;
         $tokenUsage = new TokenUsage(
+            promptTokens: $content['usage']['prompt_tokens'] ?? null,
+            completionTokens: $content['usage']['completion_tokens'] ?? null,
+            thinkingTokens: $content['usage']['completion_tokens_details']['reasoning_tokens'] ?? null,
+            cachedTokens: $content['usage']['prompt_tokens_details']['cached_tokens'] ?? null,
             remainingTokens: null !== $remainingTokens ? (int) $remainingTokens : null,
+            totalTokens: $content['usage']['total_tokens'] ?? null,
         );
-
-        $content = $rawResponse->toArray(false);
-
-        if (!\array_key_exists('usage', $content)) {
-            $metadata->add('token_usage', $tokenUsage);
-
-            return;
-        }
-
-        $usage = $content['usage'];
-
-        $tokenUsage->promptTokens = $usage['prompt_tokens'] ?? null;
-        $tokenUsage->completionTokens = $usage['completion_tokens'] ?? null;
-        $tokenUsage->thinkingTokens = $usage['completion_tokens_details']['reasoning_tokens'] ?? null;
-        $tokenUsage->cachedTokens = $usage['prompt_tokens_details']['cached_tokens'] ?? null;
-        $tokenUsage->totalTokens = $usage['total_tokens'] ?? null;
 
         $metadata->add('token_usage', $tokenUsage);
     }

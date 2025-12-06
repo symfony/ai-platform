@@ -35,23 +35,14 @@ final class TokenOutputProcessor implements OutputProcessorInterface
         }
 
         $metadata = $output->getResult()->getMetadata();
-
-        $tokenUsage = new TokenUsage();
-
         $content = $rawResponse->toArray(false);
 
-        if (!\array_key_exists('usage', $content)) {
-            $metadata->add('token_usage', $tokenUsage);
-
-            return;
-        }
-
-        $usage = $content['usage'];
-
-        $tokenUsage->promptTokens = $usage['prompt_tokens'] ?? null;
-        $tokenUsage->completionTokens = $usage['completion_tokens'] ?? null;
-        $tokenUsage->cachedTokens = $usage['prompt_cache_hit_tokens'] ?? null;
-        $tokenUsage->totalTokens = $usage['total_tokens'] ?? null;
+        $tokenUsage = new TokenUsage(
+            promptTokens: $content['usage']['prompt_tokens'] ?? null,
+            completionTokens: $content['usage']['completion_tokens'] ?? null,
+            cachedTokens: $content['usage']['prompt_cache_hit_tokens'] ?? null,
+            totalTokens: $content['usage']['total_tokens'] ?? null,
+        );
 
         $metadata->add('token_usage', $tokenUsage);
     }
