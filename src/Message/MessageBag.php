@@ -105,9 +105,12 @@ class MessageBag implements \Countable, \IteratorAggregate
         return $messages;
     }
 
-    public function prepend(MessageInterface $message): self
+    /**
+     * Clones the MessageBag without previous system message and prepends the given one.
+     */
+    public function withSystemMessage(SystemMessage $message): self
     {
-        $messages = clone $this;
+        $messages = $this->withoutSystemMessage();
         $messages->messages = array_merge([$message], $messages->messages);
 
         return $messages;
