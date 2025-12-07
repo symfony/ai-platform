@@ -113,7 +113,7 @@ final class MessageBagTest extends TestCase
         $this->assertSame('Hello, world!', $userMessage->getContent()[0]->getText());
     }
 
-    public function testPrepend()
+    public function testWithSystemMessage()
     {
         $messageBag = new MessageBag(
             Message::ofAssistant('It is time to sleep.'),
@@ -121,7 +121,7 @@ final class MessageBagTest extends TestCase
         );
 
         $newMessage = Message::forSystem('My amazing system prompt.');
-        $newMessageBag = $messageBag->prepend($newMessage);
+        $newMessageBag = $messageBag->withSystemMessage($newMessage);
 
         $this->assertCount(2, $messageBag);
         $this->assertCount(3, $newMessageBag);
