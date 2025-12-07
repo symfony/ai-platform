@@ -11,8 +11,8 @@
 
 namespace Symfony\AI\Platform\Bridge\OpenRouter;
 
+use Symfony\AI\Platform\Bridge\Generic\CompletionsModel;
 use Symfony\AI\Platform\Capability;
-use Symfony\AI\Platform\Model;
 use Symfony\AI\Platform\ModelCatalog\AbstractModelCatalog;
 
 /**
@@ -35,11 +35,11 @@ abstract class AbstractOpenRouterModelCatalog extends AbstractModelCatalog
     {
         $this->models = [
             'openrouter/auto' => [
-                'class' => Model::class,
+                'class' => CompletionsModel::class,
                 'capabilities' => Capability::cases(),
             ],
             '@preset' => [
-                'class' => Model::class,
+                'class' => CompletionsModel::class,
                 'capabilities' => Capability::cases(),
             ],
         ];
