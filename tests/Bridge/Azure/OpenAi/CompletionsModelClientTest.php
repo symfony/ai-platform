@@ -13,8 +13,8 @@ namespace Symfony\AI\Platform\Tests\Bridge\Azure\OpenAi;
 
 use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
-use Symfony\AI\Platform\Bridge\Azure\OpenAi\GptModelClient;
-use Symfony\AI\Platform\Bridge\OpenAi\Gpt;
+use Symfony\AI\Platform\Bridge\Azure\OpenAi\CompletionsModelClient;
+use Symfony\AI\Platform\Bridge\Generic\CompletionsModel;
 use Symfony\AI\Platform\Exception\InvalidArgumentException;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
@@ -22,7 +22,7 @@ use Symfony\Component\HttpClient\Response\MockResponse;
 /**
  * @author Oskar Stark <oskarstark@googlemail.com>
  */
-final class GptModelClientTest extends TestCase
+final class CompletionsModelClientTest extends TestCase
 {
     #[TestWith(['http://test.azure.com', 'The base URL must not contain the protocol.'])]
     #[TestWith(['https://test.azure.com', 'The base URL must not contain the protocol.'])]
@@ -33,7 +33,7 @@ final class GptModelClientTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage($expectedMessage);
 
-        new GptModelClient(new MockHttpClient(), $invalidUrl, 'deployment', 'api-version', 'api-key');
+        new CompletionsModelClient(new MockHttpClient(), $invalidUrl, 'deployment', 'api-version', 'api-key');
     }
 
     public function testItThrowsExceptionWhenDeploymentIsEmpty()
@@ -41,7 +41,7 @@ final class GptModelClientTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The deployment must not be empty.');
 
-        new GptModelClient(new MockHttpClient(), 'test.azure.com', '', 'api-version', 'api-key');
+        new CompletionsModelClient(new MockHttpClient(), 'test.azure.com', '', 'api-version', 'api-key');
     }
 
     public function testItThrowsExceptionWhenApiVersionIsEmpty()
@@ -49,7 +49,7 @@ final class GptModelClientTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The API version must not be empty.');
 
-        new GptModelClient(new MockHttpClient(), 'test.azure.com', 'deployment', '', 'api-key');
+        new CompletionsModelClient(new MockHttpClient(), 'test.azure.com', 'deployment', '', 'api-key');
     }
 
     public function testItThrowsExceptionWhenApiKeyIsEmpty()
@@ -57,21 +57,21 @@ final class GptModelClientTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The API key must not be empty.');
 
-        new GptModelClient(new MockHttpClient(), 'test.azure.com', 'deployment', 'api-version', '');
+        new CompletionsModelClient(new MockHttpClient(), 'test.azure.com', 'deployment', 'api-version', '');
     }
 
     public function testItAcceptsValidParameters()
     {
-        $client = new GptModelClient(new MockHttpClient(), 'test.azure.com', 'gpt-35-turbo', '2023-12-01-preview', 'valid-api-key');
+        $client = new CompletionsModelClient(new MockHttpClient(), 'test.azure.com', 'gpt-35-turbo', '2023-12-01-preview', 'valid-api-key');
 
-        $this->assertInstanceOf(GptModelClient::class, $client);
+        $this->assertInstanceOf(CompletionsModelClient::class, $client);
     }
 
     public function testItIsSupportingTheCorrectModel()
     {
-        $client = new GptModelClient(new MockHttpClient(), 'test.azure.com', 'deployment', '2023-12-01', 'api-key');
+        $client = new CompletionsModelClient(new MockHttpClient(), 'test.azure.com', 'deployment', '2023-12-01', 'api-key');
 
-        $this->assertTrue($client->supports(new Gpt('gpt-4o')));
+        $this->assertTrue($client->supports(new CompletionsModel('gpt-4o')));
     }
 
     public function testItIsExecutingTheCorrectRequest()
@@ -86,7 +86,7 @@ final class GptModelClientTest extends TestCase
         };
 
         $httpClient = new MockHttpClient([$resultCallback]);
-        $client = new GptModelClient($httpClient, 'test.azure.com', 'gpt-deployment', '2023-12-01', 'test-api-key');
-        $client->request(new Gpt('gpt-4o'), ['messages' => [['role' => 'user', 'content' => 'Hello']]]);
+        $client = new CompletionsModelClient($httpClient, 'test.azure.com', 'gpt-deployment', '2023-12-01', 'test-api-key');
+        $client->request(new CompletionsModel('gpt-4o'), ['messages' => [['role' => 'user', 'content' => 'Hello']]]);
     }
 }
