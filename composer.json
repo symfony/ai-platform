@@ -62,7 +62,7 @@
         "symfony/uid": "^7.3|^8.0"
     },
     "require-dev": {
-        "async-aws/bedrock-runtime": "^0.1.0",
+        "async-aws/bedrock-runtime": "^0.1|^1.0",
         "codewithkyrian/transformers": "^0.6.2",
         "google/auth": "^1.47",
         "phpstan/phpstan": "^2.1.17",
