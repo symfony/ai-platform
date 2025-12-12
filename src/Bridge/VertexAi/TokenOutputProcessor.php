@@ -13,7 +13,6 @@ namespace Symfony\AI\Platform\Bridge\VertexAi;
 
 use Symfony\AI\Agent\Output;
 use Symfony\AI\Agent\OutputProcessorInterface;
-use Symfony\AI\Platform\Metadata\Metadata;
 use Symfony\AI\Platform\Metadata\TokenUsage;
 use Symfony\AI\Platform\Result\StreamResult;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
@@ -37,7 +36,6 @@ final class TokenOutputProcessor implements OutputProcessorInterface
      */
     public function processOutput(Output $output): void
     {
-        $tokenUsage = new TokenUsage();
         $metadata = $output->getResult()->getMetadata();
 
         if ($output->getResult() instanceof StreamResult) {
@@ -51,7 +49,7 @@ final class TokenOutputProcessor implements OutputProcessorInterface
             }
 
             if ($lastChunk) {
-                $this->extractUsageMetadata($lastChunk['usageMetadata'], $metadata, $tokenUsage);
+                $metadata->add('token_usage', $this->extractUsageMetadata($lastChunk['usageMetadata']));
             }
 
             return;
@@ -64,13 +62,7 @@ final class TokenOutputProcessor implements OutputProcessorInterface
 
         $content = $rawResponse->toArray(false);
 
-        if (!isset($content['usageMetadata'])) {
-            $metadata->add('token_usage', $tokenUsage);
-
-            return;
-        }
-
-        $this->extractUsageMetadata($content['usageMetadata'], $metadata, $tokenUsage);
+        $metadata->add('token_usage', $this->extractUsageMetadata($content['usageMetadata'] ?? []));
     }
 
     /**
@@ -82,14 +74,14 @@ final class TokenOutputProcessor implements OutputProcessorInterface
      *     totalTokenCount?: int
      * } $usage
      */
-    private function extractUsageMetadata(array $usage, Metadata $metadata, TokenUsage $tokenUsage): void
+    private function extractUsageMetadata(array $usage): TokenUsage
     {
-        $tokenUsage->promptTokens = $usage['promptTokenCount'] ?? null;
-        $tokenUsage->completionTokens = $usage['candidatesTokenCount'] ?? null;
-        $tokenUsage->thinkingTokens = $usage['thoughtsTokenCount'] ?? null;
-        $tokenUsage->cachedTokens = $usage['cachedContentTokenCount'] ?? null;
-        $tokenUsage->totalTokens = $usage['totalTokenCount'] ?? null;
-
-        $metadata->add('token_usage', $tokenUsage);
+        return new TokenUsage(
+            promptTokens: $usage['promptTokenCount'] ?? null,
+            completionTokens: $usage['candidatesTokenCount'] ?? null,
+            thinkingTokens: $usage['thoughtsTokenCount'] ?? null,
+            cachedTokens: $usage['cachedContentTokenCount'] ?? null,
+            totalTokens: $usage['totalTokenCount'] ?? null,
+        );
     }
 }

@@ -64,7 +64,7 @@ final class TokenOutputProcessorTest extends TestCase
 
         $this->assertCount(1, $metadata);
         $this->assertInstanceOf(TokenUsage::class, $tokenUsage);
-        $this->assertSame(1000, $tokenUsage->remainingTokens);
+        $this->assertSame(1000, $tokenUsage->getRemainingTokens());
     }
 
     public function testItAddsUsageTokensToMetadata()
@@ -96,12 +96,12 @@ final class TokenOutputProcessorTest extends TestCase
         $tokenUsage = $metadata->get('token_usage');
 
         $this->assertInstanceOf(TokenUsage::class, $tokenUsage);
-        $this->assertSame(10, $tokenUsage->promptTokens);
-        $this->assertSame(20, $tokenUsage->completionTokens);
-        $this->assertSame(1000, $tokenUsage->remainingTokens);
-        $this->assertSame(20, $tokenUsage->thinkingTokens);
-        $this->assertSame(40, $tokenUsage->cachedTokens);
-        $this->assertSame(50, $tokenUsage->totalTokens);
+        $this->assertSame(10, $tokenUsage->getPromptTokens());
+        $this->assertSame(20, $tokenUsage->getCompletionTokens());
+        $this->assertSame(1000, $tokenUsage->getRemainingTokens());
+        $this->assertSame(20, $tokenUsage->getThinkingTokens());
+        $this->assertSame(40, $tokenUsage->getCachedTokens());
+        $this->assertSame(50, $tokenUsage->getTotalTokens());
     }
 
     public function testItHandlesMissingUsageFields()
@@ -126,10 +126,10 @@ final class TokenOutputProcessorTest extends TestCase
         $tokenUsage = $metadata->get('token_usage');
 
         $this->assertInstanceOf(TokenUsage::class, $tokenUsage);
-        $this->assertSame(10, $tokenUsage->promptTokens);
-        $this->assertSame(1000, $tokenUsage->remainingTokens);
-        $this->assertNull($tokenUsage->completionTokens);
-        $this->assertNull($tokenUsage->totalTokens);
+        $this->assertSame(10, $tokenUsage->getPromptTokens());
+        $this->assertSame(1000, $tokenUsage->getRemainingTokens());
+        $this->assertNull($tokenUsage->getCompletionTokens());
+        $this->assertNull($tokenUsage->getTotalTokens());
     }
 
     private function createRawResult(array $data = []): RawHttpResult
