@@ -50,10 +50,16 @@ final class DeferredResult
                 $this->convertedResult->setRawResult($this->rawResult);
             }
 
+            $this->convertedResult->getMetadata()->set($this->getMetadata()->all());
+
+            if (null !== $tokenUsageExtractor = $this->resultConverter->getTokenUsageExtractor()) {
+                if (null !== $tokenUsage = $tokenUsageExtractor->extract($this->rawResult, $this->options)) {
+                    $this->convertedResult->getMetadata()->add('token_usage', $tokenUsage);
+                }
+            }
+
             $this->isConverted = true;
         }
-
-        $this->convertedResult->getMetadata()->set($this->getMetadata()->all());
 
         return $this->convertedResult;
     }

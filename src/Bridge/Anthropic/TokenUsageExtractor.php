@@ -11,33 +11,23 @@
 
 namespace Symfony\AI\Platform\Bridge\Anthropic;
 
-use Symfony\AI\Agent\Output;
-use Symfony\AI\Agent\OutputProcessorInterface;
-use Symfony\AI\Platform\Metadata\TokenUsage;
-use Symfony\AI\Platform\Result\StreamResult;
-use Symfony\Contracts\HttpClient\ResponseInterface;
+use Symfony\AI\Platform\Result\RawResultInterface;
+use Symfony\AI\Platform\TokenUsage\TokenUsage;
+use Symfony\AI\Platform\TokenUsage\TokenUsageExtractorInterface;
 
-final class TokenOutputProcessor implements OutputProcessorInterface
+final class TokenUsageExtractor implements TokenUsageExtractorInterface
 {
-    public function processOutput(Output $output): void
+    public function extract(RawResultInterface $rawResult, array $options = []): ?TokenUsage
     {
-        if ($output->getResult() instanceof StreamResult) {
+        if ($options['stream'] ?? false) {
             // Streams have to be handled manually as the tokens are part of the streamed chunks
-            return;
+            return null;
         }
 
-        $rawResponse = $output->getResult()->getRawResult()?->getObject();
-        if (!$rawResponse instanceof ResponseInterface) {
-            return;
-        }
-
-        $metadata = $output->getResult()->getMetadata();
-        $content = $rawResponse->toArray(false);
+        $content = $rawResult->getData();
 
         if (!\array_key_exists('usage', $content)) {
-            $metadata->add('token_usage', new TokenUsage());
-
-            return;
+            return null;
         }
 
         $usage = $content['usage'];
@@ -46,11 +36,11 @@ final class TokenOutputProcessor implements OutputProcessorInterface
             $cachedTokens = ($usage['cache_creation_input_tokens'] ?? 0) + ($usage['cache_read_input_tokens'] ?? 0);
         }
 
-        $metadata->add('token_usage', new TokenUsage(
+        return new TokenUsage(
             promptTokens: $usage['input_tokens'] ?? null,
             completionTokens: $usage['output_tokens'] ?? null,
             toolTokens: $usage['server_tool_use']['web_search_requests'] ?? null,
             cachedTokens: $cachedTokens,
-        ));
+        );
     }
 }
