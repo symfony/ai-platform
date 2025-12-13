@@ -11,39 +11,34 @@
 
 namespace Symfony\AI\Platform\Bridge\Perplexity;
 
-use Symfony\AI\Agent\Output;
-use Symfony\AI\Agent\OutputProcessorInterface;
-use Symfony\AI\Platform\Metadata\TokenUsage;
-use Symfony\AI\Platform\Result\StreamResult;
-use Symfony\Contracts\HttpClient\ResponseInterface;
+use Symfony\AI\Platform\Result\RawResultInterface;
+use Symfony\AI\Platform\TokenUsage\TokenUsage;
+use Symfony\AI\Platform\TokenUsage\TokenUsageExtractorInterface;
+use Symfony\AI\Platform\TokenUsage\TokenUsageInterface;
 
 /**
  * @author Mathieu Santostefano <msantostefano@proton.me>
  */
-final class TokenOutputProcessor implements OutputProcessorInterface
+final class TokenUsageExtractor implements TokenUsageExtractorInterface
 {
-    public function processOutput(Output $output): void
+    public function extract(RawResultInterface $rawResult, array $options = []): ?TokenUsageInterface
     {
-        if ($output->getResult() instanceof StreamResult) {
+        if ($options['stream'] ?? false) {
             // Streams have to be handled manually as the tokens are part of the streamed chunks
-            return;
+            return null;
         }
 
-        $rawResponse = $output->getResult()->getRawResult()?->getObject();
-        if (!$rawResponse instanceof ResponseInterface) {
-            return;
+        $content = $rawResult->getData();
+
+        if (!\array_key_exists('usage', $content)) {
+            return null;
         }
 
-        $content = $rawResponse->toArray(false);
-
-        $metadata = $output->getResult()->getMetadata();
-        $tokenUsage = new TokenUsage(
+        return new TokenUsage(
             promptTokens: $content['usage']['prompt_tokens'] ?? null,
             completionTokens: $content['usage']['completion_tokens'] ?? null,
             thinkingTokens: $content['usage']['reasoning_tokens'] ?? null,
             totalTokens: $content['usage']['total_tokens'] ?? null,
         );
-
-        $metadata->add('token_usage', $tokenUsage);
     }
 }

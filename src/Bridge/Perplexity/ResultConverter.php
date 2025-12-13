@@ -50,6 +50,11 @@ final class ResultConverter implements ResultConverterInterface
         return $result;
     }
 
+    public function getTokenUsageExtractor(): TokenUsageExtractor
+    {
+        return new TokenUsageExtractor();
+    }
+
     private function convertStream(RawResultInterface $result): \Generator
     {
         $searchResults = $citations = [];

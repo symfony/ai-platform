@@ -9,32 +9,29 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\AI\Platform\Bridge\Gemini;
+namespace Symfony\AI\Platform\Bridge\Gemini\Gemini;
 
-use Symfony\AI\Agent\Output;
-use Symfony\AI\Agent\OutputProcessorInterface;
-use Symfony\AI\Platform\Metadata\TokenUsage;
-use Symfony\AI\Platform\Result\StreamResult;
-use Symfony\Contracts\HttpClient\ResponseInterface;
+use Symfony\AI\Platform\Result\RawResultInterface;
+use Symfony\AI\Platform\TokenUsage\TokenUsage;
+use Symfony\AI\Platform\TokenUsage\TokenUsageExtractorInterface;
+use Symfony\AI\Platform\TokenUsage\TokenUsageInterface;
 
-final class TokenOutputProcessor implements OutputProcessorInterface
+final class TokenUsageExtractor implements TokenUsageExtractorInterface
 {
-    public function processOutput(Output $output): void
+    public function extract(RawResultInterface $rawResult, array $options = []): ?TokenUsageInterface
     {
-        if ($output->getResult() instanceof StreamResult) {
+        if ($options['stream'] ?? false) {
             // Streams have to be handled manually as the tokens are part of the streamed chunks
-            return;
+            return null;
         }
 
-        $rawResponse = $output->getResult()->getRawResult()?->getObject();
-        if (!$rawResponse instanceof ResponseInterface) {
-            return;
+        $content = $rawResult->getData();
+
+        if (!\array_key_exists('usageMetadata', $content)) {
+            return null;
         }
 
-        $metadata = $output->getResult()->getMetadata();
-        $content = $rawResponse->toArray(false);
-
-        $tokenUsage = new TokenUsage(
+        return new TokenUsage(
             promptTokens: $content['usageMetadata']['promptTokenCount'] ?? null,
             completionTokens: $content['usageMetadata']['candidatesTokenCount'] ?? null,
             thinkingTokens: $content['usageMetadata']['thoughtsTokenCount'] ?? null,
@@ -42,7 +39,5 @@ final class TokenOutputProcessor implements OutputProcessorInterface
             cachedTokens: $content['usageMetadata']['cachedContentTokenCount'] ?? null,
             totalTokens: $content['usageMetadata']['totalTokenCount'] ?? null,
         );
-
-        $metadata->add('token_usage', $tokenUsage);
     }
 }
