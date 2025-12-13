@@ -12,8 +12,8 @@
 namespace Symfony\AI\Platform\Tests\Metadata;
 
 use PHPUnit\Framework\TestCase;
-use Symfony\AI\Platform\Metadata\TokenUsage;
-use Symfony\AI\Platform\Metadata\TokenUsageAggregation;
+use Symfony\AI\Platform\TokenUsage\TokenUsage;
+use Symfony\AI\Platform\TokenUsage\TokenUsageAggregation;
 
 class TokenUsageAggregationTest extends TestCase
 {

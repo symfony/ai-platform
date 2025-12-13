@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\AI\Platform\Metadata;
+namespace Symfony\AI\Platform\TokenUsage;
 
 /**
  * @author Junaid Farooq <ulislam.junaid125@gmail.com>
