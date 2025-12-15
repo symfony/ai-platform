@@ -50,7 +50,7 @@ final class DeferredResult
                 $this->convertedResult->setRawResult($this->rawResult);
             }
 
-            $this->convertedResult->getMetadata()->set($this->getMetadata()->all());
+            $this->convertedResult->getMetadata()->merge($this->getMetadata()->all());
 
             if (null !== $tokenUsageExtractor = $this->resultConverter->getTokenUsageExtractor()) {
                 if (null !== $tokenUsage = $tokenUsageExtractor->extract($this->rawResult, $this->options)) {
