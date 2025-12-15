@@ -47,6 +47,16 @@ final class ResultConverter implements ResultConverterInterface
 
         $result = 1 === \count($choices) ? $choices[0] : new ChoiceResult(...$choices);
 
+        $metadata = $result->getMetadata();
+
+        if (\array_key_exists('search_results', $data)) {
+            $metadata->add('search_results', $data['search_results']);
+        }
+
+        if (\array_key_exists('citations', $data)) {
+            $metadata->add('citations', $data['citations']);
+        }
+
         return $result;
     }
 
