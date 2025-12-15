@@ -136,6 +136,18 @@ final class DeferredResultTest extends TestCase
         $this->assertSame('value', $unwrappedResult->getMetadata()->get('key'));
     }
 
+    public function testMetadataGetsPromotedFromUnwrappedResult()
+    {
+        $result = new TextResult('Hello World');
+        $result->getMetadata()->add('foo', 'bar');
+        $converter = new PlainConverter($result);
+
+        $deferredResult = new DeferredResult($converter, new InMemoryRawResult());
+        $deferredResult->getResult();
+
+        $this->assertSame('bar', $deferredResult->getMetadata()->get('foo'));
+    }
+
     /**
      * Workaround for low deps because mocking the ResponseInterface leads to an exception with
      * mock creation "Type Traversable|object|array|string|null contains both object and a class type"
