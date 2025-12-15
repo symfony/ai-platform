@@ -108,4 +108,68 @@ class ResultConverterTest extends TestCase
 
         $converter->convert(new RawHttpResult($httpResponse));
     }
+
+    public function testAttachesSearchResultsToMetadata()
+    {
+        $converter = new ResultConverter();
+        $httpResponse = self::createMock(ResponseInterface::class);
+        $httpResponse->method('toArray')->willReturn([
+            'choices' => [
+                [
+                    'message' => [
+                        'role' => 'assistant',
+                        'content' => 'Test content',
+                    ],
+                    'finish_reason' => 'stop',
+                ],
+            ],
+            'search_results' => [
+                [
+                    'title' => 'Result 1',
+                    'url' => 'http://example.com/1',
+                ],
+                [
+                    'title' => 'Result 2',
+                    'url' => 'http://example.com/2',
+                ],
+            ],
+        ]);
+
+        $result = $converter->convert(new RawHttpResult($httpResponse));
+
+        $this->assertTrue($result->getMetadata()->has('search_results'));
+        $searchResults = $result->getMetadata()->get('search_results');
+        $this->assertCount(2, $searchResults);
+        $this->assertSame('Result 1', $searchResults[0]['title']);
+        $this->assertSame('http://example.com/1', $searchResults[0]['url']);
+    }
+
+    public function testAttachesCitationsToMetadata()
+    {
+        $converter = new ResultConverter();
+        $httpResponse = self::createMock(ResponseInterface::class);
+        $httpResponse->method('toArray')->willReturn([
+            'choices' => [
+                [
+                    'message' => [
+                        'role' => 'assistant',
+                        'content' => 'Test content',
+                    ],
+                    'finish_reason' => 'stop',
+                ],
+            ],
+            'citations' => [
+                'Citation 1',
+                'Citation 2',
+            ],
+        ]);
+
+        $result = $converter->convert(new RawHttpResult($httpResponse));
+
+        $this->assertTrue($result->getMetadata()->has('citations'));
+        $citations = $result->getMetadata()->get('citations');
+        $this->assertCount(2, $citations);
+        $this->assertSame('Citation 1', $citations[0]);
+        $this->assertSame('Citation 2', $citations[1]);
+    }
 }
