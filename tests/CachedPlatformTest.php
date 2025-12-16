@@ -40,7 +40,7 @@ final class CachedPlatformTest extends TestCase
 
         $cachedPlatform = new CachedPlatform(
             $platform,
-            new TagAwareAdapter(new ArrayAdapter()),
+            cache: new TagAwareAdapter(new ArrayAdapter()),
         );
 
         $deferredResult = $cachedPlatform->invoke('foo', 'bar', [
