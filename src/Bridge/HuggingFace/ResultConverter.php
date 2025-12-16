@@ -57,7 +57,8 @@ final class ResultConverter implements ResultConverterInterface
 
         $headers = $httpResponse->getHeaders(false);
         $contentType = $headers['content-type'][0] ?? null;
-        $content = str_contains($contentType, 'application/json') ? $httpResponse->toArray(false) : $httpResponse->getContent(false);
+        $content = null !== $contentType && str_contains($contentType, 'application/json')
+            ? $httpResponse->toArray(false) : $httpResponse->getContent(false);
 
         if (str_starts_with((string) $httpResponse->getStatusCode(), '4')) {
             $message = match (true) {
