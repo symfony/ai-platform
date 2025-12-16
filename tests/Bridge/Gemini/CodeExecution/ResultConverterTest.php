@@ -22,7 +22,7 @@ final class ResultConverterTest extends TestCase
     public function testItReturnsAggregatedTextOnSuccess()
     {
         $response = $this->createStub(ResponseInterface::class);
-        $responseContent = file_get_contents(\dirname(__DIR__, 6).'/fixtures/Bridge/Gemini/code_execution_outcome_ok.json');
+        $responseContent = file_get_contents(__DIR__.'/fixtures/code_execution_outcome_ok.json');
 
         $response
             ->method('toArray')
@@ -39,7 +39,7 @@ final class ResultConverterTest extends TestCase
     public function testItThrowsExceptionOnFailure()
     {
         $response = $this->createStub(ResponseInterface::class);
-        $responseContent = file_get_contents(\dirname(__DIR__, 6).'/fixtures/Bridge/Gemini/code_execution_outcome_failed.json');
+        $responseContent = file_get_contents(__DIR__.'/fixtures/code_execution_outcome_failed.json');
 
         $response
             ->method('toArray')
@@ -54,7 +54,7 @@ final class ResultConverterTest extends TestCase
     public function testItThrowsExceptionOnTimeout()
     {
         $response = $this->createStub(ResponseInterface::class);
-        $responseContent = file_get_contents(\dirname(__DIR__, 6).'/fixtures/Bridge/Gemini/code_execution_outcome_deadline_exceeded.json');
+        $responseContent = file_get_contents(__DIR__.'/fixtures/code_execution_outcome_deadline_exceeded.json');
 
         $response
             ->method('toArray')
