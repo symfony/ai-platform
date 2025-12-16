@@ -63,6 +63,7 @@
     },
     "require-dev": {
         "async-aws/bedrock-runtime": "^0.1|^1.0",
+        "symfony/ai-agent": "@dev",
         "codewithkyrian/transformers": "^0.6.2",
         "google/auth": "^1.47",
         "phpstan/phpstan": "^2.1.17",
@@ -85,6 +86,7 @@
     },
     "autoload-dev": {
         "psr-4": {
+            "Symfony\\AI\\Agent\\Tests\\": "../agent/tests/",
             "Symfony\\AI\\Fixtures\\": "../../fixtures",
             "Symfony\\AI\\PHPStan\\": "../../.phpstan/",
             "Symfony\\AI\\Platform\\Tests\\": "tests/"
