@@ -31,7 +31,7 @@ class File implements ContentInterface
     public static function fromDataUrl(string $dataUrl): static
     {
         if (!str_starts_with($dataUrl, 'data:')) {
-            throw new InvalidArgumentException('Invalid audio data URL format.');
+            throw new InvalidArgumentException('Invalid file data URL format.');
         }
 
         return new static(

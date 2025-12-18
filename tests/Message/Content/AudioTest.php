@@ -36,7 +36,7 @@ final class AudioTest extends TestCase
     public function testFromDataUrlWithInvalidUrl()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Invalid audio data URL format.');
+        $this->expectExceptionMessage('Invalid file data URL format.');
 
         Audio::fromDataUrl('invalid-url');
     }
