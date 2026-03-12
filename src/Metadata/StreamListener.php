@@ -9,13 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\AI\Platform\TokenUsage;
+namespace Symfony\AI\Platform\Metadata;
 
 use Symfony\AI\Platform\Result\Stream\AbstractStreamListener;
+use Symfony\AI\Platform\Result\Stream\Delta\MetadataDelta;
 use Symfony\AI\Platform\Result\Stream\DeltaEvent;
 
 /**
- * @author Christopher Hertel <mail@christopher-hertel.de>
+ * @author Fabien Potencier <fabien@symfony.com>
  */
 final class StreamListener extends AbstractStreamListener
 {
@@ -23,11 +24,11 @@ final class StreamListener extends AbstractStreamListener
     {
         $delta = $event->getDelta();
 
-        if (!$delta instanceof TokenUsageInterface) {
+        if (!$delta instanceof MetadataDelta) {
             return;
         }
 
-        $event->getMetadata()->add('token_usage', $delta);
+        $event->getMetadata()->add($delta->getKey(), $delta->getValue());
         $event->skipDelta();
     }
 }
