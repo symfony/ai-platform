@@ -18,6 +18,12 @@ use Symfony\AI\Platform\Contract\JsonSchema\Describer\SchemaAttributeDescriber;
 use Symfony\AI\Platform\Contract\JsonSchema\Subject\PropertySubject;
 use Symfony\AI\Platform\Exception\InvalidArgumentException;
 use Symfony\AI\Platform\Exception\IOException;
+use Symfony\AI\Platform\Exception\RuntimeException;
+use Symfony\AI\Platform\Tests\Fixtures\JsonSchema\ColorProvider;
+use Symfony\AI\Platform\Tests\Fixtures\JsonSchema\ContextAwareProvider;
+use Symfony\AI\Platform\Tests\Fixtures\JsonSchema\LongerStaticEnumDto;
+use Symfony\AI\Platform\Tests\Fixtures\JsonSchema\SearchQueryDto;
+use Symfony\AI\Platform\Tests\Fixtures\JsonSchema\StatusProvider;
 use Symfony\AI\Platform\Tests\Fixtures\StructuredOutput\ExampleDto;
 use Symfony\AI\Platform\Tests\Fixtures\StructuredOutput\SchemaAttributeRefDto;
 
@@ -59,5 +65,112 @@ final class SchemaAttributeDescriberTest extends TestCase
 
         $this->expectException(IOException::class);
         $describer->describeProperty($property, $schema);
+    }
+
+    public function testMergesFragmentFromProviderOnParameter()
+    {
+        $describer = new SchemaAttributeDescriber([
+            StatusProvider::class => new StatusProvider(['active', 'archived']),
+        ]);
+
+        $subject = new PropertySubject('status', new \ReflectionParameter([SearchQueryDto::class, 'search'], 'status'));
+        $schema = ['type' => 'string', 'description' => 'pre-existing'];
+
+        $describer->describeProperty($subject, $schema);
+
+        $this->assertSame([
+            'type' => 'string',
+            'description' => 'pre-existing',
+            'enum' => ['active', 'archived'],
+        ], $schema);
+    }
+
+    public function testMergesFragmentFromProviderOnProperty()
+    {
+        $describer = new SchemaAttributeDescriber([
+            ColorProvider::class => new ColorProvider(['red', 'blue']),
+        ]);
+
+        $subject = new PropertySubject('color', new \ReflectionProperty(SearchQueryDto::class, 'color'));
+        $schema = ['type' => 'string'];
+
+        $describer->describeProperty($subject, $schema);
+
+        $this->assertSame(['type' => 'string', 'enum' => ['red', 'blue']], $schema);
+    }
+
+    public function testMergesFragmentWithContext()
+    {
+        $describer = new SchemaAttributeDescriber([
+            ContextAwareProvider::class => new ContextAwareProvider(),
+        ]);
+
+        $subject = new PropertySubject('category', new \ReflectionParameter([SearchQueryDto::class, 'search'], 'category'));
+        $schema = ['type' => 'string'];
+
+        $describer->describeProperty($subject, $schema);
+
+        $this->assertSame(['type' => 'string', 'enum' => ['foo', 'bar']], $schema);
+    }
+
+    public function testThrowsWhenProviderIsNotRegistered()
+    {
+        $describer = new SchemaAttributeDescriber();
+
+        $subject = new PropertySubject('status', new \ReflectionParameter([SearchQueryDto::class, 'search'], 'status'));
+        $schema = ['type' => 'string'];
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Schema provider "'.StatusProvider::class.'" is not registered.');
+
+        $describer->describeProperty($subject, $schema);
+    }
+
+    public function testResolvesProviderByArbitraryServiceId()
+    {
+        $describer = new SchemaAttributeDescriber([
+            'app.provider.tag' => new StatusProvider(['draft', 'published']),
+        ]);
+
+        $subject = new PropertySubject('tag', new \ReflectionParameter([SearchQueryDto::class, 'searchByServiceId'], 'tag'));
+        $schema = ['type' => 'string'];
+
+        $describer->describeProperty($subject, $schema);
+
+        $this->assertSame(['type' => 'string', 'enum' => ['draft', 'published']], $schema);
+    }
+
+    public function testProviderEnumFullyReplacesLongerStaticEnum()
+    {
+        $describer = new SchemaAttributeDescriber([
+            StatusProvider::class => new StatusProvider(['active', 'archived']),
+        ]);
+
+        // LongerStaticEnumDto::$status carries #[Schema(enum: ['a', 'b', 'c'], provider: StatusProvider::class)].
+        $subject = new PropertySubject('status', new \ReflectionProperty(LongerStaticEnumDto::class, 'status'));
+        $schema = ['type' => 'string'];
+
+        $describer->describeProperty($subject, $schema);
+
+        // The runtime fragment must replace the static enum wholesale, not merge by index
+        // (which would leave the trailing 'c' from the static enum behind).
+        $this->assertSame(['type' => 'string', 'enum' => ['active', 'archived']], $schema);
+    }
+
+    public function testProviderEnumReplacesEnumLeftByEarlierDescriber()
+    {
+        $describer = new SchemaAttributeDescriber([
+            StatusProvider::class => new StatusProvider(['active', 'archived']),
+        ]);
+
+        // SearchQueryDto::$status only carries #[Schema(provider: StatusProvider::class)] (no
+        // static enum), so the incoming enum stands in for one an earlier describer produced
+        // (e.g. TypeInfoDescriber generating cases() for a backed-enum-typed property).
+        $subject = new PropertySubject('status', new \ReflectionProperty(SearchQueryDto::class, 'status'));
+        $schema = ['type' => 'string', 'enum' => ['draft', 'review', 'published', 'archived']];
+
+        $describer->describeProperty($subject, $schema);
+
+        $this->assertSame(['type' => 'string', 'enum' => ['active', 'archived']], $schema);
     }
 }

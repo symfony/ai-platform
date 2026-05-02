@@ -4,6 +4,7 @@ CHANGELOG
 0.11
 ----
 
+ * Add `provider` and `context` arguments to `#[Schema]` plus `SchemaProviderInterface` to contribute JSON Schema fragments computed at runtime (env, database, services) for tool parameters and structured output properties; `provider` accepts any container service ID and `context` is passed to `getSchemaFragment()`
  * Add `PartialJsonParser` for recovering partial JSON from streaming output
  * Add `DeferredResult::asPartialJsonStream()` yielding the largest recoverable JSON value from each streamed delta
  * Add routing-aware mock test provider (`Test\MockPlatformFactory`, `Test\MockModelClient`, `Test\MockResultConverter`, `Test\MockModelCatalog`) for any-result-type mocks in tests, complementing `Test\InMemoryPlatform`
