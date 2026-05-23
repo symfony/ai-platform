@@ -16,7 +16,9 @@ use Symfony\AI\Platform\Model;
 use Symfony\AI\Platform\Result\ObjectResult;
 use Symfony\AI\Platform\Result\RawResultInterface;
 use Symfony\AI\Platform\Result\ResultInterface;
+use Symfony\AI\Platform\Result\StreamResult;
 use Symfony\AI\Platform\ResultConverterInterface;
+use Symfony\AI\Platform\StructuredOutput\Streaming\PartialObjectStreamListener;
 use Symfony\AI\Platform\TokenUsage\TokenUsageExtractorInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -41,6 +43,16 @@ final class ValidatorResultConverter implements ResultConverterInterface
     public function convert(RawResultInterface $result, array $options = []): ResultInterface
     {
         $innerResult = $this->innerConverter->convert($result, $options);
+
+        if ($innerResult instanceof StreamResult) {
+            foreach ($innerResult->getListeners() as $listener) {
+                if ($listener instanceof PartialObjectStreamListener) {
+                    $listener->setValidator($this->validator);
+                }
+            }
+
+            return $innerResult;
+        }
 
         if (!$innerResult instanceof ObjectResult) {
             return $innerResult;

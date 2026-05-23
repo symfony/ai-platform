@@ -14,10 +14,10 @@ namespace Symfony\AI\Platform\StructuredOutput;
 use Symfony\AI\Platform\Capability;
 use Symfony\AI\Platform\Event\InvocationEvent;
 use Symfony\AI\Platform\Event\ResultEvent;
-use Symfony\AI\Platform\Exception\InvalidArgumentException;
 use Symfony\AI\Platform\Exception\MissingModelSupportException;
 use Symfony\AI\Platform\Result\DeferredResult;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
 /**
@@ -31,11 +31,11 @@ final class PlatformSubscriber implements EventSubscriberInterface
 
     private ?object $objectToPopulate = null;
 
-    private SerializerInterface $serializer;
+    private SerializerInterface&DenormalizerInterface $serializer;
 
     public function __construct(
         private readonly ResponseFormatFactoryInterface $responseFormatFactory = new ResponseFormatFactory(),
-        ?SerializerInterface $serializer = null,
+        (SerializerInterface&DenormalizerInterface)|null $serializer = null,
     ) {
         $this->serializer = $serializer ?? new Serializer();
     }
@@ -50,7 +50,6 @@ final class PlatformSubscriber implements EventSubscriberInterface
 
     /**
      * @throws MissingModelSupportException When structured output is requested but the model doesn't support it
-     * @throws InvalidArgumentException     When streaming is enabled with structured output (incompatible options)
      */
     public function processInput(InvocationEvent $event): void
     {
@@ -70,10 +69,6 @@ final class PlatformSubscriber implements EventSubscriberInterface
             $className = $responseFormat;
         } else {
             return;
-        }
-
-        if (true === ($options['stream'] ?? false)) {
-            throw new InvalidArgumentException('Streamed responses are not supported for structured output.');
         }
 
         if (!$event->getModel()->supports(Capability::OUTPUT_STRUCTURED)) {

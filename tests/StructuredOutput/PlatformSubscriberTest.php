@@ -346,11 +346,8 @@ final class PlatformSubscriberTest extends TestCase
         $this->assertSame('Kai Wegner', $result->mayor);
     }
 
-    public function testObjectInstanceThrowsExceptionWithStreaming()
+    public function testProcessInputAllowsStreamingWithStructuredOutput()
     {
-        $this->expectException(\Symfony\AI\Platform\Exception\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Streamed responses are not supported for structured output.');
-
         $processor = new PlatformSubscriber(new ConfigurableResponseFormatFactory());
 
         $city = new City(name: 'Berlin');
@@ -361,6 +358,11 @@ final class PlatformSubscriberTest extends TestCase
         ]);
 
         $processor->processInput($event);
+
+        $options = $event->getOptions();
+        $this->assertTrue($options['stream']);
+        $this->assertNotSame($city, $options['response_format']);
+        $this->assertIsArray($options['response_format']);
     }
 
     public function testProcessInputIgnoresNonObjectNonClassString()

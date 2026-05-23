@@ -25,6 +25,9 @@ use Symfony\AI\Platform\Result\Stream\Delta\TextDelta;
 use Symfony\AI\Platform\Result\StreamResult;
 use Symfony\AI\Platform\Result\TextResult;
 use Symfony\AI\Platform\ResultConverterInterface;
+use Symfony\AI\Platform\StructuredOutput\Serializer;
+use Symfony\AI\Platform\StructuredOutput\Streaming\PartialObjectStreamListener;
+use Symfony\AI\Platform\Tests\Fixtures\StructuredOutput\City;
 use Symfony\AI\Platform\TokenUsage\TokenUsage;
 use Symfony\AI\Platform\TokenUsage\TokenUsageInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface as SymfonyHttpResponse;
@@ -377,6 +380,68 @@ final class DeferredResultTest extends TestCase
 
         $this->assertCount(1, $received);
         $this->assertSame($exception, $received[0]);
+    }
+
+    public function testAsStreamedObjectYieldsOnlyTypedObjects()
+    {
+        $stream = new StreamResult((static function () {
+            yield new TextDelta('{"name":"Ber');
+            yield new TextDelta('lin"}');
+        })(), [new PartialObjectStreamListener(new Serializer(), City::class)]);
+
+        $deferred = new DeferredResult(new PlainConverter($stream), new InMemoryRawResult());
+
+        $partials = iterator_to_array($deferred->asStreamedObject(), false);
+
+        $this->assertNotEmpty($partials);
+        foreach ($partials as $object) {
+            $this->assertInstanceOf(City::class, $object);
+        }
+        $this->assertSame('Berlin', $partials[array_key_last($partials)]->name);
+    }
+
+    public function testAsObjectReturnsFinalObjectAfterStreaming()
+    {
+        $stream = new StreamResult((static function () {
+            yield new TextDelta('{"name":"Berlin","population":3500000}');
+        })(), [new PartialObjectStreamListener(new Serializer(), City::class)]);
+
+        $deferred = new DeferredResult(new PlainConverter($stream), new InMemoryRawResult());
+
+        $city = $deferred->asObject();
+        $this->assertInstanceOf(City::class, $city);
+        $this->assertSame('Berlin', $city->name);
+        $this->assertSame(3500000, $city->population);
+    }
+
+    public function testAsObjectIsIdempotentAfterStreaming()
+    {
+        $stream = new StreamResult((static function () {
+            yield new TextDelta('{"name":"Berlin"}');
+        })(), [new PartialObjectStreamListener(new Serializer(), City::class)]);
+
+        $deferred = new DeferredResult(new PlainConverter($stream), new InMemoryRawResult());
+
+        $first = $deferred->asObject();
+        $second = $deferred->asObject();
+
+        $this->assertSame($first, $second);
+    }
+
+    public function testAsStreamedObjectThenAsObjectShortCircuits()
+    {
+        $stream = new StreamResult((static function () {
+            yield new TextDelta('{"name":"Ber');
+            yield new TextDelta('lin"}');
+        })(), [new PartialObjectStreamListener(new Serializer(), City::class)]);
+
+        $deferred = new DeferredResult(new PlainConverter($stream), new InMemoryRawResult());
+
+        iterator_to_array($deferred->asStreamedObject());
+
+        $city = $deferred->asObject();
+        $this->assertInstanceOf(City::class, $city);
+        $this->assertSame('Berlin', $city->name);
     }
 
     /**
