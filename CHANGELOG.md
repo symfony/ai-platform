@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+0.11
+----
+
+ * Add `PartialJsonParser` for recovering partial JSON from streaming output
+
 0.10
 ----
 
