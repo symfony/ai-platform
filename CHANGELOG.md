@@ -5,6 +5,7 @@ CHANGELOG
 ----
 
  * Add `PartialJsonParser` for recovering partial JSON from streaming output
+ * Add routing-aware mock test provider (`Test\MockPlatformFactory`, `Test\MockModelClient`, `Test\MockResultConverter`, `Test\MockModelCatalog`) for any-result-type mocks in tests, complementing `Test\InMemoryPlatform`
 
 0.10
 ----

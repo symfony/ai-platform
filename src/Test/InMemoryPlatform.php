@@ -19,7 +19,6 @@ use Symfony\AI\Platform\PlatformInterface;
 use Symfony\AI\Platform\Result\DeferredResult;
 use Symfony\AI\Platform\Result\InMemoryRawResult;
 use Symfony\AI\Platform\Result\ResultInterface;
-use Symfony\AI\Platform\Result\TextResult;
 
 /**
  * A fake implementation of PlatformInterface that returns fixed or callable responses.
@@ -31,14 +30,16 @@ use Symfony\AI\Platform\Result\TextResult;
 class InMemoryPlatform implements PlatformInterface
 {
     private readonly ModelCatalogInterface $modelCatalog;
+    private readonly ScriptedResponse $response;
 
     /**
      * The mock result can be a string or a callable that returns a string.
      * If it's a closure, it receives the model, input, and optionally options as parameters like a real platform call.
      */
-    public function __construct(private readonly \Closure|string $mockResult)
+    public function __construct(\Closure|string $mockResult)
     {
         $this->modelCatalog = new FallbackModelCatalog();
+        $this->response = new ScriptedResponse($mockResult);
     }
 
     public function invoke(string|Model $model, array|string|object $input, array $options = []): DeferredResult
@@ -51,13 +52,8 @@ class InMemoryPlatform implements PlatformInterface
                 }
             };
         }
-        $result = \is_string($this->mockResult) ? $this->mockResult : ($this->mockResult)($model, $input, $options);
 
-        if ($result instanceof ResultInterface) {
-            return $this->createDeferredResult($result, $options);
-        }
-
-        return $this->createDeferredResult(new TextResult($result), $options);
+        return $this->createDeferredResult($this->response->resolve($model, $input, $options), $options);
     }
 
     public function getModelCatalog(): ModelCatalogInterface
