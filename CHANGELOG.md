@@ -6,6 +6,7 @@ CHANGELOG
 
  * [BC BREAK] Add `ListenerInterface::onError()` and `Result\Stream\ErrorEvent`, dispatched when draining a `StreamResult` throws, so a listener can finalize on a failed stream where `onComplete()` never fires; `AbstractStreamListener` provides a no-op default
  * Add `Test\Replay\CassetteHttpClient` and `Test\Replay\HttpCassette` to record real HTTP responses (when the cassette file is missing) and replay them offline through the real bridge pipeline (Contract, `ModelClient`, `ResultConverter`) in tests, including raw Server-Sent Event streams
+ * Add `Test\Recording\RecordingProvider` (with `Cassette`/`ResultSerializer`) to record a real provider's result once (when the cassette file is missing) and replay it offline in tests
 
 0.12
 ----
