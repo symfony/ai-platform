@@ -36,7 +36,7 @@ final class Describer implements ObjectDescriberInterface, PropertyDescriberInte
                 new PropertyInfoDescriber(),
             ];
 
-            if (class_exists(ValidatorInterface::class)) {
+            if (interface_exists(ValidatorInterface::class)) {
                 $describers[] = new ValidatorConstraintsDescriber();
             }
 
