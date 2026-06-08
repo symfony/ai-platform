@@ -42,6 +42,7 @@ enum Capability: string
 
     // VOICE
     case TEXT_TO_SPEECH = 'text-to-speech';
+    case TEXT_TO_SPEECH_ASYNC = 'text-to-speech-async';
     case SPEECH_TO_TEXT = 'speech-to-text';
 
     // IMAGE
@@ -52,6 +53,8 @@ enum Capability: string
     case TEXT_TO_VIDEO = 'text-to-video';
     case IMAGE_TO_VIDEO = 'image-to-video';
     case VIDEO_TO_VIDEO = 'video-to-video';
+    case VIDEO_FRAME_TO_FRAME = 'video-frame-to-frame';
+    case VIDEO_WITH_SUBJECT = 'video-with-subject';
 
     // EMBEDDINGS
     case EMBEDDINGS = 'embeddings';
@@ -64,4 +67,7 @@ enum Capability: string
 
     // Fill-in-the-middle (insert)
     case FILL_IN_THE_MIDDLE = 'fill-in-the-middle';
+
+    // MUSIC
+    case MUSIC = 'music';
 }
