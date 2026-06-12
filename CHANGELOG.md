@@ -5,6 +5,7 @@ CHANGELOG
 ----
 
  * Add `IncompleteStreamException`, thrown by bridge converters when a stream ends before its terminal event
+ * Add `JsonBodyEncodingTrait` so model clients can encode JSON request bodies without aborting on malformed UTF-8
  * Add support for passing a fully defined `Model` instance to `Platform::invoke()` (and `Provider::invoke()`) instead of a model name string, bypassing the model catalog; widen `ProviderInterface::supports()` to `string|Model` to route a model instance to the first provider whose model clients accept it
  * Add in-place `MessageBag::prepend()` and `MessageBag::removeSystemMessage()`
 
