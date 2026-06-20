@@ -15,16 +15,17 @@ use Symfony\AI\Platform\Exception\AuthenticationException;
 use Symfony\AI\Platform\Exception\BadRequestException;
 use Symfony\AI\Platform\Exception\ModelNotFoundException;
 use Symfony\AI\Platform\Exception\RateLimitExceededException;
+use Symfony\AI\Platform\Exception\ServerException;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
 /**
  * Provides shared HTTP error handling for bridge result converters.
  *
- * Translates the common 4xx/429 responses returned by AI providers into
- * dedicated platform exceptions so consumers can react to auth failures,
- * bad requests, missing models and rate limits without parsing error bodies
- * themselves.
+ * Translates the common 4xx/429 and 5xx responses returned by AI providers
+ * into dedicated platform exceptions so consumers can react to auth failures,
+ * bad requests, missing models, rate limits and transient server errors
+ * without parsing error bodies themselves.
  *
  * Error bodies are parsed leniently: both the nested `error.message` shape
  * (OpenAI, Gemini, Perplexity) and the flat top-level `message` shape
@@ -57,6 +58,10 @@ trait HttpStatusErrorHandlingTrait
 
         if (429 === $status) {
             throw new RateLimitExceededException($this->extractRetryAfter($response), $this->extractErrorMessage($response));
+        }
+
+        if ($status >= 500) {
+            throw new ServerException($status, $this->extractErrorMessage($response));
         }
     }
 

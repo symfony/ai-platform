@@ -7,6 +7,7 @@ CHANGELOG
  * Add `PartialJsonParser` for recovering partial JSON from streaming output
  * Add routing-aware mock test provider (`Test\MockPlatformFactory`, `Test\MockModelClient`, `Test\MockResultConverter`, `Test\MockModelCatalog`) for any-result-type mocks in tests, complementing `Test\InMemoryPlatform`
  * [BC BREAK] Rework `ToolCallMessage` to hold `Content\ContentInterface` parts (variadic constructor) instead of a single string content, mirroring `UserMessage`: `getContent()` now returns `Content\ContentInterface[]` and `asText()` returns the flattened text. `Message::ofToolCall()` accepts strings, `\Stringable`, and `Content\ContentInterface` values, upcasting strings to `Content\Text`. This enables multimodal tool results (e.g. text and images): the Anthropic and Amazon Bedrock (Nova/Converse) bridges render them as `tool_result` content blocks, the Gemini and Vertex AI bridges attach them as `inline_data` parts next to the `functionResponse`, and bridges without multimodal tool-result support degrade to text.
+ * Add `ServerException`, thrown on transient server errors (HTTP 5xx) by `HttpStatusErrorHandlingTrait` and the bridge converters so consumers can retry without parsing error messages
 
 0.10
 ----

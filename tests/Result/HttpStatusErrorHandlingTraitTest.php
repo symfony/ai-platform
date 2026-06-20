@@ -17,6 +17,7 @@ use Symfony\AI\Platform\Exception\AuthenticationException;
 use Symfony\AI\Platform\Exception\BadRequestException;
 use Symfony\AI\Platform\Exception\ModelNotFoundException;
 use Symfony\AI\Platform\Exception\RateLimitExceededException;
+use Symfony\AI\Platform\Exception\ServerException;
 use Symfony\AI\Platform\Result\HttpStatusErrorHandlingTrait;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
@@ -28,8 +29,8 @@ use Symfony\Contracts\HttpClient\ResponseInterface;
 final class HttpStatusErrorHandlingTraitTest extends TestCase
 {
     /**
-     * Any status outside the handled 400/401/404/429 set - success, redirect,
-     * server-error - is passed through untouched for the calling converter to handle.
+     * Any status outside the handled 400/401/404/429/5xx set - success,
+     * redirect - is passed through untouched for the calling converter to handle.
      */
     #[DataProvider('unhandledStatusCodes')]
     public function testDoesNotThrowForUnhandledStatusCodes(int $status)
@@ -49,8 +50,46 @@ final class HttpStatusErrorHandlingTraitTest extends TestCase
         yield '204 No Content' => [204];
         yield '301 Moved Permanently' => [301];
         yield '302 Found' => [302];
+    }
+
+    #[DataProvider('serverErrorStatusCodes')]
+    public function testThrowsServerExceptionOnServerErrorStatus(int $status)
+    {
+        $response = $this->response(json_encode([
+            'error' => [
+                'message' => 'Service down',
+            ],
+        ]), $status);
+
+        try {
+            $this->subject()->throwOnHttpError($response);
+            $this->fail('Expected ServerException.');
+        } catch (ServerException $e) {
+            $this->assertSame($status, $e->getStatusCode());
+            $this->assertStringContainsString('Service down', $e->getMessage());
+        }
+    }
+
+    /**
+     * @return iterable<array{int}>
+     */
+    public static function serverErrorStatusCodes(): iterable
+    {
         yield '500 Internal Server Error' => [500];
+        yield '502 Bad Gateway' => [502];
         yield '503 Service Unavailable' => [503];
+        yield '529 Overloaded' => [529];
+    }
+
+    public function testThrowsServerExceptionOn5xxWithEmptyBody()
+    {
+        try {
+            $this->subject()->throwOnHttpError($this->response('', 503));
+            $this->fail('Expected ServerException.');
+        } catch (ServerException $e) {
+            $this->assertSame(503, $e->getStatusCode());
+            $this->assertSame('Server error (HTTP 503).', $e->getMessage());
+        }
     }
 
     /**
