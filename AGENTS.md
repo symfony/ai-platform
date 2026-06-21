@@ -25,6 +25,7 @@ Unified abstraction for AI platforms (OpenAI, Anthropic, Azure, Gemini, VertexAI
 - `src/Tool/`: Function calling and tool definitions
 - `src/Result/`: Result types and converters
 - `src/Exception/`: Platform-specific exceptions
+- `src/EventListener/`: Event listeners (including `TemplateRendererListener`)
 
 ### Provider Support
 Bridge implementations for:
@@ -73,6 +74,12 @@ $message = Message::forSystem($template);
 
 // UserMessage with template
 $message = Message::ofUser(Template::string('Calculate {operation}'));
+
+// UserMessage with mixed content (text and template)
+$message = Message::ofUser(
+    'Plain text',
+    Template::string('and {dynamic} content')
+);
 
 // Multiple messages with templates
 $messages = new MessageBag(
