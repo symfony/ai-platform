@@ -181,7 +181,48 @@ final class MessageTest extends TestCase
         $toolCall = new ToolCall('call_123456', 'my_tool', ['foo' => 'bar']);
         $message = Message::ofToolCall($toolCall, 'Foo bar.');
 
-        $this->assertSame('Foo bar.', $message->getContent());
+        $this->assertSame('Foo bar.', $message->asText());
         $this->assertSame($toolCall, $message->getToolCall());
+        $this->assertCount(1, $message->getContent());
+        $this->assertInstanceOf(Text::class, $message->getContent()[0]);
+    }
+
+    public function testCreateToolCallMessageWithStringable()
+    {
+        $toolCall = new ToolCall('call_123456', 'my_tool', ['foo' => 'bar']);
+        $message = Message::ofToolCall($toolCall, new class implements \Stringable {
+            public function __toString(): string
+            {
+                return 'Foo bar.';
+            }
+        });
+
+        $this->assertCount(1, $message->getContent());
+        $this->assertInstanceOf(Text::class, $message->getContent()[0]);
+        $this->assertSame('Foo bar.', $message->asText());
+    }
+
+    public function testCreateToolCallMessageWithContentInterface()
+    {
+        $toolCall = new ToolCall('call_123456', 'my_tool', ['foo' => 'bar']);
+        $text = new Text('Foo bar.');
+        $message = Message::ofToolCall($toolCall, $text);
+
+        $this->assertSame([$text], $message->getContent());
+    }
+
+    public function testCreateToolCallMessageWithMultimodalContent()
+    {
+        $toolCall = new ToolCall('call_123456', 'screenshot', []);
+        $message = Message::ofToolCall(
+            $toolCall,
+            'Here is the screenshot.',
+            new ImageUrl('http://images.local/my-image.png'),
+        );
+
+        $this->assertCount(2, $message->getContent());
+        $this->assertInstanceOf(Text::class, $message->getContent()[0]);
+        $this->assertInstanceOf(ImageUrl::class, $message->getContent()[1]);
+        $this->assertSame('Here is the screenshot.', $message->asText());
     }
 }

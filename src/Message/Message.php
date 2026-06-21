@@ -70,9 +70,18 @@ final class Message
         return new UserMessage(...$content);
     }
 
-    public static function ofToolCall(ToolCall $toolCall, string $content): ToolCallMessage
+    public static function ofToolCall(ToolCall $toolCall, \Stringable|string|ContentInterface ...$content): ToolCallMessage
     {
-        return new ToolCallMessage($toolCall, $content);
+        $content = array_map(
+            static fn (\Stringable|string|ContentInterface $entry) => match (true) {
+                $entry instanceof ContentInterface => $entry,
+                \is_string($entry) => new Text($entry),
+                default => new Text((string) $entry),
+            },
+            $content,
+        );
+
+        return new ToolCallMessage($toolCall, ...$content);
     }
 
     /**

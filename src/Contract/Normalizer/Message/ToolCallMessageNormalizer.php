@@ -12,17 +12,13 @@
 namespace Symfony\AI\Platform\Contract\Normalizer\Message;
 
 use Symfony\AI\Platform\Message\ToolCallMessage;
-use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 /**
  * @author Christopher Hertel <mail@christopher-hertel.de>
  */
-final class ToolCallMessageNormalizer implements NormalizerInterface, NormalizerAwareInterface
+final class ToolCallMessageNormalizer implements NormalizerInterface
 {
-    use NormalizerAwareTrait;
-
     public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
         return $data instanceof ToolCallMessage;
@@ -48,7 +44,7 @@ final class ToolCallMessageNormalizer implements NormalizerInterface, Normalizer
     {
         return [
             'role' => $data->getRole()->value,
-            'content' => $this->normalizer->normalize($data->getContent(), $format, $context),
+            'content' => $data->asText() ?? '',
             'tool_call_id' => $data->getToolCall()->getId(),
         ];
     }

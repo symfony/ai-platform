@@ -13,9 +13,10 @@ namespace Symfony\AI\Platform\Tests\Contract\Normalizer\Message;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Contract\Normalizer\Message\ToolCallMessageNormalizer;
+use Symfony\AI\Platform\Message\Content\Image;
+use Symfony\AI\Platform\Message\Content\Text;
 use Symfony\AI\Platform\Message\ToolCallMessage;
 use Symfony\AI\Platform\Result\ToolCall;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 final class ToolCallMessageNormalizerTest extends TestCase
 {
@@ -28,7 +29,7 @@ final class ToolCallMessageNormalizerTest extends TestCase
 
     public function testSupportsNormalization()
     {
-        $toolCallMessage = new ToolCallMessage(new ToolCall('id', 'function'), 'content');
+        $toolCallMessage = new ToolCallMessage(new ToolCall('id', 'function'), new Text('content'));
 
         $this->assertTrue($this->normalizer->supportsNormalization($toolCallMessage));
         $this->assertFalse($this->normalizer->supportsNormalization(new \stdClass()));
@@ -42,20 +43,25 @@ final class ToolCallMessageNormalizerTest extends TestCase
     public function testNormalize()
     {
         $toolCall = new ToolCall('tool_call_123', 'get_weather', ['location' => 'Paris']);
-        $message = new ToolCallMessage($toolCall, 'Weather data for Paris');
-        $expectedContent = 'Normalized weather data for Paris';
-
-        $innerNormalizer = $this->createMock(NormalizerInterface::class);
-        $innerNormalizer->expects($this->once())
-            ->method('normalize')
-            ->with($message->getContent(), null, [])
-            ->willReturn($expectedContent);
-
-        $this->normalizer->setNormalizer($innerNormalizer);
+        $message = new ToolCallMessage($toolCall, new Text('Weather data for Paris'));
 
         $expected = [
             'role' => 'tool',
-            'content' => $expectedContent,
+            'content' => 'Weather data for Paris',
+            'tool_call_id' => 'tool_call_123',
+        ];
+
+        $this->assertSame($expected, $this->normalizer->normalize($message));
+    }
+
+    public function testNormalizeMultimodalContentDegradesToText()
+    {
+        $toolCall = new ToolCall('tool_call_123', 'screenshot');
+        $message = new ToolCallMessage($toolCall, new Text('Here it is'), new Image('binary', 'image/png'));
+
+        $expected = [
+            'role' => 'tool',
+            'content' => 'Here it is',
             'tool_call_id' => 'tool_call_123',
         ];
 

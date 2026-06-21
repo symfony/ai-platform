@@ -12,6 +12,8 @@
 namespace Symfony\AI\Platform\Tests\Message;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\AI\Platform\Message\Content\Image;
+use Symfony\AI\Platform\Message\Content\Text;
 use Symfony\AI\Platform\Message\ToolCallMessage;
 use Symfony\AI\Platform\Result\ToolCall;
 use Symfony\AI\Platform\Tests\Helper\UuidAssertionTrait;
@@ -26,16 +28,42 @@ final class ToolCallMessageTest extends TestCase
     public function testConstructionIsPossible()
     {
         $toolCall = new ToolCall('foo', 'bar');
-        $obj = new ToolCallMessage($toolCall, 'bar');
+        $obj = new ToolCallMessage($toolCall, new Text('bar'));
 
         $this->assertSame($toolCall, $obj->getToolCall());
-        $this->assertSame('bar', $obj->getContent());
+        $this->assertEquals([new Text('bar')], $obj->getContent());
+        $this->assertSame('bar', $obj->asText());
+    }
+
+    public function testTextOnlyContentFlattensToText()
+    {
+        $message = new ToolCallMessage(new ToolCall('foo', 'bar'), new Text('first'), new Text('second'));
+
+        $this->assertSame('first second', $message->asText());
+    }
+
+    public function testMultimodalContentExposesPartsAndFlattensTextForAsText()
+    {
+        $image = new Image('binary', 'image/png');
+        $parts = [new Text('first'), $image, new Text('second')];
+
+        $message = new ToolCallMessage(new ToolCall('foo', 'bar'), ...$parts);
+
+        $this->assertSame($parts, $message->getContent());
+        $this->assertSame('first second', $message->asText());
+    }
+
+    public function testContentWithoutTextHasNullAsText()
+    {
+        $message = new ToolCallMessage(new ToolCall('foo', 'bar'), new Image('binary', 'image/png'));
+
+        $this->assertNull($message->asText());
     }
 
     public function testMessageHasUid()
     {
         $toolCall = new ToolCall('foo', 'bar');
-        $message = new ToolCallMessage($toolCall, 'bar');
+        $message = new ToolCallMessage($toolCall, new Text('bar'));
 
         $this->assertInstanceOf(UuidV7::class, $message->getId());
     }
@@ -43,8 +71,8 @@ final class ToolCallMessageTest extends TestCase
     public function testDifferentMessagesHaveDifferentUids()
     {
         $toolCall = new ToolCall('foo', 'bar');
-        $message1 = new ToolCallMessage($toolCall, 'bar');
-        $message2 = new ToolCallMessage($toolCall, 'baz');
+        $message1 = new ToolCallMessage($toolCall, new Text('bar'));
+        $message2 = new ToolCallMessage($toolCall, new Text('baz'));
 
         $this->assertNotSame($message1->getId()->toRfc4122(), $message2->getId()->toRfc4122());
         $this->assertIsUuidV7($message1->getId()->toRfc4122());
@@ -54,8 +82,8 @@ final class ToolCallMessageTest extends TestCase
     public function testSameMessagesHaveDifferentUids()
     {
         $toolCall = new ToolCall('foo', 'bar');
-        $message1 = new ToolCallMessage($toolCall, 'bar');
-        $message2 = new ToolCallMessage($toolCall, 'bar');
+        $message1 = new ToolCallMessage($toolCall, new Text('bar'));
+        $message2 = new ToolCallMessage($toolCall, new Text('bar'));
 
         $this->assertNotSame($message1->getId()->toRfc4122(), $message2->getId()->toRfc4122());
         $this->assertIsUuidV7($message1->getId()->toRfc4122());
@@ -65,7 +93,7 @@ final class ToolCallMessageTest extends TestCase
     public function testMessageIdImplementsRequiredInterfaces()
     {
         $toolCall = new ToolCall('foo', 'bar');
-        $message = new ToolCallMessage($toolCall, 'test');
+        $message = new ToolCallMessage($toolCall, new Text('test'));
 
         $this->assertInstanceOf(AbstractUid::class, $message->getId());
         $this->assertInstanceOf(TimeBasedUidInterface::class, $message->getId());
