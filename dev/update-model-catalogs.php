@@ -74,6 +74,7 @@ $modelsDevBridges = [
         'default' => BRIDGE_NS.'OpenAi\\Gpt',
         'single' => false,
         'rules' => [
+            [static fn (array $m): bool => CapabilityMapper::isImageGenerationModel($m), BRIDGE_NS.'OpenAi\\Image'],
             [static fn (array $m): bool => CapabilityMapper::isEmbeddingModel($m), BRIDGE_NS.'OpenAi\\Embeddings'],
         ],
     ],

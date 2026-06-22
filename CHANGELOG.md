@@ -12,6 +12,10 @@ CHANGELOG
  * [BC BREAK] Rework `ToolCallMessage` to hold `Content\ContentInterface` parts (variadic constructor) instead of a single string content, mirroring `UserMessage`: `getContent()` now returns `Content\ContentInterface[]` and `asText()` returns the flattened text. `Message::ofToolCall()` accepts strings, `\Stringable`, and `Content\ContentInterface` values, upcasting strings to `Content\Text`. This enables multimodal tool results (e.g. text and images): the Anthropic and Amazon Bedrock (Nova/Converse) bridges render them as `tool_result` content blocks, the Gemini and Vertex AI bridges attach them as `inline_data` parts next to the `functionResponse`, and bridges without multimodal tool-result support degrade to text.
  * Add `ServerException`, thrown on transient server errors (HTTP 5xx) by `HttpStatusErrorHandlingTrait` and the bridge converters so consumers can retry without parsing error messages
  * Add `Capability::TEXT_TO_SPEECH_ASYNC`, `Capability::VIDEO_FRAME_TO_FRAME`, `Capability::VIDEO_WITH_SUBJECT`, and `Capability::MUSIC` cases
+ * Add OpenAI image generation for the `gpt-image-*` models (`gpt-image-1`, `gpt-image-1-mini`, `gpt-image-1.5`, `gpt-image-2`), routed to the images endpoint by the model catalog
+ * Add OpenAI image editing via the `images/edits` endpoint: pass the source image as a `Content\Image` through the `image` option of `Platform::invoke()`
+ * [BC BREAK] Rename the OpenAI `DallE` bridge to `Image` (`Bridge\OpenAi\DallE` → `Bridge\OpenAi\Image`, and the `Bridge\OpenAi\DallE\*` namespace → `Bridge\OpenAi\Image\*`) and remove the `dall-e-2`/`dall-e-3` catalog entries retired by OpenAI
+ * [BC BREAK] Replace the bridge-specific `ImageResult`, `Base64Image`, and `UrlImage` classes of the OpenAI image bridge with the generic `Result\BinaryResult` (single image) and `Result\MultiPartResult` (multiple images), matching the other multi-modal bridges
 
 0.10
 ----
