@@ -13,6 +13,7 @@ namespace Symfony\AI\Platform\Tests\Result;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Exception\RateLimitExceededException;
+use Symfony\AI\Platform\Exception\RuntimeException;
 use Symfony\AI\Platform\PlainConverter;
 use Symfony\AI\Platform\Result\BaseResult;
 use Symfony\AI\Platform\Result\DeferredResult;
@@ -262,6 +263,120 @@ final class DeferredResultTest extends TestCase
         $deferredResult = new DeferredResult(new PlainConverter($result), new InMemoryRawResult());
 
         $this->assertSame([], iterator_to_array($deferredResult->asPartialJsonStream(), false));
+    }
+
+    public function testOnConvertCallbackReceivesConvertedResultOnce()
+    {
+        $textResult = new TextResult('test content');
+        $deferredResult = new DeferredResult(new PlainConverter($textResult), new InMemoryRawResult());
+
+        $received = [];
+        $deferredResult->onConvert(static function (ResultInterface $result) use (&$received): ResultInterface {
+            $received[] = $result;
+
+            return $result;
+        });
+
+        $deferredResult->getResult();
+        $deferredResult->getResult();
+
+        $this->assertCount(1, $received);
+        $this->assertSame($textResult, $received[0]);
+    }
+
+    public function testOnConvertCallbackCanReplaceConvertedResult()
+    {
+        $replacement = new TextResult('replaced');
+        $deferredResult = new DeferredResult(new PlainConverter(new TextResult('original')), new InMemoryRawResult());
+
+        $deferredResult->onConvert(static fn (ResultInterface $result): ResultInterface => $replacement);
+
+        $this->assertSame($replacement, $deferredResult->getResult());
+    }
+
+    public function testOnConvertCallbacksRunInRegistrationOrderAndChain()
+    {
+        $deferredResult = new DeferredResult(new PlainConverter(new TextResult('original')), new InMemoryRawResult());
+
+        $order = [];
+        $received = [];
+        $first = new TextResult('first');
+        $second = new TextResult('second');
+
+        $deferredResult->onConvert(static function (ResultInterface $result) use (&$order, &$received, $first): ResultInterface {
+            $order[] = 'a';
+            $received[] = $result;
+
+            return $first;
+        });
+        $deferredResult->onConvert(static function (ResultInterface $result) use (&$order, &$received, $second): ResultInterface {
+            $order[] = 'b';
+            $received[] = $result;
+
+            return $second;
+        });
+
+        $this->assertSame($second, $deferredResult->getResult());
+        $this->assertSame(['a', 'b'], $order);
+        // The second callback receives the replacement returned by the first.
+        $this->assertSame($first, $received[1]);
+    }
+
+    public function testOnConvertCallbackExceptionDoesNotTriggerOnError()
+    {
+        $textResult = new TextResult('test content');
+        $deferredResult = new DeferredResult(new PlainConverter($textResult), new InMemoryRawResult());
+
+        $failure = new RuntimeException('listener failed');
+        $deferredResult->onConvert(static function () use ($failure): ResultInterface {
+            throw $failure;
+        });
+
+        $onErrorCalled = false;
+        $deferredResult->onError(static function () use (&$onErrorCalled): void {
+            $onErrorCalled = true;
+        });
+
+        try {
+            $deferredResult->getResult();
+            $this->fail('Expected the listener exception to propagate.');
+        } catch (RuntimeException $thrown) {
+            $this->assertSame($failure, $thrown);
+        }
+
+        $this->assertFalse($onErrorCalled);
+
+        // Conversion succeeded, so the result stays accessible and the callback does not run again.
+        $this->assertSame($textResult, $deferredResult->getResult());
+    }
+
+    public function testOnErrorCallbackReceivesExceptionOnce()
+    {
+        $rawHttpResult = new RawHttpResult($this->createStub(SymfonyHttpResponse::class));
+        $exception = new RateLimitExceededException();
+
+        $resultConverter = $this->createMock(ResultConverterInterface::class);
+        $resultConverter->expects($this->once())
+            ->method('convert')
+            ->willThrowException($exception);
+
+        $deferredResult = new DeferredResult($resultConverter, $rawHttpResult);
+
+        $received = [];
+        $deferredResult->onError(static function (\Throwable $error) use (&$received): void {
+            $received[] = $error;
+        });
+
+        for ($i = 0; $i < 2; ++$i) {
+            try {
+                $deferredResult->getResult();
+                $this->fail('Expected RateLimitExceededException.');
+            } catch (RateLimitExceededException) {
+            }
+        }
+
+        $this->assertCount(1, $received);
+        $this->assertSame($exception, $received[0]);
     }
 
     /**

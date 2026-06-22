@@ -34,6 +34,16 @@ final class DeferredResult
     private ?\Throwable $conversionFailure = null;
 
     /**
+     * @var list<\Closure(ResultInterface): ResultInterface>
+     */
+    private array $onConvert = [];
+
+    /**
+     * @var list<\Closure(\Throwable): void>
+     */
+    private array $onError = [];
+
+    /**
      * @param array<string, mixed> $options
      */
     public function __construct(
@@ -41,6 +51,31 @@ final class DeferredResult
         private readonly RawResultInterface $rawResult,
         private readonly array $options = [],
     ) {
+    }
+
+    /**
+     * Registers a callback invoked with the converted result once conversion succeeds.
+     *
+     * The callback may return a replacement result, which is then used as the converted result
+     * and handed to any subsequently registered callback. Callbacks run in registration order.
+     *
+     * @param \Closure(ResultInterface): ResultInterface $callback
+     */
+    public function onConvert(\Closure $callback): void
+    {
+        $this->onConvert[] = $callback;
+    }
+
+    /**
+     * Registers a callback invoked with the thrown exception when conversion fails.
+     *
+     * Callbacks run in registration order.
+     *
+     * @param \Closure(\Throwable): void $callback
+     */
+    public function onError(\Closure $callback): void
+    {
+        $this->onError[] = $callback;
     }
 
     /**
@@ -84,7 +119,19 @@ final class DeferredResult
             $this->isConverted = true;
         } catch (\Throwable $exception) {
             $this->conversionFailure = $exception;
+
+            foreach ($this->onError as $callback) {
+                $callback($exception);
+            }
+
             throw $exception;
+        }
+
+        // Run conversion callbacks outside the try/catch: conversion has already
+        // succeeded, so a throwing callback must not be reported as a conversion
+        // failure nor leave the result in a half-converted state.
+        foreach ($this->onConvert as $callback) {
+            $this->convertedResult = $callback($this->convertedResult);
         }
 
         return $this->convertedResult;

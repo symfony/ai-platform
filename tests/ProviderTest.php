@@ -14,6 +14,8 @@ namespace Symfony\AI\Platform\Tests;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Capability;
 use Symfony\AI\Platform\Event\InvocationEvent;
+use Symfony\AI\Platform\Event\ResultConvertedEvent;
+use Symfony\AI\Platform\Event\ResultErrorEvent;
 use Symfony\AI\Platform\Event\ResultEvent;
 use Symfony\AI\Platform\Exception\RuntimeException;
 use Symfony\AI\Platform\Model;
@@ -211,6 +213,85 @@ final class ProviderTest extends TestCase
         $this->assertCount(2, $dispatchedEvents);
         $this->assertInstanceOf(InvocationEvent::class, $dispatchedEvents[0]);
         $this->assertInstanceOf(ResultEvent::class, $dispatchedEvents[1]);
+    }
+
+    public function testInvokeDispatchesResultConvertedEventOnConversion()
+    {
+        $model = new Model('gpt-4o', [Capability::INPUT_MESSAGES]);
+        $textResult = new TextResult('Hello');
+
+        $catalog = $this->createStub(ModelCatalogInterface::class);
+        $catalog->method('getModel')->willReturn($model);
+
+        $modelClient = $this->createStub(ModelClientInterface::class);
+        $modelClient->method('supports')->willReturn(true);
+        $modelClient->method('request')->willReturn($this->createStub(RawResultInterface::class));
+
+        $resultConverter = $this->createStub(ResultConverterInterface::class);
+        $resultConverter->method('supports')->willReturn(true);
+        $resultConverter->method('convert')->willReturn($textResult);
+
+        $dispatchedEvents = [];
+        $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
+        $eventDispatcher->method('dispatch')
+            ->willReturnCallback(static function ($event) use (&$dispatchedEvents) {
+                $dispatchedEvents[] = $event;
+
+                return $event;
+            });
+
+        $provider = new Provider('openai', [$modelClient], [$resultConverter], $catalog, null, $eventDispatcher);
+
+        $deferredResult = $provider->invoke('gpt-4o', 'Hello');
+
+        // The converted event is only dispatched once the result is actually converted.
+        $this->assertCount(2, $dispatchedEvents);
+
+        $deferredResult->getResult();
+
+        $this->assertCount(3, $dispatchedEvents);
+        $this->assertInstanceOf(ResultConvertedEvent::class, $dispatchedEvents[2]);
+        $this->assertSame($textResult, $dispatchedEvents[2]->getResult());
+    }
+
+    public function testInvokeDispatchesResultErrorEventOnConversionFailure()
+    {
+        $model = new Model('gpt-4o', [Capability::INPUT_MESSAGES]);
+        $exception = new RuntimeException('conversion failed');
+
+        $catalog = $this->createStub(ModelCatalogInterface::class);
+        $catalog->method('getModel')->willReturn($model);
+
+        $modelClient = $this->createStub(ModelClientInterface::class);
+        $modelClient->method('supports')->willReturn(true);
+        $modelClient->method('request')->willReturn($this->createStub(RawResultInterface::class));
+
+        $resultConverter = $this->createStub(ResultConverterInterface::class);
+        $resultConverter->method('supports')->willReturn(true);
+        $resultConverter->method('convert')->willThrowException($exception);
+
+        $dispatchedEvents = [];
+        $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
+        $eventDispatcher->method('dispatch')
+            ->willReturnCallback(static function ($event) use (&$dispatchedEvents) {
+                $dispatchedEvents[] = $event;
+
+                return $event;
+            });
+
+        $provider = new Provider('openai', [$modelClient], [$resultConverter], $catalog, null, $eventDispatcher);
+
+        $deferredResult = $provider->invoke('gpt-4o', 'Hello');
+
+        try {
+            $deferredResult->getResult();
+            $this->fail('Expected RuntimeException to be thrown.');
+        } catch (RuntimeException $thrown) {
+            $this->assertSame($exception, $thrown);
+        }
+
+        $this->assertInstanceOf(ResultErrorEvent::class, $dispatchedEvents[2]);
+        $this->assertSame($exception, $dispatchedEvents[2]->getError());
     }
 
     public function testGetModelCatalog()
