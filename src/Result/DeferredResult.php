@@ -18,6 +18,7 @@ use Symfony\AI\Platform\Metadata\StreamListener as MetaDataStreamListener;
 use Symfony\AI\Platform\Reranking\RerankingEntry;
 use Symfony\AI\Platform\Result\Stream\Delta\TextDelta;
 use Symfony\AI\Platform\ResultConverterInterface;
+use Symfony\AI\Platform\StructuredOutput\Streaming\PartialJsonParser;
 use Symfony\AI\Platform\TokenUsage\StreamListener as TokenUsageStreamListener;
 use Symfony\AI\Platform\Vector\Vector;
 
@@ -194,6 +195,43 @@ final class DeferredResult
             }
 
             yield $delta;
+        }
+    }
+
+    /**
+     * Accumulates text deltas from the stream and yields the largest valid
+     * structure recoverable from the buffer so far. A new snapshot is only
+     * emitted when the parsed value differs from the previously yielded one,
+     * which lets consumers render partial structured output progressively
+     * without having to wire up the parser themselves.
+     *
+     * @return \Generator<mixed>
+     *
+     * @throws ExceptionInterface
+     */
+    public function asPartialJsonStream(): \Generator
+    {
+        $buffer = '';
+        $hasPrevious = false;
+        $previous = null;
+
+        foreach ($this->asTextStream() as $delta) {
+            $buffer .= $delta->getText();
+
+            $partial = PartialJsonParser::parse($buffer, $error);
+
+            if (null !== $error) {
+                continue;
+            }
+
+            if ($hasPrevious && $partial === $previous) {
+                continue;
+            }
+
+            $hasPrevious = true;
+            $previous = $partial;
+
+            yield $partial;
         }
     }
 

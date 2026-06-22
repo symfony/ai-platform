@@ -212,6 +212,58 @@ final class DeferredResultTest extends TestCase
         $this->assertSame(123456, $tokenUsage->getPromptTokens());
     }
 
+    public function testAsPartialJsonStreamYieldsGrowingSnapshots()
+    {
+        $result = new StreamResult((static function () {
+            yield new TextDelta('{"title": "Symfony AI", ');
+            yield new TextDelta('"tags": ["php", "llm",');
+            yield new TextDelta(' "agents"], "released": tru');
+            yield new TextDelta('e}');
+        })());
+
+        $deferredResult = new DeferredResult(new PlainConverter($result), new InMemoryRawResult());
+
+        $snapshots = iterator_to_array($deferredResult->asPartialJsonStream(), false);
+
+        $this->assertSame(
+            [
+                ['title' => 'Symfony AI'],
+                ['title' => 'Symfony AI', 'tags' => ['php', 'llm']],
+                ['title' => 'Symfony AI', 'tags' => ['php', 'llm', 'agents'], 'released' => true],
+            ],
+            $snapshots,
+        );
+    }
+
+    public function testAsPartialJsonStreamDoesNotYieldWhenPartialIsUnchanged()
+    {
+        $result = new StreamResult((static function () {
+            yield new TextDelta('{"title": "Symfony AI"');
+            // Whitespace deltas keep the recovered structure identical, so no new snapshot is emitted.
+            yield new TextDelta('   ');
+            yield new TextDelta(' }');
+        })());
+
+        $deferredResult = new DeferredResult(new PlainConverter($result), new InMemoryRawResult());
+
+        $snapshots = iterator_to_array($deferredResult->asPartialJsonStream(), false);
+
+        $this->assertSame([['title' => 'Symfony AI']], $snapshots);
+    }
+
+    public function testAsPartialJsonStreamSkipsUnrecoverableBuffers()
+    {
+        $result = new StreamResult((static function () {
+            // None of these prefixes form a recoverable JSON value yet.
+            yield new TextDelta('not-json');
+            yield new TextDelta(' either');
+        })());
+
+        $deferredResult = new DeferredResult(new PlainConverter($result), new InMemoryRawResult());
+
+        $this->assertSame([], iterator_to_array($deferredResult->asPartialJsonStream(), false));
+    }
+
     /**
      * Workaround for low deps because mocking the ResponseInterface leads to an exception with
      * mock creation "Type Traversable|object|array|string|null contains both object and a class type"
