@@ -12,12 +12,15 @@
 namespace Symfony\AI\Platform;
 
 use Symfony\AI\Platform\Event\InvocationEvent;
+use Symfony\AI\Platform\Event\ResultConvertedEvent;
+use Symfony\AI\Platform\Event\ResultErrorEvent;
 use Symfony\AI\Platform\Event\ResultEvent;
 use Symfony\AI\Platform\Exception\ModelNotFoundException;
 use Symfony\AI\Platform\Exception\RuntimeException;
 use Symfony\AI\Platform\ModelCatalog\ModelCatalogInterface;
 use Symfony\AI\Platform\Result\DeferredResult;
 use Symfony\AI\Platform\Result\RawResultInterface;
+use Symfony\AI\Platform\Result\ResultInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -107,7 +110,25 @@ final class Provider implements ProviderInterface
         $resultEvent = new ResultEvent($model, $result, $options, $input);
         $this->eventDispatcher?->dispatch($resultEvent);
 
-        return $resultEvent->getDeferredResult();
+        // Register on the deferred result the ResultEvent listeners ultimately produced, since a
+        // listener may swap it out via setDeferredResult(). A listener that resolves the result
+        // eagerly (defeating the laziness) would therefore convert before these are registered and
+        // miss ResultConvertedEvent.
+        $deferredResult = $resultEvent->getDeferredResult();
+
+        if (null !== $this->eventDispatcher) {
+            $deferredResult->onConvert(function (ResultInterface $result) use ($model, $options, $input): ResultInterface {
+                $event = new ResultConvertedEvent($model, $result, $options, $input);
+                $this->eventDispatcher->dispatch($event);
+
+                return $event->getResult();
+            });
+            $deferredResult->onError(function (\Throwable $error) use ($model, $options, $input): void {
+                $this->eventDispatcher->dispatch(new ResultErrorEvent($model, $error, $options, $input));
+            });
+        }
+
+        return $deferredResult;
     }
 
     public function getModelCatalog(): ModelCatalogInterface

@@ -4,6 +4,7 @@ CHANGELOG
 0.11
 ----
 
+ * Add `ResultConvertedEvent` and `ResultErrorEvent`, dispatched when the deferred result is actually converted (or conversion fails) instead of when the not-yet-resolved `ResultEvent` fires, so listeners can act on the resolved result
  * Add `provider` and `context` arguments to `#[Schema]` plus `SchemaProviderInterface` to contribute JSON Schema fragments computed at runtime (env, database, services) for tool parameters and structured output properties; `provider` accepts any container service ID and `context` is passed to `getSchemaFragment()`
  * Add `PartialJsonParser` for recovering partial JSON from streaming output
  * Add `DeferredResult::asPartialJsonStream()` yielding the largest recoverable JSON value from each streamed delta
