@@ -78,7 +78,13 @@ final class Schema
         }
 
         if (\is_array($enum)) {
-            if (array_filter($enum, static fn (mixed $item) => null === $item || \is_int($item) || \is_float($item) || \is_string($item)) !== $enum) {
+            // Attribute arguments are not type-checked against the docblock at runtime, so guard explicitly.
+            /** @var mixed $item */
+            foreach ($enum as $item) {
+                if (null === $item || \is_int($item) || \is_float($item) || \is_string($item)) {
+                    continue;
+                }
+
                 throw new InvalidArgumentException('All enum values must be float, integer, strings, or null.');
             }
         }

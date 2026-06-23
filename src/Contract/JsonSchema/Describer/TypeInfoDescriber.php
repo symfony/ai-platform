@@ -85,6 +85,8 @@ final class TypeInfoDescriber implements ObjectDescriberInterface, PropertyDescr
     }
 
     /**
+     * @param Type<*> $type
+     *
      * @return array<string, mixed>
      */
     private function getTypeSchema(Type $type): array
