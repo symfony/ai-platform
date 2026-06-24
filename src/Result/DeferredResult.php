@@ -36,6 +36,12 @@ final class DeferredResult
     private ?\Throwable $conversionFailure = null;
 
     /**
+     * Shared stream generator so the one-shot stream is driven exactly once
+     * across asStream(), asStreamedObject() and asObject().
+     */
+    private ?\Generator $stream = null;
+
+    /**
      * @var list<\Closure(ResultInterface): ResultInterface>
      */
     private array $onConvert = [];
@@ -168,11 +174,18 @@ final class DeferredResult
             $finalResult = $listener->getFinalObjectResult();
 
             if (null === $finalResult) {
-                // Drain the stream so the listener fires its completion handler;
-                // consumers can also iterate asStreamedObject() beforehand and
-                // asObject() will then short-circuit on the cached final result.
-                foreach ($this->asStream() as $delta) {
-                    unset($delta);
+                // Pump the remainder via next() instead of re-iterating: the
+                // stream may be mid-flight (asStreamedObject() stopped early) and
+                // cannot be restarted without reprocessing deltas. This finishes
+                // it and fires the listener's completion handler.
+                $generator = $this->stream ??= $result->getContent();
+
+                try {
+                    while ($generator->valid()) {
+                        $generator->next();
+                    }
+                } finally {
+                    $this->getMetadata()->set($result->getMetadata()->all());
                 }
 
                 $finalResult = $listener->getFinalObjectResult();
@@ -267,9 +280,10 @@ final class DeferredResult
     public function asStream(): \Generator
     {
         $result = $this->as(StreamResult::class);
+        $generator = $this->stream ??= $result->getContent();
 
         try {
-            yield from $result->getContent();
+            yield from $generator;
         } finally {
             $this->getMetadata()->set($result->getMetadata()->all());
         }

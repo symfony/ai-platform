@@ -444,6 +444,55 @@ final class DeferredResultTest extends TestCase
         $this->assertSame('Berlin', $city->name);
     }
 
+    public function testAsObjectFinishesStreamAfterEarlyBreak()
+    {
+        $stream = new StreamResult((static function () {
+            yield new TextDelta('{"name":"Ber');
+            yield new TextDelta('lin","population":35');
+            yield new TextDelta('00000}');
+        })(), [new PartialObjectStreamListener(new Serializer(), City::class)]);
+
+        $deferred = new DeferredResult(new PlainConverter($stream), new InMemoryRawResult());
+
+        // Stop iterating after the first snapshot, mimicking a consumer that
+        // bails out early (e.g. once the object is "good enough").
+        foreach ($deferred->asStreamedObject() as $partial) {
+            $this->assertInstanceOf(City::class, $partial);
+            break;
+        }
+
+        // asObject() must finish draining the remainder of the stream and
+        // return the complete object, not throw or return a partial.
+        $city = $deferred->asObject();
+        $this->assertInstanceOf(City::class, $city);
+        $this->assertSame('Berlin', $city->name);
+        $this->assertSame(3500000, $city->population);
+    }
+
+    public function testAsObjectFinishesStreamAfterExceptionDuringIteration()
+    {
+        $stream = new StreamResult((static function () {
+            yield new TextDelta('{"name":"Ber');
+            yield new TextDelta('lin","population":35');
+            yield new TextDelta('00000}');
+        })(), [new PartialObjectStreamListener(new Serializer(), City::class)]);
+
+        $deferred = new DeferredResult(new PlainConverter($stream), new InMemoryRawResult());
+
+        try {
+            foreach ($deferred->asStreamedObject() as $partial) {
+                throw new \LogicException('rendering blew up');
+            }
+        } catch (\LogicException) {
+            // Swallowed: the consumer recovers and still wants the final object.
+        }
+
+        $city = $deferred->asObject();
+        $this->assertInstanceOf(City::class, $city);
+        $this->assertSame('Berlin', $city->name);
+        $this->assertSame(3500000, $city->population);
+    }
+
     /**
      * Workaround for low deps because mocking the ResponseInterface leads to an exception with
      * mock creation "Type Traversable|object|array|string|null contains both object and a class type"
