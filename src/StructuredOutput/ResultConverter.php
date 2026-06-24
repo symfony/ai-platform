@@ -18,21 +18,27 @@ use Symfony\AI\Platform\Result\MultiPartResult;
 use Symfony\AI\Platform\Result\ObjectResult;
 use Symfony\AI\Platform\Result\RawResultInterface;
 use Symfony\AI\Platform\Result\ResultInterface;
+use Symfony\AI\Platform\Result\StreamResult;
 use Symfony\AI\Platform\Result\TextResult;
 use Symfony\AI\Platform\ResultConverterInterface;
+use Symfony\AI\Platform\StructuredOutput\Streaming\PartialObjectStreamListener;
 use Symfony\AI\Platform\TokenUsage\TokenUsageExtractorInterface;
 use Symfony\Component\Serializer\Exception\ExceptionInterface as SerializerExceptionInterface;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
 final class ResultConverter implements ResultConverterInterface
 {
+    private readonly SerializerInterface&DenormalizerInterface $serializer;
+
     public function __construct(
         private readonly ResultConverterInterface $innerConverter,
-        private readonly SerializerInterface $serializer,
+        SerializerInterface&DenormalizerInterface $serializer,
         private readonly ?string $outputType = null,
         private readonly ?object $objectToPopulate = null,
     ) {
+        $this->serializer = $serializer;
     }
 
     public function supports(Model $model): bool
@@ -54,6 +60,14 @@ final class ResultConverter implements ResultConverterInterface
 
         if ($innerResult instanceof ChoiceResult) {
             return $this->convertChoice($innerResult, $result);
+        }
+
+        if ($innerResult instanceof StreamResult && null !== $this->outputType) {
+            $innerResult->addListener(new PartialObjectStreamListener(
+                $this->serializer,
+                $this->outputType,
+                $this->objectToPopulate,
+            ));
         }
 
         return $innerResult;

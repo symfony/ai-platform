@@ -38,6 +38,14 @@ final class StreamResult extends BaseResult
     }
 
     /**
+     * @return ListenerInterface[]
+     */
+    public function getListeners(): array
+    {
+        return $this->listeners;
+    }
+
+    /**
      * @return \Generator<DeltaInterface>
      */
     public function getContent(): \Generator

@@ -18,10 +18,13 @@ use Symfony\AI\Platform\Result\ChoiceResult;
 use Symfony\AI\Platform\Result\InMemoryRawResult;
 use Symfony\AI\Platform\Result\MultiPartResult;
 use Symfony\AI\Platform\Result\ObjectResult;
+use Symfony\AI\Platform\Result\Stream\Delta\TextDelta;
+use Symfony\AI\Platform\Result\StreamResult;
 use Symfony\AI\Platform\Result\TextResult;
 use Symfony\AI\Platform\Result\ThinkingResult;
 use Symfony\AI\Platform\StructuredOutput\ResultConverter;
 use Symfony\AI\Platform\StructuredOutput\Serializer;
+use Symfony\AI\Platform\StructuredOutput\Streaming\PartialObjectStreamListener;
 use Symfony\AI\Platform\Tests\Fixtures\StructuredOutput\City;
 use Symfony\AI\Platform\Tests\Fixtures\StructuredOutput\SomeStructure;
 use Symfony\AI\Platform\Tests\Fixtures\StructuredOutput\UserWithAccessors;
@@ -121,6 +124,37 @@ final class ResultConverterTest extends TestCase
         $result = $converter->convert(new InMemoryRawResult());
 
         $this->assertSame($objectResult, $result);
+    }
+
+    public function testConvertStreamResultWithOutputTypeAttachesPartialObjectListener()
+    {
+        $stream = new StreamResult((static function () {
+            yield new TextDelta('{"name":"Berlin"}');
+        })());
+
+        $converter = new ResultConverter(new PlainConverter($stream), new Serializer(), City::class);
+        $result = $converter->convert(new InMemoryRawResult());
+
+        $this->assertSame($stream, $result);
+
+        $listeners = array_filter(
+            $stream->getListeners(),
+            static fn ($l) => $l instanceof PartialObjectStreamListener,
+        );
+        $this->assertCount(1, $listeners);
+    }
+
+    public function testConvertStreamResultWithoutOutputTypeIsUnchanged()
+    {
+        $stream = new StreamResult((static function () {
+            yield new TextDelta('{"name":"Berlin"}');
+        })());
+
+        $converter = new ResultConverter(new PlainConverter($stream), new Serializer());
+        $result = $converter->convert(new InMemoryRawResult());
+
+        $this->assertSame($stream, $result);
+        $this->assertSame([], $stream->getListeners());
     }
 
     public function testConvertPreservesMetadataFromInnerResult()

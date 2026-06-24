@@ -16,9 +16,11 @@ use Symfony\AI\Platform\Exception\UnexpectedResultTypeException;
 use Symfony\AI\Platform\Metadata\MetadataAwareTrait;
 use Symfony\AI\Platform\Metadata\StreamListener as MetaDataStreamListener;
 use Symfony\AI\Platform\Reranking\RerankingEntry;
+use Symfony\AI\Platform\Result\Stream\Delta\PartialObjectDelta;
 use Symfony\AI\Platform\Result\Stream\Delta\TextDelta;
 use Symfony\AI\Platform\ResultConverterInterface;
 use Symfony\AI\Platform\StructuredOutput\Streaming\PartialJsonParser;
+use Symfony\AI\Platform\StructuredOutput\Streaming\PartialObjectStreamListener;
 use Symfony\AI\Platform\TokenUsage\StreamListener as TokenUsageStreamListener;
 use Symfony\AI\Platform\Vector\Vector;
 
@@ -160,7 +162,51 @@ final class DeferredResult
      */
     public function asObject(): object
     {
+        $result = $this->getResult();
+
+        if ($result instanceof StreamResult && null !== $listener = $this->findPartialObjectListener($result)) {
+            $finalResult = $listener->getFinalObjectResult();
+
+            if (null === $finalResult) {
+                // Drain the stream so the listener fires its completion handler;
+                // consumers can also iterate asStreamedObject() beforehand and
+                // asObject() will then short-circuit on the cached final result.
+                foreach ($this->asStream() as $delta) {
+                    unset($delta);
+                }
+
+                $finalResult = $listener->getFinalObjectResult();
+            }
+
+            if (null === $finalResult) {
+                throw new UnexpectedResultTypeException(ObjectResult::class, StreamResult::class);
+            }
+
+            return $finalResult->getContent();
+        }
+
         return $this->as(ObjectResult::class)->getContent();
+    }
+
+    /**
+     * Yields progressively populated instances of the target class as the
+     * model emits more tokens. Each yielded value is the typed object itself;
+     * consumers that also need the raw JSON buffer can iterate asStream() and
+     * inspect the underlying PartialObjectDelta instances directly.
+     *
+     * @return \Generator<object>
+     *
+     * @throws ExceptionInterface
+     */
+    public function asStreamedObject(): \Generator
+    {
+        foreach ($this->asStream() as $delta) {
+            if (!$delta instanceof PartialObjectDelta) {
+                continue;
+            }
+
+            yield $delta->getObject();
+        }
     }
 
     /**
@@ -290,6 +336,17 @@ final class DeferredResult
     public function asToolCalls(): array
     {
         return $this->as(ToolCallResult::class)->getContent();
+    }
+
+    private function findPartialObjectListener(StreamResult $result): ?PartialObjectStreamListener
+    {
+        foreach ($result->getListeners() as $listener) {
+            if ($listener instanceof PartialObjectStreamListener) {
+                return $listener;
+            }
+        }
+
+        return null;
     }
 
     /**
