@@ -14,20 +14,34 @@ namespace Symfony\AI\Platform\Tests\Message;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Exception\InvalidArgumentException;
 use Symfony\AI\Platform\Message\Content\CodeExecution;
+use Symfony\AI\Platform\Message\Content\ComputerCall;
 use Symfony\AI\Platform\Message\Content\ContentInterface;
 use Symfony\AI\Platform\Message\Content\ExecutableCode;
+use Symfony\AI\Platform\Message\Content\FileSearch;
 use Symfony\AI\Platform\Message\Content\ImageUrl;
+use Symfony\AI\Platform\Message\Content\LocalShellCall;
+use Symfony\AI\Platform\Message\Content\McpApprovalRequest;
+use Symfony\AI\Platform\Message\Content\McpCall;
+use Symfony\AI\Platform\Message\Content\McpListTools;
 use Symfony\AI\Platform\Message\Content\Text;
 use Symfony\AI\Platform\Message\Content\Thinking;
+use Symfony\AI\Platform\Message\Content\WebSearch;
 use Symfony\AI\Platform\Message\Message;
 use Symfony\AI\Platform\Result\BinaryResult;
 use Symfony\AI\Platform\Result\CodeExecutionResult;
+use Symfony\AI\Platform\Result\ComputerCallResult;
 use Symfony\AI\Platform\Result\ExecutableCodeResult;
+use Symfony\AI\Platform\Result\FileSearchResult;
+use Symfony\AI\Platform\Result\LocalShellCallResult;
+use Symfony\AI\Platform\Result\McpApprovalRequestResult;
+use Symfony\AI\Platform\Result\McpCallResult;
+use Symfony\AI\Platform\Result\McpListToolsResult;
 use Symfony\AI\Platform\Result\MultiPartResult;
 use Symfony\AI\Platform\Result\TextResult;
 use Symfony\AI\Platform\Result\ThinkingResult;
 use Symfony\AI\Platform\Result\ToolCall;
 use Symfony\AI\Platform\Result\ToolCallResult;
+use Symfony\AI\Platform\Result\WebSearchResult;
 
 final class MessageTest extends TestCase
 {
@@ -152,6 +166,51 @@ final class MessageTest extends TestCase
         $this->assertTrue($parts[4]->isSucceeded());
         $this->assertSame('hi', $parts[4]->getOutput());
         $this->assertSame('srvtoolu_1', $parts[4]->getId());
+    }
+
+    public function testCreateAssistantMessageMapsServerToolResultTypes()
+    {
+        $result = new MultiPartResult([
+            new WebSearchResult('latest AI news', 'ws_1', 'completed'),
+            new FileSearchResult(['q'], [['file_id' => 'file-1']], 'fs_1', 'completed'),
+            new McpCallResult('deepwiki', 'ask', '{"q":1}', 'out', null, 'mcp_1', 'completed'),
+            new McpListToolsResult('deepwiki', [['name' => 'ask']], 'mcpl_1'),
+            new McpApprovalRequestResult('deepwiki', 'ask', '{"q":1}', 'mcpr_1'),
+            new ComputerCallResult(['type' => 'click'], 'call_1', [], 'cu_1', 'completed'),
+            new LocalShellCallResult(['bash', '-lc', 'ls'], 'call_2', 'lsh_1', 'completed'),
+            new TextResult('Visible answer.'),
+        ]);
+
+        $message = Message::ofAssistant($result);
+
+        $parts = $message->getContent();
+        $this->assertCount(8, $parts);
+
+        $this->assertInstanceOf(WebSearch::class, $parts[0]);
+        $this->assertSame('latest AI news', $parts[0]->getQuery());
+
+        $this->assertInstanceOf(FileSearch::class, $parts[1]);
+        $this->assertSame(['q'], $parts[1]->getQueries());
+        $this->assertSame([['file_id' => 'file-1']], $parts[1]->getResults());
+
+        $this->assertInstanceOf(McpCall::class, $parts[2]);
+        $this->assertSame('deepwiki', $parts[2]->getServerLabel());
+        $this->assertSame('out', $parts[2]->getOutput());
+
+        $this->assertInstanceOf(McpListTools::class, $parts[3]);
+        $this->assertSame([['name' => 'ask']], $parts[3]->getTools());
+
+        $this->assertInstanceOf(McpApprovalRequest::class, $parts[4]);
+        $this->assertSame('ask', $parts[4]->getName());
+
+        $this->assertInstanceOf(ComputerCall::class, $parts[5]);
+        $this->assertSame(['type' => 'click'], $parts[5]->getAction());
+        $this->assertSame('call_1', $parts[5]->getCallId());
+
+        $this->assertInstanceOf(LocalShellCall::class, $parts[6]);
+        $this->assertSame(['bash', '-lc', 'ls'], $parts[6]->getCommand());
+
+        $this->assertInstanceOf(Text::class, $parts[7]);
     }
 
     public function testCreateAssistantMessageFromUnsupportedResultThrows()
