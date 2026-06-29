@@ -18,12 +18,13 @@ final class WebSearchResultTest extends TestCase
 {
     public function testGetters()
     {
-        $result = new WebSearchResult('latest AI news', 'ws_1', 'completed');
+        $result = new WebSearchResult('latest AI news', 'ws_1', 'completed', ['latest AI news', 'OpenAI recent announcements']);
 
         $this->assertSame('latest AI news', $result->getContent());
         $this->assertSame('latest AI news', $result->getQuery());
         $this->assertSame('ws_1', $result->getId());
         $this->assertSame('completed', $result->getStatus());
+        $this->assertSame(['latest AI news', 'OpenAI recent announcements'], $result->getQueries());
     }
 
     public function testDefaultsToNull()

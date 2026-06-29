@@ -20,14 +20,16 @@ namespace Symfony\AI\Platform\Result;
 final class WebSearchResult extends BaseResult
 {
     /**
-     * @param string|null $query  The search query the model sent to the web search tool, or null when the action carried no query (e.g. opening or reading a page)
-     * @param string|null $id     Identifier of the web search call output item, as assigned by the provider (e.g. "ws_...")
-     * @param string|null $status Provider-reported status of the call, e.g. "completed", "searching" or "failed"
+     * @param string|null  $query   The search query the model sent to the web search tool, or null when the action carried no query (e.g. opening or reading a page)
+     * @param string|null  $id      Identifier of the web search call output item, as assigned by the provider (e.g. "ws_...")
+     * @param string|null  $status  Provider-reported status of the call, e.g. "completed", "searching" or "failed"
+     * @param list<string> $queries All queries when the model issued multiple searches in a single call
      */
     public function __construct(
         private readonly ?string $query = null,
         private readonly ?string $id = null,
         private readonly ?string $status = null,
+        private readonly array $queries = [],
     ) {
     }
 
@@ -49,5 +51,13 @@ final class WebSearchResult extends BaseResult
     public function getStatus(): ?string
     {
         return $this->status;
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function getQueries(): array
+    {
+        return $this->queries;
     }
 }

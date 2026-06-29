@@ -132,7 +132,7 @@ final class Message
         }
 
         if ($part instanceof WebSearchResult) {
-            return [new WebSearch($part->getQuery(), $part->getId(), $part->getStatus())];
+            return [new WebSearch($part->getQuery(), $part->getId(), $part->getStatus(), $part->getQueries())];
         }
 
         if ($part instanceof FileSearchResult) {
