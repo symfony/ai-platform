@@ -110,3 +110,33 @@ Rendering happens externally during `Platform.invoke()` when `template_vars` opt
 - Consistent contract interfaces across providers
 - Template system uses type-based rendering (not renderer injection)
 - Template rendering via TemplateRendererListener during invocation
+
+## Testing bridges: record & replay
+
+Result converters are the most bug-prone part of a bridge because they must
+interpret a provider's real (and evolving) response and streaming-event shapes.
+Hand-written fixtures drift from reality, so this component ships record-and-replay
+scaffolding in `src/Test/Replay/` (production-autoloaded, reusable by every bridge):
+
+The building blocks are `Test\Replay\HttpCassette` (redacted on-disk recording) and
+`Test\Replay\CassetteHttpClient` (records through a real client, replays FIFO through a
+`MockHttpClient`) — see the "Testing" section of `docs/components/platform.rst`.
+
+- **Record** (occasional, real API, local only): the whole `examples/` corpus is the
+  request corpus. A maintainer runs `examples/runner --record openai` against their
+  own API keys, and `CassetteHttpClient` captures each interaction — including raw
+  SSE streams, with binary bodies elided to metadata stubs — into a redacted `HttpCassette`
+  (`examples/tests/fixtures/<path>.json`), refreshing the replay goldens afterwards; both
+  are then committed. Recording never runs in CI: it needs credentials for every
+  provider, which CI does not have.
+- **Replay** (always, CI, no keys): `examples/tests/ExamplesReplayTest` re-runs each
+  example offline (a `CassetteHttpClient` serving the cassette, `CASSETTE=replay`)
+  and asserts it still succeeds against its committed golden output. Because the
+  example drives the real pipeline (`Platform → ModelClient → RawHttpResult →
+  ResultConverter`), a converter regression fails here.
+- **Targeted assertions**: extend `Test\Replay\AbstractBridgeReplayTestCase` (see
+  `Bridge/OpenResponses/Tests/ReplayTest`) to assert precise stream deltas / exception
+  types on committed cassettes when golden-stdout is too coarse.
+
+When adding or changing a converter, record (or hand-seed) a cassette for the new
+provider behavior so the replay tests lock it in.

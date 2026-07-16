@@ -140,6 +140,43 @@ final class CassetteHttpClientTest extends TestCase
         $this->assertSame([['delta' => 'Hel'], ['delta' => 'lo']], $deltas);
     }
 
+    public function testRecordsBinaryResponseAsMetadataStubAndReplaysPlaceholder()
+    {
+        $bytes = "\x00\x01\xff\xfeRIFF-fake-audio-bytes";
+
+        $realClient = new MockHttpClient(new MockResponse($bytes, ['response_headers' => ['content-type' => 'audio/mpeg']]));
+        $recording = new CassetteHttpClient(new HttpCassette($this->path), $realClient, record: true);
+
+        // During recording the caller still receives the real bytes.
+        $this->assertSame($bytes, $recording->request('GET', 'https://example.com/speech')->getContent());
+
+        // The cassette keeps only the metadata stub, never the binary body.
+        $data = json_decode((string) file_get_contents($this->path), true, flags: \JSON_THROW_ON_ERROR);
+        $this->assertSame('binary', $data['interactions'][0]['response']['body_format']);
+        $this->assertNull($data['interactions'][0]['response']['body']);
+        $this->assertSame(\strlen($bytes), $data['interactions'][0]['response']['body_size']);
+        $this->assertSame(['audio/mpeg'], $data['interactions'][0]['response']['headers']['content-type']);
+
+        // Replay serves a small, diffable placeholder body with the recorded metadata.
+        $client = new CassetteHttpClient(new HttpCassette($this->path), record: false);
+        $response = $client->request('GET', 'https://example.com/speech');
+
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame(['audio/mpeg'], $response->getHeaders()['content-type']);
+        $this->assertSame(\sprintf('[%d bytes of binary body elided by the cassette]', \strlen($bytes)), $response->getContent());
+    }
+
+    public function testDetectsBinaryBodyWithoutContentType()
+    {
+        $realClient = new MockHttpClient(new MockResponse("plain-prefix-then\x00binary"));
+        $recording = new CassetteHttpClient(new HttpCassette($this->path), $realClient, record: true);
+        $recording->request('GET', 'https://example.com')->getContent();
+
+        $data = json_decode((string) file_get_contents($this->path), true, flags: \JSON_THROW_ON_ERROR);
+        $this->assertSame('binary', $data['interactions'][0]['response']['body_format']);
+        $this->assertNull($data['interactions'][0]['response']['body']);
+    }
+
     public function testReplayDropsRecordedTransferHeaders()
     {
         $recorder = new HttpCassette($this->path);

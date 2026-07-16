@@ -28,6 +28,9 @@ use Symfony\Contracts\HttpClient\ResponseStreamInterface;
  *    (secrets redacted), and returns a buffered response identical to what replay will serve;
  *  - replay (cassette exists): serves the next recorded interaction (FIFO).
  *
+ * Binary response bodies are the exception to "identical": they are elided to a metadata stub in the
+ * cassette, so record hands the caller the real bytes while replay serves a small placeholder body.
+ *
  * Delete the cassette to re-record. Requires `symfony/http-client` (the `MockHttpClient`/`MockResponse` classes).
  *
  * @author Johannes Wachter <johannes@sulu.io>
@@ -104,11 +107,13 @@ final class CassetteHttpClient implements HttpClientInterface
     /**
      * @param array<string, list<string>> $headers
      *
-     * @return 'json'|'sse'
+     * @return 'json'|'sse'|'binary'
      */
     private static function detectBodyFormat(array $headers, string $body): string
     {
-        if (str_contains($headers['content-type'][0] ?? '', 'text/event-stream')) {
+        $contentType = $headers['content-type'][0] ?? '';
+
+        if (str_contains($contentType, 'text/event-stream')) {
             return 'sse';
         }
 
@@ -116,15 +121,34 @@ final class CassetteHttpClient implements HttpClientInterface
             return 'sse';
         }
 
+        foreach (['image/', 'audio/', 'video/', 'application/octet-stream', 'application/pdf'] as $binaryType) {
+            if (str_starts_with($contentType, $binaryType)) {
+                return 'binary';
+            }
+        }
+
+        if (str_contains($body, "\0")) {
+            return 'binary';
+        }
+
         return 'json';
     }
 
     /**
-     * @param array{status: int, headers: array<string, list<string>|string>, body: mixed, body_format?: 'json'|'sse'} $recorded
+     * @param array{status: int, headers: array<string, list<string>|string>, body: mixed, body_format?: 'json'|'sse'|'binary', body_size?: int} $recorded
      */
     private static function toMockResponse(array $recorded): MockResponse
     {
         $body = $recorded['body'];
+
+        // A binary body is elided to a metadata stub on record (see HttpCassette), so replay
+        // serves a small deterministic placeholder instead of the original bytes. During
+        // recording the body is still present and the caller receives the real bytes - the
+        // one case where a record run can produce different output than its replay.
+        if (null === $body && 'binary' === ($recorded['body_format'] ?? 'json')) {
+            $body = \sprintf('[%d bytes of binary body elided by the cassette]', $recorded['body_size'] ?? 0);
+        }
+
         if (!\is_string($body)) {
             $body = json_encode($body, \JSON_THROW_ON_ERROR);
         }

@@ -24,7 +24,12 @@ use Symfony\AI\Platform\Exception\RuntimeException;
  * Streamed responses are stored with their raw Server-Sent Event body and a `sse` body format,
  * so the bridge's stream parser frames them on replay exactly as it would on the wire.
  *
- * @phpstan-type RecordedResponse array{status: int, headers: array<string, list<string>>, body: mixed, body_format?: 'json'|'sse'}
+ * Binary response bodies (generated images, audio, ...) are not stored byte-for-byte: committing
+ * megabytes of opaque bytes would bloat the repository without making the recording reviewable.
+ * The cassette keeps a metadata stub instead - status, headers (including the content type) and
+ * the recorded byte size - and {@see CassetteHttpClient} serves a small placeholder body on replay.
+ *
+ * @phpstan-type RecordedResponse array{status: int, headers: array<string, list<string>>, body: mixed, body_format?: 'json'|'sse'|'binary', body_size?: int}
  * @phpstan-type Interaction array{request: array<string, mixed>, response: RecordedResponse}
  *
  * @author Johannes Wachter <johannes@sulu.io>
@@ -39,6 +44,7 @@ final class HttpCassette
         'api-key',
         'x-api-key',
         'x-goog-api-key',
+        'x-subscription-token',
         'openai-organization',
         'openai-project',
         'cookie',
@@ -98,20 +104,27 @@ final class HttpCassette
     /**
      * @param array<string, mixed>        $options    the Symfony HttpClient request options
      * @param array<string, list<string>> $headers    the recorded response headers
-     * @param 'json'|'sse'                $bodyFormat how the body is framed on the wire
+     * @param 'json'|'sse'|'binary'       $bodyFormat how the body is framed on the wire
      */
     public function record(string $method, string $url, array $options, int $status, array $headers, string $body, string $bodyFormat = 'json'): void
     {
         $this->load();
 
+        $response = [
+            'status' => $status,
+            'headers' => self::sanitizeHeaders($headers),
+            'body_format' => $bodyFormat,
+            'body' => $body,
+        ];
+
+        if ('binary' === $bodyFormat) {
+            $response['body'] = null;
+            $response['body_size'] = \strlen($body);
+        }
+
         $this->interactions[] = [
             'request' => self::redactRequest($method, $url, $options),
-            'response' => [
-                'status' => $status,
-                'headers' => self::sanitizeHeaders($headers),
-                'body_format' => $bodyFormat,
-                'body' => $body,
-            ],
+            'response' => $response,
         ];
 
         $this->save();

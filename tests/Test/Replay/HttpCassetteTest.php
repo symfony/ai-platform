@@ -48,7 +48,11 @@ final class HttpCassetteTest extends TestCase
             'https://api.mistral.ai/v1/chat/completions',
             [
                 'auth_bearer' => 'sk-secret',
-                'headers' => ['Authorization' => 'Bearer sk-secret', 'Content-Type' => 'application/json'],
+                'headers' => [
+                    'Authorization' => 'Bearer sk-secret',
+                    'X-Subscription-Token' => 'sk-secret',
+                    'Content-Type' => 'application/json',
+                ],
                 'json' => ['model' => 'mistral-large-latest'],
             ],
             200,
@@ -61,6 +65,7 @@ final class HttpCassetteTest extends TestCase
 
         $this->assertSame('POST', $request['method']);
         $this->assertSame(['[redacted]'], $request['headers']['authorization']);
+        $this->assertSame(['[redacted]'], $request['headers']['x-subscription-token']);
         $this->assertSame(['application/json'], $request['headers']['content-type']);
         $this->assertSame(['model' => 'mistral-large-latest'], $request['body']);
         $this->assertArrayHasKey('signature', $request);
@@ -134,6 +139,19 @@ final class HttpCassetteTest extends TestCase
         $data = json_decode((string) file_get_contents($this->path), true, flags: \JSON_THROW_ON_ERROR);
 
         $this->assertSame('sse', $data['interactions'][0]['response']['body_format']);
+    }
+
+    public function testRecordElidesBinaryBodyToMetadataStub()
+    {
+        $cassette = new HttpCassette($this->path);
+        $cassette->record('GET', 'https://example.com/speech', [], 200, ['content-type' => ['audio/mpeg']], "\x00\x01binary", 'binary');
+
+        $data = json_decode((string) file_get_contents($this->path), true, flags: \JSON_THROW_ON_ERROR);
+
+        $this->assertSame('binary', $data['interactions'][0]['response']['body_format']);
+        $this->assertNull($data['interactions'][0]['response']['body']);
+        $this->assertSame(8, $data['interactions'][0]['response']['body_size']);
+        $this->assertSame(['audio/mpeg'], $data['interactions'][0]['response']['headers']['content-type']);
     }
 
     public function testNextReturnsInteractionsInOrder()
