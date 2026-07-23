@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+0.13
+----
+
+ * [BC BREAK] Add `ListenerInterface::onError()` and `Result\Stream\ErrorEvent`, dispatched when draining a `StreamResult` throws, so a listener can finalize on a failed stream where `onComplete()` never fires; `AbstractStreamListener` provides a no-op default
+
 0.12
 ----
 
