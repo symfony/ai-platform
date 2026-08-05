@@ -16,6 +16,7 @@ use Symfony\AI\Platform\Exception\InvalidArgumentException;
 use Symfony\AI\Platform\Message\Content\CodeExecution;
 use Symfony\AI\Platform\Message\Content\ComputerCall;
 use Symfony\AI\Platform\Message\Content\ContentInterface;
+use Symfony\AI\Platform\Message\Content\CustomToolCall;
 use Symfony\AI\Platform\Message\Content\ExecutableCode;
 use Symfony\AI\Platform\Message\Content\FileSearch;
 use Symfony\AI\Platform\Message\Content\ImageUrl;
@@ -30,6 +31,7 @@ use Symfony\AI\Platform\Message\Message;
 use Symfony\AI\Platform\Result\BinaryResult;
 use Symfony\AI\Platform\Result\CodeExecutionResult;
 use Symfony\AI\Platform\Result\ComputerCallResult;
+use Symfony\AI\Platform\Result\CustomToolCallResult;
 use Symfony\AI\Platform\Result\ExecutableCodeResult;
 use Symfony\AI\Platform\Result\FileSearchResult;
 use Symfony\AI\Platform\Result\LocalShellCallResult;
@@ -178,13 +180,14 @@ final class MessageTest extends TestCase
             new McpApprovalRequestResult('deepwiki', 'ask', '{"q":1}', 'mcpr_1'),
             new ComputerCallResult(['type' => 'click'], 'call_1', [], 'cu_1', 'completed'),
             new LocalShellCallResult(['bash', '-lc', 'ls'], 'call_2', 'lsh_1', 'completed'),
+            new CustomToolCallResult('x_search', 'latest AI news', 'ctc_1', 'completed'),
             new TextResult('Visible answer.'),
         ]);
 
         $message = Message::ofAssistant($result);
 
         $parts = $message->getContent();
-        $this->assertCount(8, $parts);
+        $this->assertCount(9, $parts);
 
         $this->assertInstanceOf(WebSearch::class, $parts[0]);
         $this->assertSame('latest AI news', $parts[0]->getQuery());
@@ -211,7 +214,13 @@ final class MessageTest extends TestCase
         $this->assertInstanceOf(LocalShellCall::class, $parts[6]);
         $this->assertSame(['bash', '-lc', 'ls'], $parts[6]->getCommand());
 
-        $this->assertInstanceOf(Text::class, $parts[7]);
+        $this->assertInstanceOf(CustomToolCall::class, $parts[7]);
+        $this->assertSame('x_search', $parts[7]->getName());
+        $this->assertSame('latest AI news', $parts[7]->getInput());
+        $this->assertSame('ctc_1', $parts[7]->getId());
+        $this->assertSame('completed', $parts[7]->getStatus());
+
+        $this->assertInstanceOf(Text::class, $parts[8]);
     }
 
     public function testCreateAssistantMessageFromUnsupportedResultThrows()

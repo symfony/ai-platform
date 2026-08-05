@@ -15,6 +15,7 @@ use Symfony\AI\Platform\Exception\InvalidArgumentException;
 use Symfony\AI\Platform\Message\Content\CodeExecution;
 use Symfony\AI\Platform\Message\Content\ComputerCall;
 use Symfony\AI\Platform\Message\Content\ContentInterface;
+use Symfony\AI\Platform\Message\Content\CustomToolCall;
 use Symfony\AI\Platform\Message\Content\ExecutableCode;
 use Symfony\AI\Platform\Message\Content\FileSearch;
 use Symfony\AI\Platform\Message\Content\LocalShellCall;
@@ -26,6 +27,7 @@ use Symfony\AI\Platform\Message\Content\Thinking;
 use Symfony\AI\Platform\Message\Content\WebSearch;
 use Symfony\AI\Platform\Result\CodeExecutionResult;
 use Symfony\AI\Platform\Result\ComputerCallResult;
+use Symfony\AI\Platform\Result\CustomToolCallResult;
 use Symfony\AI\Platform\Result\ExecutableCodeResult;
 use Symfony\AI\Platform\Result\FileSearchResult;
 use Symfony\AI\Platform\Result\LocalShellCallResult;
@@ -141,6 +143,10 @@ final class Message
 
         if ($part instanceof McpCallResult) {
             return [new McpCall($part->getServerLabel(), $part->getName(), $part->getArguments(), $part->getContent(), $part->getError(), $part->getId(), $part->getStatus())];
+        }
+
+        if ($part instanceof CustomToolCallResult) {
+            return [new CustomToolCall($part->getName(), $part->getInput(), $part->getId(), $part->getStatus())];
         }
 
         if ($part instanceof McpListToolsResult) {
