@@ -15,6 +15,7 @@ use Symfony\AI\Platform\Capability;
 use Symfony\AI\Platform\Exception\InvalidArgumentException;
 use Symfony\AI\Platform\Exception\ModelNotFoundException;
 use Symfony\AI\Platform\Model;
+use Symfony\AI\Platform\ModelOptionsParser;
 
 /**
  * @author Oskar Stark <oskarstark@googlemail.com>
@@ -84,7 +85,7 @@ abstract class AbstractModelCatalog implements ModelCatalogInterface
                 throw new InvalidArgumentException('Model name cannot be empty.');
             }
 
-            parse_str($queryString, $options);
+            $options = ModelOptionsParser::parse($queryString);
 
             $options = self::convertScalarStrings($options);
         }

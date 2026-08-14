@@ -171,6 +171,15 @@ final class AbstractModelCatalogTest extends TestCase
         $this->assertSame(2.5E3, $options['presence_penalty']);
     }
 
+    public function testGetModelKeepsPeriodsInOptionNames()
+    {
+        $catalog = $this->createTestCatalog();
+        $model = $catalog->getModel('test-model?reasoning.effort=medium');
+
+        $this->assertSame('test-model', $model->getName());
+        $this->assertSame(['reasoning.effort' => 'medium'], $model->getOptions());
+    }
+
     private function createTestCatalog(): AbstractModelCatalog
     {
         return new class extends AbstractModelCatalog {
