@@ -18,6 +18,8 @@ namespace Symfony\AI\Platform;
  * of turning them into underscores, so that provider options like
  * "reasoning.effort" survive.
  *
+ * @internal
+ *
  * @author Saiful Islam Feroz <saif012@gmail.com>
  */
 final class ModelOptionsParser
