@@ -23,12 +23,14 @@ use Symfony\AI\Platform\Result\DeferredResult;
 use Symfony\AI\Platform\Result\ObjectResult;
 use Symfony\AI\Platform\Result\Stream\Delta\TextDelta;
 use Symfony\AI\Platform\Result\StreamResult;
+use Symfony\AI\Platform\Result\TextResult;
 use Symfony\AI\Platform\Result\ToolCall;
 use Symfony\AI\Platform\Result\ToolCallResult;
 use Symfony\AI\Platform\Result\VectorResult;
 use Symfony\AI\Platform\Test\MockPlatformFactory as MockFactory;
 use Symfony\AI\Platform\Test\Recording\Cassette;
 use Symfony\AI\Platform\Test\Recording\RecordingProvider;
+use Symfony\AI\Platform\TokenUsage\TokenUsage;
 use Symfony\AI\Platform\Vector\Vector;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\JsonMockResponse;
@@ -155,6 +157,66 @@ final class RecordingProviderTest extends TestCase
         $replay = new RecordingProvider($this->throwingProvider(), new Cassette($this->path), record: false);
 
         $this->assertSame('Recorded by Anthropic', $replay->invoke('claude-3-7-sonnet-20250219', new MessageBag(Message::ofUser('Hello')))->asText());
+    }
+
+    public function testReplayedResultExposesRecordedTokenUsage()
+    {
+        $this->record(MockFactory::createProvider(static function (): TextResult {
+            $result = new TextResult('hello');
+            $result->getMetadata()->add('token_usage', new TokenUsage(promptTokens: 12, completionTokens: 34, totalTokens: 46));
+
+            return $result;
+        }));
+
+        $result = $this->replay()->invoke('any-model', 'q');
+
+        $this->assertSame('hello', $result->asText());
+
+        $usage = $result->getMetadata()->get('token_usage');
+
+        $this->assertInstanceOf(TokenUsage::class, $usage);
+        $this->assertSame(12, $usage->getPromptTokens());
+        $this->assertSame(34, $usage->getCompletionTokens());
+        $this->assertSame(46, $usage->getTotalTokens());
+    }
+
+    public function testReplayedStreamExposesRecordedTokenUsage()
+    {
+        // No listener is wired here on purpose: DeferredResult attaches the token usage stream
+        // listener itself, which is what promotes the delta to result metadata at record time.
+        $this->record(MockFactory::createProvider(static fn (): StreamResult => new StreamResult((static function (): \Generator {
+            yield new TextDelta('Hel');
+            yield new TokenUsage(promptTokens: 4, completionTokens: 2, totalTokens: 6);
+            yield new TextDelta('lo');
+        })())));
+
+        $result = $this->replay()->invoke('any-model', 'q');
+
+        $text = '';
+        foreach ($result->asTextStream() as $delta) {
+            $text .= (string) $delta;
+        }
+
+        $usage = $result->getMetadata()->get('token_usage');
+
+        $this->assertSame('Hello', $text);
+        $this->assertInstanceOf(TokenUsage::class, $usage);
+        $this->assertSame(6, $usage->getTotalTokens());
+    }
+
+    public function testReplayedResultPreservesFloatMetadataThroughTheCassetteFile()
+    {
+        $this->record(MockFactory::createProvider(static function (): TextResult {
+            $result = new TextResult('hello');
+            $result->getMetadata()->add('usage', ['seconds' => 2.0, 'ratio' => 1.5, 'score' => 0.0]);
+
+            return $result;
+        }));
+
+        $result = $this->replay()->invoke('any-model', 'q');
+
+        $this->assertSame('hello', $result->asText());
+        $this->assertSame(['seconds' => 2.0, 'ratio' => 1.5, 'score' => 0.0], $result->getMetadata()->get('usage'));
     }
 
     public function testReplayThrowsOnSignatureMiss()

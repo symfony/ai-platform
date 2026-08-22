@@ -17,6 +17,27 @@ use Symfony\AI\Platform\TokenUsage\TokenUsageAggregation;
 
 class TokenUsageAggregationTest extends TestCase
 {
+    public function testGetTokenUsagesReturnsTheAggregatedUsagesInOrder()
+    {
+        $first = new TokenUsage(promptTokens: 10);
+        $second = new TokenUsage(promptTokens: 7);
+
+        $aggregation = new TokenUsageAggregation([$first, $second]);
+
+        $this->assertSame([$first, $second], $aggregation->getTokenUsages());
+    }
+
+    public function testGetTokenUsagesReflectsUsagesAddedAfterConstruction()
+    {
+        $first = new TokenUsage(promptTokens: 10);
+        $second = new TokenUsage(promptTokens: 7);
+
+        $aggregation = new TokenUsageAggregation([$first]);
+        $aggregation->add($second);
+
+        $this->assertSame([$first, $second], $aggregation->getTokenUsages());
+    }
+
     public function testAggregatesTokenUsageCorrectly()
     {
         $usage1 = new TokenUsage(

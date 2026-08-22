@@ -32,6 +32,16 @@ final class TokenUsageAggregation implements TokenUsageInterface, MergeableMetad
         $this->tokenUsages[] = $tokenUsage;
     }
 
+    /**
+     * The individual usages this aggregation sums up, in the order they were reported.
+     *
+     * @return TokenUsageInterface[]
+     */
+    public function getTokenUsages(): array
+    {
+        return $this->tokenUsages;
+    }
+
     public function merge(MergeableMetadataInterface $metadata): self
     {
         if (!$metadata instanceof TokenUsageInterface) {

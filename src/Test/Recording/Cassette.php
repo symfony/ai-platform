@@ -26,6 +26,8 @@ use Symfony\AI\Platform\Exception\RuntimeException;
  */
 final class Cassette
 {
+    private const DIRECTORY_MODE = 0777;
+
     /**
      * @var list<Interaction>
      */
@@ -114,10 +116,25 @@ final class Cassette
     private function save(): void
     {
         $directory = \dirname($this->path);
-        if (!is_dir($directory)) {
-            mkdir($directory, 0777, true);
+        if (!is_dir($directory) && !@mkdir($directory, self::DIRECTORY_MODE, true) && !is_dir($directory)) {
+            throw new RuntimeException(\sprintf('Cannot create cassette directory "%s".', $directory));
         }
 
-        file_put_contents($this->path, json_encode(['interactions' => $this->interactions], \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES | \JSON_UNESCAPED_UNICODE)."\n");
+        // JSON_THROW_ON_ERROR: without it an unencodable value (NAN, INF, invalid UTF-8) makes
+        // json_encode() return false, and the file would be overwritten with a bare newline,
+        // destroying every interaction recorded so far.
+        // JSON_PRESERVE_ZERO_FRACTION: without it a float with no fractional part is written as
+        // an integer, so a recorded 2.0 replays as int(2) and the cassette silently retypes what
+        // the provider reported.
+        try {
+            $json = json_encode(['interactions' => $this->interactions], \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES | \JSON_UNESCAPED_UNICODE | \JSON_PRESERVE_ZERO_FRACTION | \JSON_THROW_ON_ERROR);
+        } catch (\JsonException $exception) {
+            throw new RuntimeException(\sprintf('Cannot encode cassette "%s"; the recorded result holds a value JSON cannot represent.', $this->path), previous: $exception);
+        }
+
+        $contents = $json."\n";
+        if (\strlen($contents) !== file_put_contents($this->path, $contents)) {
+            throw new RuntimeException(\sprintf('Cannot write cassette "%s".', $this->path));
+        }
     }
 }

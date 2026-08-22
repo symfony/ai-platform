@@ -31,6 +31,24 @@ final class CassetteTest extends TestCase
         }
     }
 
+    public function testUnencodableInteractionThrowsAndLeavesEarlierRecordingsIntact()
+    {
+        $cassette = new Cassette($this->path);
+        $cassette->record('gpt-4o', 'sig', ['type' => 'text', 'content' => 'hi']);
+
+        try {
+            $cassette->record('gpt-4o', 'other', ['type' => 'text', 'content' => "invalid \xB1\x31 utf8"]);
+            $this->fail(\sprintf('Expected "%s" to be thrown.', RuntimeException::class));
+        } catch (RuntimeException $exception) {
+            $this->assertStringContainsString('JSON cannot represent', $exception->getMessage());
+        }
+
+        $data = json_decode((string) file_get_contents($this->path), true, flags: \JSON_THROW_ON_ERROR);
+
+        $this->assertCount(1, $data['interactions']);
+        $this->assertSame('hi', $data['interactions'][0]['result']['content']);
+    }
+
     public function testExistsReflectsFilePresence()
     {
         $cassette = new Cassette($this->path);

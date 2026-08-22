@@ -13,6 +13,8 @@ namespace Symfony\AI\Platform\Tests\Test\Recording;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Exception\InvalidArgumentException;
+use Symfony\AI\Platform\FinishReason\FinishReason;
+use Symfony\AI\Platform\FinishReason\FinishReasonCase;
 use Symfony\AI\Platform\Result\BinaryResult;
 use Symfony\AI\Platform\Result\ObjectResult;
 use Symfony\AI\Platform\Result\Stream\Delta\TextDelta;
@@ -23,6 +25,9 @@ use Symfony\AI\Platform\Result\ToolCall;
 use Symfony\AI\Platform\Result\ToolCallResult;
 use Symfony\AI\Platform\Result\VectorResult;
 use Symfony\AI\Platform\Test\Recording\ResultSerializer;
+use Symfony\AI\Platform\TokenUsage\StreamListener;
+use Symfony\AI\Platform\TokenUsage\TokenUsage;
+use Symfony\AI\Platform\TokenUsage\TokenUsageAggregation;
 use Symfony\AI\Platform\Vector\Vector;
 
 final class ResultSerializerTest extends TestCase
@@ -94,6 +99,277 @@ final class ResultSerializerTest extends TestCase
         }
 
         $this->assertSame('Hello', $text);
+    }
+
+    public function testRoundTripPreservesScalarAndArrayMetadata()
+    {
+        $source = new TextResult('Hello');
+        $source->getMetadata()->add('signature', 'sig-1');
+        $source->getMetadata()->add('usage', ['input_tokens' => 3, 'seconds' => 1.5]);
+        $source->getMetadata()->add('cached', false);
+        $source->getMetadata()->add('unset', null);
+
+        $metadata = ResultSerializer::fromArray(ResultSerializer::toArray($source))->getMetadata();
+
+        $this->assertSame('sig-1', $metadata->get('signature'));
+        $this->assertSame(['input_tokens' => 3, 'seconds' => 1.5], $metadata->get('usage'));
+        $this->assertFalse($metadata->get('cached'));
+        $this->assertTrue($metadata->has('unset'));
+        $this->assertNull($metadata->get('unset'));
+    }
+
+    public function testRoundTripPreservesFinishReason()
+    {
+        $source = new TextResult('Hello');
+        $source->getMetadata()->add('finish_reason', new FinishReason(FinishReasonCase::LENGTH, 'max_tokens'));
+
+        $finishReason = ResultSerializer::fromArray(ResultSerializer::toArray($source))->getMetadata()->get('finish_reason');
+
+        $this->assertInstanceOf(FinishReason::class, $finishReason);
+        $this->assertTrue($finishReason->is(FinishReasonCase::LENGTH));
+        $this->assertSame('max_tokens', $finishReason->getRaw());
+    }
+
+    public function testRoundTripPreservesTokenUsage()
+    {
+        $source = new TextResult('Hello');
+        $source->getMetadata()->add('token_usage', new TokenUsage(
+            promptTokens: 12,
+            completionTokens: 34,
+            cachedTokens: 5,
+            totalTokens: 46,
+        ));
+
+        $usage = ResultSerializer::fromArray(ResultSerializer::toArray($source))->getMetadata()->get('token_usage');
+
+        $this->assertInstanceOf(TokenUsage::class, $usage);
+        $this->assertSame(12, $usage->getPromptTokens());
+        $this->assertSame(34, $usage->getCompletionTokens());
+        $this->assertSame(5, $usage->getCachedTokens());
+        $this->assertSame(46, $usage->getTotalTokens());
+        $this->assertNull($usage->getThinkingTokens());
+    }
+
+    public function testRoundTripPreservesTokenUsageAggregation()
+    {
+        $source = new TextResult('Hello');
+        $source->getMetadata()->add('token_usage', new TokenUsageAggregation([
+            new TokenUsage(promptTokens: 10, totalTokens: 10),
+            new TokenUsage(promptTokens: 7, totalTokens: 7),
+        ]));
+
+        $usage = ResultSerializer::fromArray(ResultSerializer::toArray($source))->getMetadata()->get('token_usage');
+
+        $this->assertInstanceOf(TokenUsageAggregation::class, $usage);
+        $this->assertSame(2, $usage->count());
+        $this->assertSame(17, $usage->getPromptTokens());
+        $this->assertSame(17, $usage->getTotalTokens());
+    }
+
+    public function testStreamRoundTripPreservesMetadataCollectedWhileDraining()
+    {
+        $stream = new StreamResult((static function (): \Generator {
+            yield new TextDelta('Hel');
+            yield new TokenUsage(promptTokens: 4, completionTokens: 2, totalTokens: 6);
+            yield new TextDelta('lo');
+        })(), [new StreamListener()]);
+
+        $result = ResultSerializer::fromArray(ResultSerializer::toArray($stream));
+
+        $text = '';
+        foreach ($result->getContent() as $delta) {
+            $text .= (string) $delta;
+        }
+
+        $usage = $result->getMetadata()->get('token_usage');
+
+        $this->assertSame('Hello', $text);
+        $this->assertInstanceOf(TokenUsage::class, $usage);
+        $this->assertSame(6, $usage->getTotalTokens());
+    }
+
+    public function testResultWithoutMetadataDoesNotWriteMetadataKey()
+    {
+        $this->assertArrayNotHasKey('metadata', ResultSerializer::toArray(new TextResult('Hello')));
+    }
+
+    public function testUnsupportedMetadataValueThrows()
+    {
+        $source = new TextResult('Hello');
+        $source->getMetadata()->add('raw_response', new \stdClass());
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Cannot record result metadata "raw_response" of type "stdClass"');
+        ResultSerializer::toArray($source);
+    }
+
+    public function testReservedTypeKeyInMetadataArrayThrows()
+    {
+        $source = new TextResult('Hello');
+        $source->getMetadata()->add('citations', ['#type' => 'spoofed']);
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('reserved key "#type"');
+        ResultSerializer::toArray($source);
+    }
+
+    public function testUnknownMetadataTypeOnFromArrayThrows()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        ResultSerializer::fromArray([
+            'type' => 'text',
+            'content' => 'Hello',
+            'metadata' => ['whatever' => ['#type' => 'nope']],
+        ]);
+    }
+
+    public function testRoundTripPreservesNestedTokenUsageAggregation()
+    {
+        $source = new TextResult('Hello');
+        $source->getMetadata()->add('token_usage', new TokenUsageAggregation([
+            new TokenUsage(promptTokens: 10, totalTokens: 10),
+            new TokenUsageAggregation([
+                new TokenUsage(promptTokens: 3, totalTokens: 3),
+                new TokenUsage(promptTokens: 4, totalTokens: 4),
+            ]),
+        ]));
+
+        $usage = ResultSerializer::fromArray(ResultSerializer::toArray($source))->getMetadata()->get('token_usage');
+
+        $this->assertInstanceOf(TokenUsageAggregation::class, $usage);
+        $this->assertSame(3, $usage->count());
+        $this->assertSame(17, $usage->getPromptTokens());
+        $this->assertInstanceOf(TokenUsageAggregation::class, $usage->getTokenUsages()[1]);
+    }
+
+    public function testRoundTripPreservesObjectsNestedInsideMetadataArrays()
+    {
+        $source = new TextResult('Hello');
+        $source->getMetadata()->add('attempts', [
+            'first' => ['finish_reason' => new FinishReason(FinishReasonCase::LENGTH, 'max_tokens')],
+        ]);
+
+        $nested = ResultSerializer::fromArray(ResultSerializer::toArray($source))->getMetadata()->get('attempts');
+
+        $this->assertInstanceOf(FinishReason::class, $nested['first']['finish_reason']);
+        $this->assertTrue($nested['first']['finish_reason']->is(FinishReasonCase::LENGTH));
+    }
+
+    public function testReservedTypeKeyNestedInMetadataArrayThrows()
+    {
+        $source = new TextResult('Hello');
+        $source->getMetadata()->add('attempts', [['#type' => 'spoofed']]);
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('reserved key "#type"');
+        ResultSerializer::toArray($source);
+    }
+
+    public function testUnknownFinishReasonCaseOnFromArrayThrows()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('is not a known finish reason case');
+        ResultSerializer::fromArray([
+            'type' => 'text',
+            'content' => 'Hello',
+            'metadata' => ['finish_reason' => ['#type' => 'finish_reason', 'case' => 'no_such_case', 'raw' => 'z']],
+        ]);
+    }
+
+    public function testNonArrayMetadataOnFromArrayThrows()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('expected an array');
+        ResultSerializer::fromArray(['type' => 'text', 'content' => 'Hello', 'metadata' => 'not-an-array']);
+    }
+
+    public function testNullMetadataOnFromArrayThrows()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('expected an array');
+        ResultSerializer::fromArray(['type' => 'text', 'content' => 'Hello', 'metadata' => null]);
+    }
+
+    public function testAbsentMetadataKeyOnFromArrayIsAccepted()
+    {
+        $result = ResultSerializer::fromArray(['type' => 'text', 'content' => 'Hello']);
+
+        $this->assertSame('Hello', $result->getContent());
+        $this->assertCount(0, $result->getMetadata());
+    }
+
+    public function testAggregatedUsageThatIsNotATokenUsageThrows()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('is not a token usage');
+        ResultSerializer::fromArray([
+            'type' => 'text',
+            'content' => 'Hello',
+            'metadata' => ['token_usage' => ['#type' => 'token_usage_aggregation', 'usages' => ['nonsense']]],
+        ]);
+    }
+
+    public function testAggregationWithoutUsagesListThrows()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('field "usages" must be a list');
+        ResultSerializer::fromArray([
+            'type' => 'text',
+            'content' => 'Hello',
+            'metadata' => ['token_usage' => ['#type' => 'token_usage_aggregation']],
+        ]);
+    }
+
+    public function testNonListAggregatedUsagesThrows()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('field "usages" must be a list');
+        ResultSerializer::fromArray([
+            'type' => 'text',
+            'content' => 'Hello',
+            'metadata' => ['token_usage' => ['#type' => 'token_usage_aggregation', 'usages' => 'oops']],
+        ]);
+    }
+
+    public function testNonStringFinishReasonFieldThrows()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('field "raw" must be a string');
+        ResultSerializer::fromArray([
+            'type' => 'text',
+            'content' => 'Hello',
+            'metadata' => ['finish_reason' => ['#type' => 'finish_reason', 'case' => 'stop', 'raw' => ['nope']]],
+        ]);
+    }
+
+    public function testNonIntegerTokenUsageFieldThrows()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('field "prompt_tokens" must be an integer or null');
+        ResultSerializer::fromArray([
+            'type' => 'text',
+            'content' => 'Hello',
+            'metadata' => ['token_usage' => ['#type' => 'token_usage', 'prompt_tokens' => '12abc']],
+        ]);
+    }
+
+    /**
+     * The other round-trip tests hand the array straight back to fromArray(). A cassette is JSON on
+     * disk, so at least one case has to survive a real encode/decode: that is where a float with no
+     * fractional part used to come back as an int.
+     */
+    public function testRoundTripThroughRealJsonPreservesScalarTypes()
+    {
+        $source = new TextResult('Hello');
+        $source->getMetadata()->add('usage', ['seconds' => 2.0, 'ratio' => 1.5, 'score' => 0.0, 'count' => 3]);
+        $source->getMetadata()->add('token_usage', new TokenUsage(promptTokens: 12, totalTokens: 12));
+
+        $encoded = json_encode(ResultSerializer::toArray($source), \JSON_PRESERVE_ZERO_FRACTION | \JSON_THROW_ON_ERROR);
+        $metadata = ResultSerializer::fromArray(json_decode((string) $encoded, true, flags: \JSON_THROW_ON_ERROR))->getMetadata();
+
+        $this->assertSame(['seconds' => 2.0, 'ratio' => 1.5, 'score' => 0.0, 'count' => 3], $metadata->get('usage'));
+        $this->assertInstanceOf(TokenUsage::class, $metadata->get('token_usage'));
+        $this->assertSame(12, $metadata->get('token_usage')->getTotalTokens());
     }
 
     public function testUnsupportedResultTypeThrows()
