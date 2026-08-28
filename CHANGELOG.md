@@ -11,6 +11,8 @@ CHANGELOG
  * Add `TokenUsage\TokenUsageAggregation::getTokenUsages()` to read back the individual usages an aggregation sums up
  * Encode `Test\Recording\Cassette` with `JSON_THROW_ON_ERROR` and `JSON_PRESERVE_ZERO_FRACTION` and check the write, so a result holding a value JSON cannot represent (`NAN`, `INF`, invalid UTF-8) raises instead of truncating the cassette and destroying the interactions already recorded in it, and a recorded float with no fractional part no longer replays as an integer
  * Add `Test\Replay\AbstractBridgeReplayTestCase` for cassette-driven bridge replay tests, and make the `examples/` corpus a record/replay harness: `examples/runner --record` captures every HTTP interaction of an example into a committed cassette and refreshes the replay goldens, `ExamplesReplayTest` re-runs each recorded example offline through the full bridge pipeline in CI, without credentials, against those goldens
+ * Add `Result\Stream\AssistantMessageStreamListener`, which rebuilds the assistant turn - text, thinking blocks with their signatures, tool calls, in provider order - from a streamed response
+ * Accept a `StreamResult` in `Message::ofAssistant()` and add `StreamResult::getAssistantMessage()`, so a streamed turn is replayed like a buffered one, draining the stream if the caller has not read it
  * Add `Result\CustomToolCallResult` for `custom_tool_call` output items reported by provider-specific server-side tools (e.g. xAI's `x_search`), converted the same way as the other built-in tool call results instead of being surfaced as a `ToolCall` the application is expected to execute
 
 0.12

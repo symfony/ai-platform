@@ -18,6 +18,7 @@ use Symfony\AI\Platform\Message\Content\ComputerCall;
 use Symfony\AI\Platform\Message\Content\ContentInterface;
 use Symfony\AI\Platform\Message\Content\CustomToolCall;
 use Symfony\AI\Platform\Message\Content\ExecutableCode;
+use Symfony\AI\Platform\Message\Content\File;
 use Symfony\AI\Platform\Message\Content\FileSearch;
 use Symfony\AI\Platform\Message\Content\ImageUrl;
 use Symfony\AI\Platform\Message\Content\LocalShellCall;
@@ -39,6 +40,7 @@ use Symfony\AI\Platform\Result\McpApprovalRequestResult;
 use Symfony\AI\Platform\Result\McpCallResult;
 use Symfony\AI\Platform\Result\McpListToolsResult;
 use Symfony\AI\Platform\Result\MultiPartResult;
+use Symfony\AI\Platform\Result\ObjectResult;
 use Symfony\AI\Platform\Result\TextResult;
 use Symfony\AI\Platform\Result\ThinkingResult;
 use Symfony\AI\Platform\Result\ToolCall;
@@ -223,9 +225,23 @@ final class MessageTest extends TestCase
         $this->assertInstanceOf(Text::class, $parts[8]);
     }
 
+    public function testCreateAssistantMessageFromBinaryResultKeepsItAsAFile()
+    {
+        $result = new MultiPartResult([
+            BinaryResult::fromBase64(base64_encode('binary'), 'image/png'),
+            new ToolCallResult([new ToolCall('id1', 'tool1')]),
+        ]);
+
+        $content = Message::ofAssistant($result)->getContent();
+
+        $this->assertInstanceOf(File::class, $content[0]);
+        $this->assertSame('image/png', $content[0]->getFormat());
+        $this->assertInstanceOf(ToolCall::class, $content[1]);
+    }
+
     public function testCreateAssistantMessageFromUnsupportedResultThrows()
     {
-        $result = BinaryResult::fromBase64(base64_encode('binary'), 'image/png');
+        $result = new ObjectResult(new \stdClass());
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(\sprintf('Unsupported assistant message part of type "%s".', $result::class));
@@ -237,7 +253,7 @@ final class MessageTest extends TestCase
     {
         $result = new MultiPartResult([
             new TextResult('Visible answer.'),
-            BinaryResult::fromBase64(base64_encode('binary'), 'image/png'),
+            new ObjectResult(new \stdClass()),
         ]);
 
         $this->expectException(InvalidArgumentException::class);
