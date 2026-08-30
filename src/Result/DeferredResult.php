@@ -152,9 +152,11 @@ final class DeferredResult
     }
 
     /**
+     * @return object|array<string, mixed>
+     *
      * @throws ExceptionInterface
      */
-    public function asObject(): object
+    public function asObject(): object|array
     {
         $result = $this->getResult();
 

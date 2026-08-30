@@ -39,9 +39,14 @@ trait TypedResultTrait
     }
 
     /**
+     * A `response_format` given as a plain JSON schema has no class to deserialize into,
+     * so the structured output stays the decoded array.
+     *
+     * @return object|array<string, mixed>
+     *
      * @throws ExceptionInterface
      */
-    public function asObject(): object
+    public function asObject(): object|array
     {
         return $this->as(ObjectResult::class)->getContent();
     }
