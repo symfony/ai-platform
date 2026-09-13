@@ -84,8 +84,9 @@ final class CassetteHttpClient implements HttpClientInterface
         $this->cassette->record($method, $url, $options, $status, $headers, $body, $bodyFormat);
 
         // Re-issue the recorded bytes through a MockHttpClient so the caller reads exactly what
-        // replay will serve (a bare MockResponse cannot be consumed on its own).
-        return self::toMockClientResponse(['status' => $status, 'headers' => $headers, 'body' => $body, 'body_format' => $bodyFormat], $method, $url, $options);
+        // replay will serve (a bare MockResponse cannot be consumed on its own). The request body
+        // is left out: the live request already consumed streamed uploads, which cannot be re-read.
+        return self::toMockClientResponse(['status' => $status, 'headers' => $headers, 'body' => $body, 'body_format' => $bodyFormat], $method, $url, array_diff_key($options, ['body' => true, 'json' => true]));
     }
 
     public function stream(ResponseInterface|iterable $responses, ?float $timeout = null): ResponseStreamInterface

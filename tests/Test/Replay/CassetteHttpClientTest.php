@@ -79,6 +79,31 @@ final class CassetteHttpClientTest extends TestCase
         $this->assertFileExists($this->path);
     }
 
+    public function testRecordsStreamedUploadAndReplaysIt()
+    {
+        $file = tempnam(sys_get_temp_dir(), 'ai-upload-');
+        file_put_contents($file, 'audio bytes');
+
+        try {
+            $realClient = new MockHttpClient(new JsonMockResponse(['text' => 'hi']));
+            $recorder = new CassetteHttpClient(new HttpCassette($this->path), $realClient, record: true);
+
+            $handle = fopen($file, 'r');
+            $response = $recorder->request('POST', 'https://example.com/v1/audio/transcriptions', ['body' => ['model' => 'whisper-1', 'file' => $handle]]);
+            $this->assertSame(['text' => 'hi'], $response->toArray());
+            fclose($handle);
+
+            $replayer = new CassetteHttpClient(new HttpCassette($this->path), record: false);
+
+            $handle = fopen($file, 'r');
+            $response = $replayer->request('POST', 'https://example.com/v1/audio/transcriptions', ['body' => ['model' => 'whisper-1', 'file' => $handle]]);
+            $this->assertSame(['text' => 'hi'], $response->toArray());
+            fclose($handle);
+        } finally {
+            unlink($file);
+        }
+    }
+
     public function testReplaysAutomaticallyWhenCassetteExists()
     {
         $recorder = new HttpCassette($this->path);

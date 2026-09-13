@@ -45,10 +45,21 @@ final class HttpCassette
         'x-api-key',
         'x-goog-api-key',
         'x-subscription-token',
+        'xi-api-key',
+        'apikey',
         'openai-organization',
         'openai-project',
         'cookie',
         'set-cookie',
+    ];
+
+    /**
+     * Body and query parameters that carry credentials, for APIs that do not accept them as a header.
+     */
+    private const SENSITIVE_PARAMETERS = [
+        'api_key',
+        'apikey',
+        'access_token',
     ];
 
     /**
@@ -93,8 +104,14 @@ final class HttpCassette
 
     private int $cursor = 0;
 
+    /**
+     * @param array<string, string> $replacements values replaced in every recorded request and response, for
+     *                                            example a real endpoint or credential mapped to the placeholder
+     *                                            a replay run sends instead
+     */
     public function __construct(
         private readonly string $path,
+        private readonly array $replacements = [],
     ) {
     }
 
@@ -112,11 +129,13 @@ final class HttpCassette
     {
         $this->load();
 
+        [$url, $options] = $this->replaceInRequest($url, $options);
+
         $response = [
             'status' => $status,
-            'headers' => self::sanitizeHeaders($headers),
+            'headers' => self::sanitizeHeaders($this->replace($headers)),
             'body_format' => $bodyFormat,
-            'body' => $body,
+            'body' => $this->replace($body),
         ];
 
         if ('binary' === $bodyFormat) {
@@ -155,10 +174,46 @@ final class HttpCassette
     public function nextFor(string $method, string $url, array $options = []): array
     {
         $interaction = $this->currentInteraction();
+        [$url, $options] = $this->replaceInRequest($url, $options);
         self::assertRequestSignatureMatches($interaction['request'] ?? null, $method, $url, $options, $this->path, $this->cursor);
         ++$this->cursor;
 
         return $interaction['response'];
+    }
+
+    /**
+     * @param array<string, mixed> $options
+     *
+     * @return array{string, array<string, mixed>}
+     */
+    private function replaceInRequest(string $url, array $options): array
+    {
+        foreach (['headers', 'query', 'json', 'body'] as $option) {
+            if (isset($options[$option])) {
+                $options[$option] = $this->replace($options[$option]);
+            }
+        }
+
+        return [$this->replace($url), $options];
+    }
+
+    private function replace(mixed $value): mixed
+    {
+        if ([] === $this->replacements) {
+            return $value;
+        }
+
+        if (\is_string($value)) {
+            return strtr($value, $this->replacements);
+        }
+
+        if (\is_array($value)) {
+            foreach ($value as $key => $item) {
+                $value[$key] = $this->replace($item);
+            }
+        }
+
+        return $value;
     }
 
     /**
@@ -172,8 +227,8 @@ final class HttpCassette
 
         $request = ['method' => $method, 'url' => $url];
 
-        $query = $options['query'] ?? null;
-        $body = $options['json'] ?? $options['body'] ?? null;
+        $query = self::requestQuery($options);
+        $body = self::requestBody($options);
         $request[self::REQUEST_SIGNATURE] = self::legacySignature($method, $url, $body);
         $request[self::REQUEST_SIGNATURE_V2] = self::signature($method, $url, $query, $body);
 
@@ -221,6 +276,81 @@ final class HttpCassette
         }
 
         return $headers;
+    }
+
+    /**
+     * Returns the request body as it is signed and stored.
+     *
+     * @param array<string, mixed> $options
+     */
+    private static function requestBody(array $options): mixed
+    {
+        $body = $options['json'] ?? $options['body'] ?? null;
+
+        if (!\is_array($body)) {
+            return self::stubBinary($body);
+        }
+
+        return self::redactParameters($body);
+    }
+
+    /**
+     * Returns the request query as it is signed.
+     *
+     * @param array<string, mixed> $options
+     */
+    private static function requestQuery(array $options): mixed
+    {
+        $query = $options['query'] ?? null;
+
+        if (!\is_array($query)) {
+            return $query;
+        }
+
+        return self::redactParameters($query);
+    }
+
+    /**
+     * Redacts credentials that some APIs expect as a body or query parameter instead of a header,
+     * before signing: a replay run sends a placeholder credential that must match the recording.
+     *
+     * Binary uploads are replaced by a stub: their bytes are no JSON and would bloat the cassette like
+     * a binary response. A binary string is stubbed with its size and hash; a stream - the file uploads
+     * of the audio bridges - with its file name and size only, since reading it would consume the
+     * upload. Either stub is derived the same way on record and replay.
+     *
+     * @param array<mixed> $parameters
+     *
+     * @return array<mixed>
+     */
+    private static function redactParameters(array $parameters): array
+    {
+        foreach ($parameters as $name => $value) {
+            if (\is_string($name) && \in_array(strtolower($name), self::SENSITIVE_PARAMETERS, true)) {
+                $parameters[$name] = self::REDACTED;
+            } elseif (\is_array($value)) {
+                $parameters[$name] = self::redactParameters($value);
+            } else {
+                $parameters[$name] = self::stubBinary($value);
+            }
+        }
+
+        return $parameters;
+    }
+
+    private static function stubBinary(mixed $value): mixed
+    {
+        if (\is_string($value) && 1 !== preg_match('//u', $value)) {
+            return \sprintf('[binary body, %d bytes, xxh128 %s]', \strlen($value), hash('xxh128', $value));
+        }
+
+        if (!\is_resource($value)) {
+            return $value;
+        }
+
+        $stat = fstat($value);
+
+        return \sprintf('[resource %s, %d bytes]', basename(stream_get_meta_data($value)['uri'] ?? ''), false === $stat ? 0 : $stat['size']);
     }
 
     /**
@@ -276,9 +406,9 @@ final class HttpCassette
             return;
         }
 
-        $body = $options['json'] ?? $options['body'] ?? null;
+        $body = self::requestBody($options);
         if (isset($recordedRequest[self::REQUEST_SIGNATURE_V2]) && \is_string($recordedRequest[self::REQUEST_SIGNATURE_V2])) {
-            $signature = self::signature($method, $url, $options['query'] ?? null, $body);
+            $signature = self::signature($method, $url, self::requestQuery($options), $body);
             if ($recordedRequest[self::REQUEST_SIGNATURE_V2] === $signature) {
                 return;
             }
@@ -381,7 +511,7 @@ final class HttpCassette
      * question the hash answered. Key order is normalised (it is not a change), but types are
      * not: `JSON_PRESERVE_ZERO_FRACTION` keeps `1.0` distinct from `1`, matching the signature.
      *
-     * Returns null when the value cannot be encoded (a resource body, NAN, invalid UTF-8). Null
+     * Returns null when the value cannot be encoded (NAN, invalid UTF-8). Null
      * is never equal to another null here by design: an unencodable body proves nothing about
      * what changed, so the caller must treat it as not comparable rather than as a match. A
      * falsy-coalescing fallback would be wrong twice over -- json_encode(0) returns the falsy
@@ -509,8 +639,8 @@ final class HttpCassette
             mkdir($directory, 0777, true);
         }
 
-        // JSON_THROW_ON_ERROR: without it an unencodable value (a `body` opened as a resource by
-        // the audio bridges, NAN, invalid UTF-8) makes json_encode() return false, and the file
+        // JSON_THROW_ON_ERROR: without it an unencodable value (NAN, invalid UTF-8) makes
+        // json_encode() return false, and the file
         // would be overwritten with a bare newline, destroying every interaction recorded so far.
         // JSON_PRESERVE_ZERO_FRACTION: `signature()` hashes with it, so writing without it stores
         // a recorded 1.0 as 1 -- the cassette would no longer reproduce its own signature and the

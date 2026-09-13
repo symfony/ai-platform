@@ -179,23 +179,133 @@ final class HttpCassetteTest extends TestCase
         $replay->next();
     }
 
+    public function testRecordStubsStreamedMultipartBodyAndReplaysIt()
+    {
+        $file = tempnam(sys_get_temp_dir(), 'ai-upload-');
+        file_put_contents($file, 'twelve bytes');
+
+        try {
+            $handle = fopen($file, 'r');
+            $cassette = new HttpCassette($this->path);
+            $cassette->record('POST', 'https://example.com/v1/audio/transcriptions', ['body' => ['model' => 'whisper-1', 'file' => $handle]], 200, [], '{"text":"hi"}');
+            fclose($handle);
+
+            $data = json_decode((string) file_get_contents($this->path), true, flags: \JSON_THROW_ON_ERROR);
+            $this->assertSame(
+                ['model' => 'whisper-1', 'file' => \sprintf('[resource %s, 12 bytes]', basename($file))],
+                $data['interactions'][0]['request']['body'],
+            );
+
+            $handle = fopen($file, 'r');
+            $replay = new HttpCassette($this->path);
+            $response = $replay->nextFor('POST', 'https://example.com/v1/audio/transcriptions', ['body' => ['model' => 'whisper-1', 'file' => $handle]]);
+            fclose($handle);
+
+            $this->assertSame('{"text":"hi"}', $response['body']);
+        } finally {
+            unlink($file);
+        }
+    }
+
+    public function testRecordStubsStreamedBody()
+    {
+        $file = tempnam(sys_get_temp_dir(), 'ai-upload-');
+        file_put_contents($file, 'four');
+
+        try {
+            $handle = fopen($file, 'r');
+            $cassette = new HttpCassette($this->path);
+            $cassette->record('POST', 'https://example.com/v1/listen', ['body' => $handle], 200, [], '{}');
+            fclose($handle);
+
+            $data = json_decode((string) file_get_contents($this->path), true, flags: \JSON_THROW_ON_ERROR);
+            $this->assertSame(\sprintf('[resource %s, 4 bytes]', basename($file)), $data['interactions'][0]['request']['body']);
+        } finally {
+            unlink($file);
+        }
+    }
+
+    public function testRecordReplacesConfiguredValuesAndReplaysWithThePlaceholders()
+    {
+        $cassette = new HttpCassette($this->path, [
+            'my-resource.openai.azure.com' => 'your-resource.openai.azure.com',
+            'vs_real123456' => 'vs_test',
+        ]);
+        $cassette->record(
+            'POST',
+            'https://my-resource.openai.azure.com/openai/responses',
+            ['json' => ['tools' => [['vector_store_ids' => ['vs_real123456']]]]],
+            200,
+            ['x-resource' => ['my-resource.openai.azure.com']],
+            '{"vector_store_id":"vs_real123456"}',
+        );
+
+        $contents = (string) file_get_contents($this->path);
+        $this->assertStringNotContainsString('my-resource', $contents);
+        $this->assertStringNotContainsString('vs_real123456', $contents);
+
+        $replay = new HttpCassette($this->path);
+        $response = $replay->nextFor('POST', 'https://your-resource.openai.azure.com/openai/responses', [
+            'json' => ['tools' => [['vector_store_ids' => ['vs_test']]]],
+        ]);
+
+        $this->assertSame('{"vector_store_id":"vs_test"}', $response['body']);
+        $this->assertSame(['your-resource.openai.azure.com'], $response['headers']['x-resource']);
+    }
+
+    public function testRecordStubsBinaryStringBodyAndReplaysIt()
+    {
+        $binary = "\x89PNG\x00\xff";
+
+        $cassette = new HttpCassette($this->path);
+        $cassette->record('POST', 'https://example.com/models/vit', ['body' => $binary], 200, [], '[]');
+
+        $data = json_decode((string) file_get_contents($this->path), true, flags: \JSON_THROW_ON_ERROR);
+        $this->assertSame(\sprintf('[binary body, 6 bytes, xxh128 %s]', hash('xxh128', $binary)), $data['interactions'][0]['request']['body']);
+
+        $replay = new HttpCassette($this->path);
+        $this->assertSame('[]', $replay->nextFor('POST', 'https://example.com/models/vit', ['body' => $binary])['body']);
+    }
+
+    public function testRecordRedactsCredentialParametersAndReplaysWithPlaceholder()
+    {
+        $cassette = new HttpCassette($this->path);
+        $cassette->record('POST', 'https://api.tavily.com/search', [
+            'headers' => ['xi-api-key' => 'sk-secret'],
+            'query' => ['access_token' => 'sk-secret', 'q' => 'Berlin'],
+            'json' => ['api_key' => 'sk-secret', 'query' => 'Berlin'],
+        ], 200, [], '{}');
+
+        $contents = (string) file_get_contents($this->path);
+        $this->assertStringNotContainsString('sk-secret', $contents);
+
+        $data = json_decode($contents, true, flags: \JSON_THROW_ON_ERROR);
+        $this->assertSame(['[redacted]'], $data['interactions'][0]['request']['headers']['xi-api-key']);
+        $this->assertSame(['api_key' => '[redacted]', 'query' => 'Berlin'], $data['interactions'][0]['request']['body']);
+
+        $replay = new HttpCassette($this->path);
+        $response = $replay->nextFor('POST', 'https://api.tavily.com/search', [
+            'query' => ['access_token' => 'sk-replay', 'q' => 'Berlin'],
+            'json' => ['api_key' => 'sk-replay', 'query' => 'Berlin'],
+        ]);
+
+        $this->assertSame('{}', $response['body']);
+    }
+
     public function testRecordKeepsTheCassetteWhenAnInteractionCannotBeEncoded()
     {
         $cassette = new HttpCassette($this->path);
         $cassette->record('POST', 'https://example.com', ['json' => ['kept' => true]], 200, [], '{}');
         $recorded = file_get_contents($this->path);
 
-        $handle = fopen('php://memory', 'r');
-
         try {
-            // A resource body (the audio bridges upload one) cannot be encoded. Writing must fail
-            // loudly rather than truncate the file and destroy what was already recorded.
+            // NAN cannot be encoded. Writing must fail loudly rather than truncate the file and
+            // destroy what was already recorded.
             $this->expectException(RuntimeException::class);
             $this->expectExceptionMessage('Cannot encode cassette');
 
-            $cassette->record('POST', 'https://example.com', ['body' => $handle], 200, [], '{}');
+            $cassette->record('POST', 'https://example.com', ['json' => ['value' => \NAN]], 200, [], '{}');
         } finally {
-            fclose($handle);
             $this->assertSame($recorded, file_get_contents($this->path));
         }
     }
