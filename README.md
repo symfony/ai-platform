@@ -55,6 +55,7 @@ To use a specific AI platform, install the corresponding bridge package:
 | Scaleway            | `symfony/ai-scaleway-platform`            |
 | Together            | `symfony/ai-together-platform`            |
 | TransformersPHP     | `symfony/ai-transformers-php-platform`    |
+| TypeSafe            | `symfony/ai-type-safe-platform`           |
 | Google Vertex AI    | `symfony/ai-vertex-ai-platform`           |
 | Voyage              | `symfony/ai-voyage-platform`              |
 
