@@ -74,6 +74,13 @@ final class CassetteHttpClient implements HttpClientInterface
             return self::toMockClientResponse($this->cassette->nextFor($method, $url, $options), $method, $url, $options);
         }
 
+        // AWS credential providers use the configured transport to contact SSO, STS, ECS or IMDS.
+        // Those exchanges authenticate the inference request but are not part of it: never persist
+        // their credential-bearing responses or consume a replay interaction for them.
+        if (self::isAwsCredentialRequest($url)) {
+            return $this->realClient->request($method, $url, $options);
+        }
+
         $response = $this->realClient->request($method, $url, $options);
 
         $status = $response->getStatusCode();
@@ -130,6 +137,43 @@ final class CassetteHttpClient implements HttpClientInterface
         }
 
         return 'json';
+    }
+
+    private static function isAwsCredentialRequest(string $url): bool
+    {
+        $host = parse_url($url, \PHP_URL_HOST);
+        if (!\is_string($host)) {
+            return false;
+        }
+
+        // IMDS, the ECS task-role endpoint and EKS Pod Identity all answer on link-local addresses.
+        if (\in_array($host, ['169.254.169.254', '169.254.170.2', '169.254.170.23', 'fd00:ec2::254'], true)) {
+            return true;
+        }
+
+        // A container credential provider can be pointed at an arbitrary host through
+        // AWS_CONTAINER_CREDENTIALS_FULL_URI, which no host pattern can anticipate.
+        $fullUri = $_SERVER['AWS_CONTAINER_CREDENTIALS_FULL_URI'] ?? null;
+        if (\is_string($fullUri) && $host === parse_url($fullUri, \PHP_URL_HOST)) {
+            return true;
+        }
+
+        // Both the commercial and the China partition, whose hosts end in ".amazonaws.com.cn".
+        if (!str_ends_with($host, '.amazonaws.com') && !str_ends_with($host, '.amazonaws.com.cn')) {
+            return false;
+        }
+
+        if ('sts.amazonaws.com' === $host) {
+            return true;
+        }
+
+        foreach (['sts.', 'portal.sso.', 'oidc.'] as $prefix) {
+            if (str_starts_with($host, $prefix)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

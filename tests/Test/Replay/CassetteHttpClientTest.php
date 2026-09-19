@@ -11,6 +11,7 @@
 
 namespace Symfony\AI\Platform\Tests\Test\Replay;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\AI\Platform\Exception\InvalidArgumentException;
 use Symfony\AI\Platform\Exception\RuntimeException;
@@ -102,6 +103,70 @@ final class CassetteHttpClientTest extends TestCase
         } finally {
             unlink($file);
         }
+    }
+
+    public function testAwsCredentialRequestsBypassRecording()
+    {
+        $realClient = new MockHttpClient([
+            new JsonMockResponse(['roleCredentials' => ['accessKeyId' => 'AKIDEXAMPLE', 'secretAccessKey' => 'secret']]),
+            new JsonMockResponse(['answer' => 'recorded']),
+        ]);
+        $client = new CassetteHttpClient(new HttpCassette($this->path), $realClient, record: true);
+
+        $credentials = $client->request('GET', 'https://portal.sso.eu-central-1.amazonaws.com/federation/credentials')->toArray();
+        $response = $client->request('POST', 'https://bedrock-mantle.eu-central-1.api.aws/anthropic/v1/messages')->toArray();
+
+        $this->assertSame('AKIDEXAMPLE', $credentials['roleCredentials']['accessKeyId']);
+        $this->assertSame(['answer' => 'recorded'], $response);
+
+        $data = json_decode((string) file_get_contents($this->path), true, flags: \JSON_THROW_ON_ERROR);
+        $this->assertCount(1, $data['interactions']);
+        $this->assertSame('https://bedrock-mantle.eu-central-1.api.aws/anthropic/v1/messages', $data['interactions'][0]['request']['url']);
+        $this->assertStringNotContainsString('AKIDEXAMPLE', (string) file_get_contents($this->path));
+        $this->assertStringNotContainsString('secret', (string) file_get_contents($this->path));
+    }
+
+    /**
+     * @return iterable<string, array{0: string}>
+     */
+    public static function provideAwsCredentialHosts(): iterable
+    {
+        yield 'sts global' => ['https://sts.amazonaws.com/'];
+        yield 'sts regional' => ['https://sts.eu-central-1.amazonaws.com/'];
+        yield 'sso portal' => ['https://portal.sso.eu-central-1.amazonaws.com/federation/credentials'];
+        yield 'sso oidc' => ['https://oidc.eu-central-1.amazonaws.com/token'];
+        yield 'imds' => ['http://169.254.169.254/latest/meta-data/iam/security-credentials/'];
+        yield 'ecs task role' => ['http://169.254.170.2/v2/credentials/abc'];
+        yield 'eks pod identity' => ['http://169.254.170.23/v1/credentials'];
+        yield 'china partition sts' => ['https://sts.cn-north-1.amazonaws.com.cn/'];
+    }
+
+    #[DataProvider('provideAwsCredentialHosts')]
+    public function testAwsCredentialHostsBypassRecording(string $url)
+    {
+        $realClient = new MockHttpClient([
+            new JsonMockResponse(['secretAccessKey' => 'super-secret']),
+            new JsonMockResponse(['answer' => 'recorded']),
+        ]);
+        $client = new CassetteHttpClient(new HttpCassette($this->path), $realClient, record: true);
+
+        $client->request('GET', $url)->toArray();
+        $client->request('POST', 'https://bedrock-mantle.eu-central-1.api.aws/anthropic/v1/messages')->toArray();
+
+        $data = json_decode((string) file_get_contents($this->path), true, flags: \JSON_THROW_ON_ERROR);
+        $this->assertCount(1, $data['interactions']);
+        $this->assertStringNotContainsString('super-secret', (string) file_get_contents($this->path));
+    }
+
+    public function testNonCredentialAwsHostsAreStillRecorded()
+    {
+        $realClient = new MockHttpClient([new JsonMockResponse(['answer' => 'recorded'])]);
+        $client = new CassetteHttpClient(new HttpCassette($this->path), $realClient, record: true);
+
+        $client->request('POST', 'https://bedrock-runtime.us-east-1.amazonaws.com/openai/v1/chat/completions')->toArray();
+
+        $data = json_decode((string) file_get_contents($this->path), true, flags: \JSON_THROW_ON_ERROR);
+        $this->assertCount(1, $data['interactions']);
     }
 
     public function testReplaysAutomaticallyWhenCassetteExists()
