@@ -17,13 +17,16 @@ use Symfony\AI\Platform\Result\ResultInterface;
 /**
  * Resolves asynchronous jobs previously started through `Platform::invoke()`.
  *
- * Implementations perform exactly one request per call and never sleep: how often a job is polled,
- * and for how long, is the caller's decision - see {@see JobRunner} for the blocking variant.
+ * Implementations never sleep: how often a job is polled, and for how long, is the caller's
+ * decision - see {@see JobRunner} for the blocking variant.
  *
  * @author Johannes Wachter <johannes@sulu.io>
  */
 interface JobClientInterface
 {
+    /**
+     * Whether this client can resolve the handle; a {@see JobRunner} refuses one it declines.
+     */
     public function supports(JobHandle $handle): bool;
 
     /**
@@ -34,7 +37,7 @@ interface JobClientInterface
     public function getStatus(JobHandle $handle): JobStatus;
 
     /**
-     * Fetches the finished job's result.
+     * Fetches the finished job's result, in as many requests as the provider needs to hand it over.
      *
      * Only meaningful once {@see getStatus()} reported {@see JobStateCase::SUCCEEDED}; implementations
      * throw when the job did not finish successfully.

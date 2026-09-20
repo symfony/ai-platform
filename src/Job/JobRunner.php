@@ -50,6 +50,11 @@ final class JobRunner
     private const DEFAULT_MAX_DURATION = 120;
 
     /**
+     * Below the clock's own resolution, what is left of the budget is rounding.
+     */
+    private const CLOCK_RESOLUTION = 0.000001;
+
+    /**
      * @param float    $pollInterval seconds to wait between two polls
      * @param int|null $maxDuration  seconds to wait before giving up, for every job this runner
      *                               waits for; null defers to what each job says it needs (see
@@ -72,17 +77,22 @@ final class JobRunner
      * @param int|null $maxDuration seconds to wait for this job, overruling both the runner's own
      *                              budget and what the job asks for
      *
-     * @throws JobFailedException  when the job reached a terminal state without a result
-     * @throws JobTimeoutException when the job was still running after the last poll
+     * @throws InvalidArgumentException when the job client cannot resolve this handle
+     * @throws JobFailedException       when the job reached a terminal state without a result
+     * @throws JobTimeoutException      when the job was still running after the last poll
      */
     public function wait(JobClientInterface $jobClient, JobHandle $handle, ?int $maxDuration = null): DeferredResult
     {
         self::assertDuration($maxDuration);
 
-        $budget = $maxDuration ?? $this->maxDuration ?? $handle->getMaxDuration() ?? self::DEFAULT_MAX_DURATION;
-        $maxPolls = $this->maxPollsFor($budget);
+        if (!$jobClient->supports($handle)) {
+            throw new InvalidArgumentException(\sprintf('The job "%s" of provider "%s" cannot be resolved by "%s".', $handle->getId(), $handle->getProvider() ?? 'unknown', $jobClient::class));
+        }
 
-        for ($poll = 1; $poll <= $maxPolls; ++$poll) {
+        $budget = $maxDuration ?? $this->maxDuration ?? $handle->getMaxDuration() ?? self::DEFAULT_MAX_DURATION;
+        $deadline = $this->now() + $budget;
+
+        while (true) {
             $status = $jobClient->getStatus($handle);
 
             if ($status->is(JobStateCase::SUCCEEDED)) {
@@ -95,21 +105,20 @@ final class JobRunner
                 throw new JobFailedException($status, \sprintf('The job "%s" ended as "%s".%s', $handle->getId(), $status->getRaw(), null !== $status->getError() ? ' '.$status->getError() : ''));
             }
 
-            // Not after the last poll: the caller would only wait for a status nobody reads.
-            if ($poll < $maxPolls) {
-                $this->clock->sleep($this->pollInterval);
+            // Sleeping past the deadline would only wait for a status nobody reads.
+            if ($this->now() + $this->pollInterval + self::CLOCK_RESOLUTION >= $deadline) {
+                break;
             }
+
+            $this->clock->sleep($this->pollInterval);
         }
 
         throw new JobTimeoutException($handle, \sprintf('The job "%s" did not finish within %d second(s). It may still be running - keep the handle and wait for it again later, or allow more time via the "maxDuration" argument.', $handle->getId(), $budget));
     }
 
-    /**
-     * Turns a duration into a number of polls at the configured interval.
-     */
-    private function maxPollsFor(int $maxDuration): int
+    private function now(): float
     {
-        return max(1, (int) ceil($maxDuration / $this->pollInterval));
+        return (float) $this->clock->now()->format('U.u');
     }
 
     private static function assertDuration(?int $maxDuration): void

@@ -30,6 +30,15 @@ final class ScriptedJobClient implements JobClientInterface
 
     public int $resultCalls = 0;
 
+    public bool $supports = true;
+
+    /**
+     * Lets a test spend time inside a poll.
+     *
+     * @var (\Closure(): void)|null
+     */
+    public ?\Closure $onStatus = null;
+
     /**
      * @var list<JobStatus>
      */
@@ -42,12 +51,16 @@ final class ScriptedJobClient implements JobClientInterface
 
     public function supports(JobHandle $handle): bool
     {
-        return true;
+        return $this->supports;
     }
 
     public function getStatus(JobHandle $handle): JobStatus
     {
         ++$this->statusCalls;
+
+        if (null !== $this->onStatus) {
+            ($this->onStatus)();
+        }
 
         return array_shift($this->statuses) ?? throw new LogicException('The runner polled more often than the test scripted.');
     }

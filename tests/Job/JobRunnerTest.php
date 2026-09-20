@@ -212,6 +212,36 @@ final class JobRunnerTest extends TestCase
         $this->assertSame(0, $jobClient->resultCalls);
     }
 
+    public function testTheBudgetCountsTheTimeTheProviderTakesToAnswer()
+    {
+        $clock = new MockClock('2026-01-01 00:00:00');
+
+        // Every poll takes two seconds at the provider, on top of the one second between polls.
+        $jobClient = new ScriptedJobClient(...array_fill(0, 10, new JobStatus(JobStateCase::RUNNING, 'Processing')));
+        $jobClient->onStatus = static fn () => $clock->sleep(2.0);
+
+        try {
+            (new JobRunner($clock, 1.0))->wait($jobClient, new JobHandle('task-1'), maxDuration: 9);
+            $this->fail(\sprintf('Expected a "%s".', JobTimeoutException::class));
+        } catch (JobTimeoutException) {
+        }
+
+        // Three polls at three seconds each, not nine at one second between them.
+        $this->assertSame(3, $jobClient->statusCalls);
+        $this->assertSame('2026-01-01 00:00:08', $clock->now()->format('Y-m-d H:i:s'));
+    }
+
+    public function testItRefusesAHandleTheJobClientCannotResolve()
+    {
+        $jobClient = $this->jobClient();
+        $jobClient->supports = false;
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('cannot be resolved by');
+
+        (new JobRunner(new MockClock()))->wait($jobClient, new JobHandle('task-1', [], 'other-provider'));
+    }
+
     public function testItRejectsANonsensicalPollInterval()
     {
         $this->expectException(InvalidArgumentException::class);
