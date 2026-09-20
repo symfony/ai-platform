@@ -13,6 +13,7 @@ namespace Symfony\AI\Platform\Result;
 
 use Symfony\AI\Platform\Exception\ExceptionInterface;
 use Symfony\AI\Platform\Exception\UnexpectedResultTypeException;
+use Symfony\AI\Platform\Job\JobHandle;
 use Symfony\AI\Platform\Metadata\MetadataAwareTrait;
 use Symfony\AI\Platform\Metadata\StreamListener as MetaDataStreamListener;
 use Symfony\AI\Platform\ResultConverterInterface;
@@ -149,6 +150,14 @@ final class DeferredResult
     public function getRawResult(): RawResultInterface
     {
         return $this->rawResult;
+    }
+
+    /**
+     * @throws ExceptionInterface when the provider answered with a result instead of a job
+     */
+    public function asJob(): JobHandle
+    {
+        return $this->as(JobResult::class)->getContent();
     }
 
     /**

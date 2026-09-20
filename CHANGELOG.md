@@ -1,6 +1,5 @@
 CHANGELOG
-=========
-
+==
 0.14
 ----
 
@@ -12,6 +11,7 @@ CHANGELOG
  * Verify a replayed HTTP cassette request signature before serving the recorded response
  * Add an optional `Stopwatch` to `TraceablePlatform`, timing each invocation until its result is converted or its stream is consumed
  * Add `Test\Replay\BodyRedactor` and redact recorded request bodies in `HttpCassette` by default; replay verification retries against the redacted body, so a cassette recorded before redaction keeps replaying
+ * Add asynchronous job support: providers that answer a request with a job identifier instead of a result now return a `Result\JobResult`, whose `Job\JobHandle` is serializable and can be resolved in another process through the job client of the bridge that started it, which creates the handle including the provider name.
 
 0.13
 ----
