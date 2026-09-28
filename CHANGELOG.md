@@ -7,6 +7,7 @@ CHANGELOG
  * Remove `Test\InMemoryPlatform` in favor of `Test\MockPlatformFactory::createPlatform()`
  * Add an optional class argument to `DeferredResult::asObject()`, asserting the structured output is an instance of that class and letting static analysis infer it as the return type
  * Add `Exception\RetryableExceptionInterface`, implemented by `ServerException` and `RateLimitExceededException`, so a consumer wiring platform calls into a queue with a retry policy can tell a transient failure from a permanent one without enumerating every exception class itself
+ * Add `PlatformOptions::MAX_OUTPUT_TOKENS`, a canonical output token limit that the Anthropic, Bedrock (Claude and Nova), Gemini, Vertex AI, Mistral and generic completions bridges translate to their own field; an explicit provider-specific limit like `max_tokens` still wins, and `Claude` now sets its default of 1000 tokens through the canonical option
 
 0.14
 ----
