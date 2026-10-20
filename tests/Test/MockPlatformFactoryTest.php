@@ -12,6 +12,9 @@
 namespace Symfony\AI\Platform\Tests\Test;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\AI\Platform\Event\InvocationEvent;
+use Symfony\AI\Platform\Event\ResultConvertedEvent;
+use Symfony\AI\Platform\Event\ResultEvent;
 use Symfony\AI\Platform\Exception\ModelNotFoundException;
 use Symfony\AI\Platform\Model;
 use Symfony\AI\Platform\Platform;
@@ -23,6 +26,7 @@ use Symfony\AI\Platform\Result\VectorResult;
 use Symfony\AI\Platform\Test\MockModelCatalog;
 use Symfony\AI\Platform\Test\MockPlatformFactory;
 use Symfony\AI\Platform\Vector\Vector;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 final class MockPlatformFactoryTest extends TestCase
 {
@@ -31,6 +35,22 @@ final class MockPlatformFactoryTest extends TestCase
         $platform = MockPlatformFactory::createPlatform('hi');
 
         $this->assertSame('hi', $platform->invoke('any-model', 'q')->asText());
+    }
+
+    public function testCreatePlatformDispatchesPlatformEvents()
+    {
+        $dispatched = [];
+        $eventDispatcher = new EventDispatcher();
+        foreach ([InvocationEvent::class, ResultEvent::class, ResultConvertedEvent::class] as $eventClass) {
+            $eventDispatcher->addListener($eventClass, static function (object $event) use (&$dispatched): void {
+                $dispatched[] = $event::class;
+            });
+        }
+
+        $platform = MockPlatformFactory::createPlatform('hi', eventDispatcher: $eventDispatcher);
+        $platform->invoke('any-model', 'q')->asText();
+
+        $this->assertSame([InvocationEvent::class, ResultEvent::class, ResultConvertedEvent::class], $dispatched);
     }
 
     public function testCreateProviderWithCatalogGatesRouting()

@@ -4,6 +4,7 @@ CHANGELOG
 0.15
 ----
 
+ * Remove `Test\InMemoryPlatform` in favor of `Test\MockPlatformFactory::createPlatform()`
  * Add an optional class argument to `DeferredResult::asObject()`, asserting the structured output is an instance of that class and letting static analysis infer it as the return type
  * Add `Exception\RetryableExceptionInterface`, implemented by `ServerException` and `RateLimitExceededException`, so a consumer wiring platform calls into a queue with a retry policy can tell a transient failure from a permanent one without enumerating every exception class itself
 

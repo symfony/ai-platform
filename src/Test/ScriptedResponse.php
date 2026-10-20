@@ -25,8 +25,7 @@ use Symfony\AI\Platform\Result\TextResult;
  *  - a \Closure(Model $model, array|string|object $input, array $options): ResultInterface|string.
  *
  * Bare strings are wrapped in a {@see TextResult}; a {@see ResultInterface} is returned verbatim,
- * so every result type is supported. Shared by the provider-level {@see MockModelClient} and the
- * platform-level {@see InMemoryPlatform} so both speak the same scripting language.
+ * so every result type is supported.
  *
  * @author Christopher Hertel <mail@christopher-hertel.de>
  */
