@@ -62,10 +62,14 @@ class MessageBag implements \Countable, \IteratorAggregate
      */
     public function removeSystemMessage(): void
     {
-        $this->messages = array_values(array_filter(
-            $this->messages,
-            static fn (MessageInterface $message): bool => !$message instanceof SystemMessage,
-        ));
+        $messages = [];
+        foreach ($this->messages as $message) {
+            if (!$message instanceof SystemMessage) {
+                $messages[] = $message;
+            }
+        }
+
+        $this->messages = $messages;
     }
 
     /**
@@ -147,10 +151,14 @@ class MessageBag implements \Countable, \IteratorAggregate
     public function withoutSystemMessage(): self
     {
         $messages = clone $this;
-        $messages->messages = array_values(array_filter(
-            $messages->messages,
-            static fn (MessageInterface $message) => !$message instanceof SystemMessage,
-        ));
+        $filtered = [];
+        foreach ($messages->messages as $message) {
+            if (!$message instanceof SystemMessage) {
+                $filtered[] = $message;
+            }
+        }
+
+        $messages->messages = $filtered;
 
         return $messages;
     }

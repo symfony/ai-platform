@@ -131,6 +131,56 @@ final class MessageBagTest extends TestCase
         $this->assertSame('Hello, world!', $userMessage->getContent()[0]->getText());
     }
 
+    public function testSystemMessageRemovalPreservesOrderIdentityAndDuplicates()
+    {
+        $userMessage = Message::ofUser('Hello!');
+        $assistantMessage = Message::ofAssistant('Hi!');
+        $systemMessage = Message::forSystem('System prompt.');
+        $originalMessages = [$systemMessage, $userMessage, $systemMessage, $assistantMessage, $userMessage, $systemMessage];
+        $messageBag = new MessageBag(...$originalMessages);
+        $expectedMessages = [$userMessage, $assistantMessage, $userMessage];
+
+        $newMessageBag = $messageBag->withoutSystemMessage();
+
+        $this->assertNotSame($messageBag, $newMessageBag);
+        $this->assertSame($messageBag->getId(), $newMessageBag->getId());
+        $this->assertSame($originalMessages, $messageBag->getMessages());
+        $this->assertSame($expectedMessages, $newMessageBag->getMessages());
+
+        $messageBag->removeSystemMessage();
+
+        $this->assertSame($expectedMessages, $messageBag->getMessages());
+    }
+
+    public function testSystemMessageRemovalFromEmptyBag()
+    {
+        $messageBag = new MessageBag();
+
+        $this->assertSame([], $messageBag->withoutSystemMessage()->getMessages());
+        $messageBag->removeSystemMessage();
+        $this->assertSame([], $messageBag->getMessages());
+    }
+
+    public function testSystemMessageRemovalWithOnlySystemMessages()
+    {
+        $messageBag = new MessageBag(Message::forSystem('First prompt.'), Message::forSystem('Second prompt.'));
+
+        $this->assertSame([], $messageBag->withoutSystemMessage()->getMessages());
+        $this->assertCount(2, $messageBag);
+        $messageBag->removeSystemMessage();
+        $this->assertSame([], $messageBag->getMessages());
+    }
+
+    public function testSystemMessageRemovalWithoutSystemMessages()
+    {
+        $originalMessages = [Message::ofUser('Hello!'), Message::ofAssistant('Hi!')];
+        $messageBag = new MessageBag(...$originalMessages);
+
+        $this->assertSame($originalMessages, $messageBag->withoutSystemMessage()->getMessages());
+        $messageBag->removeSystemMessage();
+        $this->assertSame($originalMessages, $messageBag->getMessages());
+    }
+
     public function testWithoutToolMessages()
     {
         $messageBag = new MessageBag(
