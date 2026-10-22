@@ -12,6 +12,7 @@
 namespace Symfony\AI\Platform\Tests\Message;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\AI\Platform\Exception\InvalidArgumentException;
 use Symfony\AI\Platform\Message\AssistantMessage;
 use Symfony\AI\Platform\Message\Content\ImageUrl;
 use Symfony\AI\Platform\Message\Content\Text;
@@ -23,6 +24,7 @@ use Symfony\AI\Platform\Message\UserMessage;
 use Symfony\AI\Platform\Result\ToolCall;
 use Symfony\Component\Uid\AbstractUid;
 use Symfony\Component\Uid\TimeBasedUidInterface;
+use Symfony\Component\Uid\Uuid;
 
 final class MessageBagTest extends TestCase
 {
@@ -458,6 +460,51 @@ final class MessageBagTest extends TestCase
         $messageBag = new MessageBag($latestMessageAsUser, $latestMessageAsAssistant);
 
         $this->assertSame($latestMessageAsUser, $messageBag->latestAs(Role::User));
+    }
+
+    public function testMessageBagReturnsLastMessageOfRoleAsLatest()
+    {
+        $firstUserMessage = Message::ofUser('First');
+        $lastUserMessage = Message::ofUser('Last');
+
+        $messageBag = new MessageBag($firstUserMessage, Message::ofAssistant('Answer'), $lastUserMessage, Message::ofAssistant('Answer'));
+
+        $this->assertSame($lastUserMessage, $messageBag->latestAs(Role::User));
+    }
+
+    public function testLatestAsThrowsWithoutMessageOfRole()
+    {
+        $messageBag = new MessageBag(Message::ofUser('Hello'));
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('No message found for role "Assistant".');
+
+        $messageBag->latestAs(Role::Assistant);
+    }
+
+    public function testReplaceThrowsForUnknownUuid()
+    {
+        $messageBag = new MessageBag(Message::ofUser('Hello'));
+        $uuid = Uuid::v7();
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage(\sprintf('No message found for Uuid: "%s".', $uuid->toRfc4122()));
+
+        $messageBag->replace($uuid, Message::ofUser('Replacement'));
+    }
+
+    public function testReplaceThrowsForDuplicateUuid()
+    {
+        $userMessage = Message::ofUser('Hello');
+        $messageBag = new MessageBag($userMessage, $userMessage);
+
+        /** @var AbstractUid&TimeBasedUidInterface $uuid */
+        $uuid = $userMessage->getId();
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('More than one message found for Uuid');
+
+        $messageBag->replace($uuid, Message::ofUser('Replacement'));
     }
 
     public function testIsLastMessageFromReturnsFalseForEmptyBag()

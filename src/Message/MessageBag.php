@@ -82,10 +82,12 @@ class MessageBag implements \Countable, \IteratorAggregate
 
     public function getSystemMessage(string $separator = \PHP_EOL.\PHP_EOL): ?SystemMessage
     {
-        $systemMessages = array_values(array_filter(
-            $this->messages,
-            static fn (MessageInterface $message): bool => $message instanceof SystemMessage,
-        ));
+        $systemMessages = [];
+        foreach ($this->messages as $message) {
+            if ($message instanceof SystemMessage) {
+                $systemMessages[] = $message;
+            }
+        }
 
         if ([] === $systemMessages) {
             return null;
@@ -132,18 +134,24 @@ class MessageBag implements \Countable, \IteratorAggregate
 
     public function replace(AbstractUid&TimeBasedUidInterface $uuid, MessageInterface $newMessage): self
     {
-        $messagesByUuid = array_filter(
-            $this->messages,
-            static fn (MessageInterface $message): bool => $message->getId()->equals($uuid)
-        );
+        $position = null;
+        foreach ($this->messages as $index => $message) {
+            if (!$message->getId()->equals($uuid)) {
+                continue;
+            }
 
-        if (1 < \count($messagesByUuid)) {
-            throw new InvalidArgumentException(\sprintf('More than one message found for Uuid: "%s".', $uuid->toRfc4122()));
+            if (null !== $position) {
+                throw new InvalidArgumentException(\sprintf('More than one message found for Uuid: "%s".', $uuid->toRfc4122()));
+            }
+
+            $position = $index;
         }
 
-        $currentMessage = array_search(array_values($messagesByUuid)[0], $this->messages, true);
+        if (null === $position) {
+            throw new InvalidArgumentException(\sprintf('No message found for Uuid: "%s".', $uuid->toRfc4122()));
+        }
 
-        $this->messages[$currentMessage] = $newMessage;
+        $this->messages[$position] = $newMessage;
 
         return $this;
     }
@@ -151,14 +159,7 @@ class MessageBag implements \Countable, \IteratorAggregate
     public function withoutSystemMessage(): self
     {
         $messages = clone $this;
-        $filtered = [];
-        foreach ($messages->messages as $message) {
-            if (!$message instanceof SystemMessage) {
-                $filtered[] = $message;
-            }
-        }
-
-        $messages->messages = $filtered;
+        $messages->removeSystemMessage();
 
         return $messages;
     }
@@ -170,20 +171,18 @@ class MessageBag implements \Countable, \IteratorAggregate
     public function withoutToolMessages(): self
     {
         $messages = clone $this;
-        $messages->messages = array_values(array_filter(
-            $messages->messages,
-            static function (MessageInterface $message): bool {
-                if ($message instanceof ToolCallMessage) {
-                    return false;
-                }
+        $messages->messages = [];
+        foreach ($this->messages as $message) {
+            if ($message instanceof ToolCallMessage) {
+                continue;
+            }
 
-                if ($message instanceof AssistantMessage && null === $message->asText()) {
-                    return false;
-                }
+            if ($message instanceof AssistantMessage && null === $message->asText()) {
+                continue;
+            }
 
-                return true;
-            },
-        ));
+            $messages->messages[] = $message;
+        }
 
         return $messages;
     }
@@ -194,25 +193,20 @@ class MessageBag implements \Countable, \IteratorAggregate
     public function withSystemMessage(SystemMessage $message): self
     {
         $messages = $this->withoutSystemMessage();
-        $messages->messages = array_merge([$message], $messages->messages);
+        $messages->prepend($message);
 
         return $messages;
     }
 
     public function latestAs(Role $role): MessageInterface
     {
-        $messages = array_filter(
-            $this->messages,
-            static fn (MessageInterface $message): bool => $message->getRole() === $role,
-        );
-
-        $message = array_pop($messages);
-
-        if (!$message instanceof MessageInterface) {
-            throw new InvalidArgumentException(\sprintf('No message found for role "%s".', $role->name));
+        for ($index = \count($this->messages) - 1; $index >= 0; --$index) {
+            if ($this->messages[$index]->getRole() === $role) {
+                return $this->messages[$index];
+            }
         }
 
-        return $message;
+        throw new InvalidArgumentException(\sprintf('No message found for role "%s".', $role->name));
     }
 
     public function isLastMessageFrom(Role $role): bool
