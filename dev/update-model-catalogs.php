@@ -19,6 +19,11 @@
  * The OpenRouter bridge is sourced from the OpenRouter API, reusing the modality mapping already in
  * Symfony\AI\Platform\Bridge\OpenRouter\ModelApiCatalog.
  *
+ * The HuggingFace bridge is sourced from the Hugging Face Hub API, reusing the task and capability
+ * mapping of Symfony\AI\Platform\Bridge\HuggingFace\ModelMapper. Its list is rewritten instead of
+ * merged, since models frequently go offline on Hugging Face Inference Providers. Pinned models are
+ * always looked up, so they stay listed while they are served, even outside the most downloaded ones.
+ *
  * Add-only: hand-curated entries win, so only genuinely new models are appended. Removals and
  * capability corrections stay manual. The content between the "// STATIC LIST START" and
  * "// STATIC LIST END" markers is rewritten; everything else in the file is left untouched.
@@ -29,6 +34,9 @@
  * @author Kévin Dunglas <kevin@les-tilleuls.coop>
  */
 
+use Symfony\AI\Platform\Bridge\HuggingFace\ApiClient as HuggingFaceApiClient;
+use Symfony\AI\Platform\Bridge\HuggingFace\Completions as HuggingFaceCompletions;
+use Symfony\AI\Platform\Bridge\HuggingFace\ModelMapper as HuggingFaceModelMapper;
 use Symfony\AI\Platform\Bridge\ModelsDev\CapabilityMapper;
 use Symfony\AI\Platform\Bridge\OpenRouter\ModelApiCatalog;
 use Symfony\AI\Platform\Capability;
@@ -51,6 +59,33 @@ const BRIDGE_NS = 'Symfony\\AI\\Platform\\Bridge\\';
 // Routing models injected at runtime by AbstractOpenRouterModelCatalog; they must stay out of the
 // static list.
 const OPENROUTER_ROUTING_KEYS = ['openrouter/auto', 'openrouter/bodybuilder', 'openrouter/free', '@preset'];
+
+// Number of the most downloaded models listed per task pipeline of the Hugging Face inference service.
+const HUGGINGFACE_MODELS_PER_PIPELINE = 20;
+
+// featherless-ai serves thousands of fine-tunes without feature metadata; they stay with ModelApiCatalog.
+const HUGGINGFACE_EXCLUDED_PROVIDERS = ['featherless-ai'];
+
+// Task models used by the examples and tests, kept even when they drop out of the most downloaded ones.
+const HUGGINGFACE_PINNED_MODELS = [
+    'BAAI/bge-large-en-v1.5',
+    'BAAI/bge-small-en-v1.5',
+    'FacebookAI/xlm-roberta-base',
+    'Helsinki-NLP/opus-mt-ru-en',
+    'ProsusAI/finbert',
+    'cross-encoder/ms-marco-MiniLM-L6-v2',
+    'dbmdz/bert-large-cased-finetuned-conll03-english',
+    'deepset/roberta-base-squad2',
+    'facebook/bart-large-cnn',
+    'facebook/bart-large-mnli',
+    'facebook/detr-resnet-50',
+    'google/tapas-base-finetuned-wtq',
+    'google/vit-base-patch16-224',
+    'nvidia/segformer-b0-finetuned-ade-512-512',
+    'openai/whisper-large-v3',
+    'sentence-transformers/all-MiniLM-L6-v2',
+    'stabilityai/stable-diffusion-3-medium-diffusers',
+];
 
 /**
  * Per-provider bridges sourced from models.dev.
@@ -165,6 +200,11 @@ $modelsDevBridges = [
             $failed = !writeCatalog($io, 'OpenRouter', $openRouter, true, $dryRun, OPENROUTER_ROUTING_KEYS) || $failed;
         }
 
+        if (null === $filter || 'huggingface' === strtolower($filter)) {
+            $huggingFace = fetchHuggingFace($http);
+            $failed = !writeCatalog($io, 'HuggingFace', $huggingFace, false, $dryRun) || $failed;
+        }
+
         if ($failed) {
             $io->error('One or more catalogs could not be updated.');
 
@@ -202,6 +242,57 @@ function fetchOpenRouter(HttpClientInterface $http): array
         $ref = new ReflectionMethod($catalog, $method);
         foreach ($ref->invoke($catalog) as $id => $config) {
             $models[$id] = $config;
+        }
+    }
+
+    return $models;
+}
+
+/**
+ * Lists the chat models of the inference providers, the most downloaded models of each task
+ * pipeline of the Hugging Face inference service and the pinned models that are still served.
+ *
+ * @return array<string, array{class: class-string, capabilities: list<Capability>}>
+ */
+function fetchHuggingFace(HttpClientInterface $http): array
+{
+    $apiClient = new HuggingFaceApiClient($http);
+    $models = [];
+
+    foreach (['text-generation', 'image-text-to-text'] as $pipelineTag) {
+        foreach ($apiClient->listModels(['pipeline_tag' => $pipelineTag]) as $model) {
+            $model['inferenceProviderMapping'] = array_filter(
+                $model['inferenceProviderMapping'] ?? [],
+                static fn (array $mapping): bool => !in_array($mapping['provider'] ?? null, HUGGINGFACE_EXCLUDED_PROVIDERS, true),
+            );
+
+            $definition = HuggingFaceModelMapper::map($model);
+            if (HuggingFaceCompletions::class === ($definition['class'] ?? null)) {
+                $models[$model['id']] = $definition;
+            }
+        }
+    }
+
+    foreach (HuggingFaceModelMapper::getPipelineTasks() as $task) {
+        $filters = ['inference_provider' => 'hf-inference', 'pipeline_tag' => $task, 'sort' => 'downloads'];
+
+        foreach ($apiClient->listModels($filters, HUGGINGFACE_MODELS_PER_PIPELINE) as $model) {
+            $definition = HuggingFaceModelMapper::map($model);
+            if (null !== $definition) {
+                $models[$model['id']] ??= $definition;
+            }
+        }
+    }
+
+    foreach (HUGGINGFACE_PINNED_MODELS as $modelId) {
+        $model = $apiClient->findModel($modelId);
+        if (null === $model) {
+            continue;
+        }
+
+        $definition = HuggingFaceModelMapper::map($model);
+        if (null !== $definition) {
+            $models[$modelId] ??= $definition;
         }
     }
 
